@@ -48,18 +48,16 @@ class Hero():
         self.map = map_
         self.frame_num = 10
         self.frame_order = 0
-        #self.attack_image = pygame.image.load(r'E:\vscode\python\game\images\attack.jpeg')
-        self.stay_image = pygame.image.load('E:\\vscode\\python\\game\\images\\stay.jpeg')
+        self.stay_image = pygame.image.load('game/images/stay.jpeg')
         self.move_left_images = []
         self.move_right_images = []
         self.up_images = []
         self.down_images = []
         for i in range(1, 8):
-            image_path = 'E:\\vscode\\python\\game\\images\\move_left_images\\' + str(i) + '.jpeg'
+            image_path = 'game/images/move_left_images/' + str(i) + '.jpeg'
             self.move_left_images.append(pygame.image.load(image_path))
-            image_path = 'E:\\vscode\\python\\game\\images\\move_right_images\\' + str(i) + '.jpeg'
+            image_path = 'game/images/move_right_images/' + str(i) + '.jpeg'
             self.move_right_images.append(pygame.image.load(image_path))
-        #self.jump_image = pygame.image.load(r'E:\vscode\python\game\images\jump.jpeg')
         self.image = self.stay_image
         self.rect = self.image.get_rect()
         self.rect.centerx = self.screen.get_rect().centerx
