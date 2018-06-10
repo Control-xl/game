@@ -29,7 +29,7 @@ if __name__ == '__main__':
     map1 = Map(screen, settings)
     hero = Ship(settings, screen)
 
-    gf.play_bg_music("b.mp3")
+    gf.play_bg_music("music/b.mp3")
     clock = pygame.time.Clock()
 
     while True:

@@ -36,7 +36,7 @@ class Map():
                 self.settings.left_border -= min(hero.speed, self.settings.left_border)
                 self.settings.right_border = self.settings.left_border + self.settings.screen_width
             else:
-                gf.play_short_music("forest01_new.ogg")
+                gf.play_short_music("music/forest01_new.ogg")
 
     def blitme(self):
         point_list = []

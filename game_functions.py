@@ -30,8 +30,8 @@ def check_events(settings, screen, hero):
 
 def update_screen(settings, screen, hero, map):
     screen.fill(settings.bg_color)
-    hero.blitme(settings)
-    map.blitme(settings)
+    hero.blitme()
+    map.blitme()
 
 
 
