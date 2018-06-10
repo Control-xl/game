@@ -19,8 +19,8 @@ if __name__ == '__main__':
     # 设置bgm音量
     pygame.mixer.music.set_volume(settings.volume)
 
-    test = "??"
-    #生成窗口，
+
+    #生成窗口，teset
     screen = pygame.display.set_mode((settings.screen_width, settings.screen_height))
 
 
