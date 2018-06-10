@@ -171,3 +171,30 @@ class Hero():
     def blitme(self):
         self.screen.blit(self.image, self.rect)
     
+if __name__ == '__main__':
+    pygame.init()
+    screen = pygame.display.set_mode((1200, 800), 0, 0)
+    hero = Hero(screen, 1)
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_j:
+                    hero.attack = 100
+                if event.key == pygame.K_w:
+                    hero.jump = 500
+                if event.key == pygame.K_a:
+                    hero.moving_left = True
+                if event.key == pygame.K_d:
+                    hero.moving_right = True
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_a:
+                    hero.moving_left = False
+                if event.key == pygame.K_d:
+                    hero.moving_right = False
+        screen.fill((255, 255, 255))
+        hero.update()
+        hero.blitme()
+        pygame.display.update()
+        pass
