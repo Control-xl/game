@@ -41,10 +41,6 @@ class Ship():
     def blitme(self):
         self.screen.blit(self.image,self.rect)
 
-
-        
-        
-        
 class Hero():
     def __init__(self, screen, map_, settings):
         self.screen = screen
@@ -128,11 +124,44 @@ class Hero():
 
     def hurt_image(self):
         #受伤动画，播完动画则结束受伤状态
+        if self.direction == self.settings.hero_direction["left"]:
+            self.image = self.hurt_left_images[self.image_order]
+        elif self.direction == self.settings.hero_direction["right"]:
+            self.image = self.hurt_right_images[self.image_order]
+        self.frame_order += 1
+        if self.frame_order == self.frame_size:      #切换图片
+            self.frame_order = 0
+            self.image_order += 1
+            if self.image_order == self.hurt_size:
+                self.image_order = 0
+                self.status = self.settings.hero_status["stay"]
         pass
+        #
 
     def attack_image(self):
         #攻击动画
-        pass
+        if self.status == self.settings.hero_status["attack"]：
+            if self.direction == self.settings.hero_direction["left"]:
+                self.image = self.attack_left_images[self.image_order]
+            elif self.direction == self.settings.hero_direction["right"]:
+                self.image = self.attack_right_images[self.image_order]
+            self.frame_order += 1
+            if self.frame_order == self.frame_size:      #切换图片
+                self.frame_order = 0
+                self.image_order += 1
+                if self.image_order == self.attack_size:
+                    self.image_order = 0
+                    self.status = self.settings.hero_status["stay"]
+        elif self.status == self.settings.hero_status["jump"]:
+            #跳起时进行攻击
+            pass
+        elif self.status == self.settings.hero_status["fall"]:
+            #掉落时进行攻击
+            pass
+        elif self.status == self.settings.hero_status["squat"]:
+            #下蹲时进行攻击
+            pass
+
 
     def jump_image(self):
         #跳跃动画
