@@ -25,6 +25,7 @@ class Ship():
         self.moving_left = False
 
         self.speed = 1
+        self.blood = self.ai_settings.hero_init_blood
 
     def update(self):
 
@@ -51,8 +52,8 @@ class Hero():
         self.settings = settings
         self.frame_num = 5
         self.frame_order = 0
-        self.stay_right_image = pygame.image.load('game/images/stay_right.jpeg')
-        self.stay_left_image = pygame.image.load('game/images/stay_left.jpeg')
+        self.stay_right_image = pygame.image.load('images/stay_right.jpeg')
+        self.stay_left_image = pygame.image.load('images/stay_left.jpeg')
         self.move_left_images = []
         self.move_right_images = []
         self.jump_right_images = []
@@ -64,9 +65,9 @@ class Hero():
         self.attack_left_images = []
         self.attack_right_images = []
         for i in range(1, 8):
-            image_path = 'game/images/move_left_images/' + str(i) + '.jpeg'
+            image_path = 'images/move_left_images/' + str(i) + '.jpeg'
             self.move_left_images.append(pygame.image.load(image_path))
-            image_path = 'game/images/move_right_images/' + str(i) + '.jpeg'
+            image_path = 'images/move_right_images/' + str(i) + '.jpeg'
             self.move_right_images.append(pygame.image.load(image_path))
         self.image = self.stay_right_image
         self.rect = self.image.get_rect()
@@ -149,6 +150,7 @@ class Hero():
             pass
         else :
             # 静止状态
+            a = 1
 
     def update_pos(self):
         self.update_herox()

@@ -23,7 +23,8 @@ class Map():
     def update(self, hero):
         """根据英雄位置更新地图信息"""
         # 如果英雄向右移而且超过了屏幕的一一半位置
-        if hero.moving_right and hero.rect.right >= self.settings.screen_width/2:
+        if hero.moving_right and\
+                hero.rect.right >= self.settings.screen_width/2:
             # 且地图的右边界没有到达地图的最大位置
             if self.settings.right_border + self.settings.screen_width < self.settings.map_max:
                 self.settings.left_border += min(hero.speed, self.settings.map_max - self.settings.right_border)
@@ -37,6 +38,8 @@ class Map():
                 self.settings.right_border = self.settings.left_border + self.settings.screen_width
             else:
                 gf.play_short_music("music/forest01_new.ogg")
+
+
 
     def blitme(self):
         point_list = []
