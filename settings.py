@@ -55,7 +55,7 @@ class Settings():
             #"hurt_right" : 19,
             #"hurt_left" : 20,
         }
-        self.hero_direction = {"left" : 0, "right" : 1}
+        self.hero_direction = {"left" : -1, "right" : 1}
 
         # 英雄初始血量
         self.hero_init_blood = 3

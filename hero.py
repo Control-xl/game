@@ -47,6 +47,7 @@ class Hero():
         self.hurt_size = 7
         self.speedx = 1
         self.speedy = 1
+        self.velocityx = 0
 
     def update_status(self):
         #根据旧状态即status的值继续状态;或者根据按键(即or后面)更改状态.更新image
@@ -73,7 +74,8 @@ class Hero():
             pass
         else : #self.status == self.settings.hero_status["stay"]
             # 静止状态
-            self.status
+            self.status = self.status == self.settings.hero_status["stay"]
+            self.velocityx = 0
 
     def get_hurt(self, direction):
         # 发生碰撞时，调用的接口函数，
@@ -82,10 +84,14 @@ class Hero():
         if self.status != self.settings.hero_status["hurt"]:
             self.direction = direction
             self.status = self.settings.hero_status["hurt"]
+            self.image_order = 0
+            self.frame_order = 0
         pass
 
     def hurt_image(self):
         #受伤动画，播完动画则结束受伤状态
+        self.velocityx = self.direction * speedx
+        self.velocityy = -self.speedy
         if self.direction == self.settings.hero_direction["left"]:
             self.image = self.hurt_left_images[self.image_order]
         elif self.direction == self.settings.hero_direction["right"]:
@@ -102,7 +108,7 @@ class Hero():
 
     def attack_image(self):
         #攻击动画
-        if self.status == self.settings.hero_status["attack"]：
+        if self.status == self.settings.hero_status["attack"] :
             if self.direction == self.settings.hero_direction["left"]:
                 self.image = self.attack_left_images[self.image_order]
             elif self.direction == self.settings.hero_direction["right"]:
@@ -139,6 +145,8 @@ class Hero():
 
     def move_image(self):
         #移动动画, 如果是状态发生改变
+        self.velocityx = self.speedx * self.direction
+        self.velocityy = -self.speedy
         if self.status == self.settings.hero_status["move"]:
             #动画未播放完整，继续动画
             if self.direction == self.settings.hero_direction["left"]:
@@ -166,19 +174,24 @@ class Hero():
         pass
 
     def update_herox(self):
+        if self.rect.bottom <= self.map.gety(self.rect.centerx + self.velocityx) :
+            self.rect.centerx += self.velocityx
+            """
         if self.status == self.settings.hero_status["move"] and self.direction == self.settings.hero_direction["left"] and \
            self.rect.left > 0 and self.rect.bottom <= 800: #self.map.gety(self.rect.left - self.speedx) :
             self.rect.centerx -= self.speedx
         if self.status == self.settings.hero_status["move"] and self.direction == self.settings.hero_direction["right"] and \
            self.rect.right < 1200 and self.rect.bottom <= 800: #self.map.gety(self.rect.right + self.speedx):
             self.rect.centerx += self.speedx
+            """
 
     def update_heroy(self):
         #跳起与坠落
-        if self.status == self.settings.hero_status["jump"]:
+        if self.velocityy > 0:
+            self.rect.bottom += self.velocityy
             pass
         elif self.rect.bottom < self.map.gety(self.rect.centerx):
-            self.rect.bottom += self.speedy + self.map.gety(self.rect.centerx)
+            self.rect.bottom += self.velocityy
         pass
 
 
