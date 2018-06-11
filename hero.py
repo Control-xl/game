@@ -1,5 +1,6 @@
 import pygame
-
+import sys
+from map import Map
 
 class Ship():
 
@@ -46,12 +47,13 @@ class Hero():
     def __init__(self, screen, map_):
         self.screen = screen
         self.map = map_
-        self.frame_num = 10
+        self.frame_num = 20
         self.frame_order = 0
-        self.stay_image = pygame.image.load('game/images/stay.jpeg')
+        self.stay_right_image = pygame.image.load('game/images/stay_right.jpeg')
+        self.stay_left_image = pygame.image.load('game/images/stay_left.jpeg')
         self.move_left_images = []
         self.move_right_images = []
-        self.up_images = []
+        self.jump_images = []
         self.down_images = []
         for i in range(1, 8):
             image_path = 'game/images/move_left_images/' + str(i) + '.jpeg'
