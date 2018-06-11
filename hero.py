@@ -12,10 +12,15 @@ class Hero():
         self.frame_order = 0
         self.stay_right_image = pygame.image.load('game/images/stay_right.jpeg')
         self.stay_left_image = pygame.image.load('game/images/stay_left.jpeg')
-        self.squat_left_image = []
-        self.squat_right_image = []
+        self.squat_left_image = pygame.image.load('game/images/squat_left.jpeg')
+        self.squat_right_image = pygame.image.load('game/images/squat_right.jpeg')
         self.move_left_images = []
         self.move_right_images = []
+        for i in range(1, 8):
+            image_path = 'game/images/move_left_images/move_' + str(i) + '.jpeg'
+            self.move_left_images.append(pygame.image.load(image_path))
+            image_path = 'game/images/move_right_images/move_' + str(i) + '.jpeg'
+            self.move_right_images.append(pygame.image.load(image_path))
         self.squat_move_left_images = []
         self.squat_move_right_images = []
         self.jump_right_images = []
@@ -26,11 +31,7 @@ class Hero():
         self.hurt_right_images = []
         self.attack_left_images = []
         self.attack_right_images = []
-        for i in range(1, 8):
-            image_path = 'game/images/move_left_images/' + str(i) + '.jpeg'
-            self.move_left_images.append(pygame.image.load(image_path))
-            image_path = 'game/images/move_right_images/' + str(i) + '.jpeg'
-            self.move_right_images.append(pygame.image.load(image_path))
+
         self.image = self.stay_right_image
         self.rect = self.image.get_rect()
         self.rect.centerx = self.screen.get_rect().centerx
@@ -46,8 +47,8 @@ class Hero():
         self.falling = False
         self.image_order = 0     #正播放的图片序号
         self.move_size = 7       #移动图片的总数目
-        self.attack_size = 7
-        self.jump_size = 7
+        self.attack_size = 8
+        self.jump_size = 15
         self.hurt_size = 7
         self.speedx = 1
         self.speedy = 1
@@ -82,7 +83,13 @@ class Hero():
              self.status == self.settings.hero_status["fall"] :
             # 跳跃，下蹲，掉落，第三
             pass
-        elif self.jumping or self.squating or self.falling :
+        elif self.jumping :
+            #跳跃键
+            pass
+        elif self.squating :
+            #下蹲键
+            self.squat_image()
+        elif self.falling :
             #self.falling 应该改成判断self高度
             pass
         elif self.status == self.settings.hero_status["move"] or self.moving_left != self.moving_right:
@@ -91,7 +98,7 @@ class Hero():
             pass
         else : #self.status == self.settings.hero_status["stay"]
             # 静止状态
-            self.status = self.status == self.settings.hero_status["stay"]
+            self.status = self.settings.hero_status["stay"]
             self.velocityx = 0
 
     def display_frame(self, image_size):
@@ -181,7 +188,7 @@ class Hero():
             if self.direction == self.settings.hero_direction["left"]:
                 self.image = self.move_left_images[self.image_order]
             elif self.direction == self.settings.hero_direction["right"]:
-                self.image = self.move_left_images[self.image_order]
+                self.image = self.move_right_images[self.image_order]
             self.display_frame(self.move_size)
         if self.status == self.settings.hero_status["stay"] and self.moving_left != self.moving_right:
             #由stay状态变成移动状态
@@ -196,7 +203,7 @@ class Hero():
         pass
 
     def update_herox(self):
-        if self.rect.bottom <= self.map.gety(self.rect.centerx + self.velocityx) :
+        if self.rect.centerx > 0 and self.rect.centerx < 1200 and self.rect.bottom <= 800: #self.map.gety(self.rect.centerx + self.velocityx) :
             self.rect.centerx += self.velocityx
             """
         if self.status == self.settings.hero_status["move"] and self.direction == self.settings.hero_direction["left"] and \
@@ -218,6 +225,8 @@ class Hero():
 
 
     def update(self):
+        if self.moving_left == self.moving_right:
+            self.velocityx = 0
         self.update_status()
         self.update_pos()
 
@@ -254,7 +263,7 @@ if __name__ == '__main__':
                     hero.moving_right = False
                 if event.key == pygame.K_s:
                     hero.squating = False
-        screen.fill((255, 255, 255))
+        screen.fill((0, 0, 0))
         hero.update()
         hero.blitme()
         pygame.display.update()
