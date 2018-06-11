@@ -16,8 +16,10 @@ class Hero():
         self.move_right_images = []
         self.jump_right_images = []
         self.jump_left_images = []
-        self.down_right_images = []
-        self.down_left_images = []
+        self.fall_right_images = []
+        self.fall_left_images = []
+        self.squat_left_image = []
+        self.squat_right_image = []
         self.hurt_left_images = []
         self.hurt_right_images = []
         self.attack_left_images = []
@@ -48,6 +50,7 @@ class Hero():
         self.speedx = 1
         self.speedy = 1
         self.velocityx = 0
+        self.velocityy = -self.speedy
 
     def update_status(self):
         #根据旧状态即status的值继续状态;或者根据按键(即or后面)更改状态.更新image
@@ -56,10 +59,22 @@ class Hero():
             #受伤的优先级最高, 要更新图形
             self.hurt_image()
             pass
-        elif self.status == self.settings.hero_status["attack"] or self.attacking :
+        elif self.status == self.settings.hero_status["attack"] :
             #攻击优先级次之
             self.attack_image()
             pass
+        elif self.status == self.settings.hero_status["jump_attack"] :
+            #跳起攻击
+            pass
+        elif self.status == self.settings.hero_status["squat_attack"] :
+            pass
+        elif self.attacking : #当按下攻击键时
+            if self.status == self.settings.hero_status["jump"] :
+                self.status = self.settings.hero_status["jump_attack"]
+            elif self.status == self.settings.hero_status["squat"] :
+                self.status = self.settings.hero_status["squat_attack"]
+            else :
+                self.status = self.settings.hero_status["attack"]
         elif self.status == self.settings.hero_status["jump"] or \
              self.status == self.settings.hero_status["squat"] or \
              self.status == self.settings.hero_status["fall"] :
@@ -76,6 +91,15 @@ class Hero():
             # 静止状态
             self.status = self.status == self.settings.hero_status["stay"]
             self.velocityx = 0
+
+    def display_frame(self, image_size):
+        self.frame_order += 1
+        if self.frame_order == self.frame_size:      #切换图片
+            self.frame_order = 0
+            self.image_order += 1
+            if self.image_order == image_size:
+                self.image_order = 0
+                self.status = self.settings.hero_status["stay"]
 
     def get_hurt(self, direction):
         # 发生碰撞时，调用的接口函数，
@@ -96,6 +120,7 @@ class Hero():
             self.image = self.hurt_left_images[self.image_order]
         elif self.direction == self.settings.hero_direction["right"]:
             self.image = self.hurt_right_images[self.image_order]
+        self.display_frame(self.hurt_size)
         self.frame_order += 1
         if self.frame_order == self.frame_size:      #切换图片
             self.frame_order = 0
@@ -103,33 +128,31 @@ class Hero():
             if self.image_order == self.hurt_size:
                 self.image_order = 0
                 self.status = self.settings.hero_status["stay"]
-        pass
-        #
 
     def attack_image(self):
         #攻击动画
+        #self.velocityx 不变
+        self.velocityy = -self.speedy
         if self.status == self.settings.hero_status["attack"] :
             if self.direction == self.settings.hero_direction["left"]:
                 self.image = self.attack_left_images[self.image_order]
             elif self.direction == self.settings.hero_direction["right"]:
                 self.image = self.attack_right_images[self.image_order]
-            self.frame_order += 1
-            if self.frame_order == self.frame_size:      #切换图片
-                self.frame_order = 0
-                self.image_order += 1
-                if self.image_order == self.attack_size:
-                    self.image_order = 0
-                    self.status = self.settings.hero_status["stay"]
-        elif self.status == self.settings.hero_status["jump"]:
+            self.display_frame(self.attack_size)
+        elif self.status == self.settings.hero_status["jump_attack"]:
             #跳起时进行攻击
-            pass
-        elif self.status == self.settings.hero_status["fall"]:
-            #掉落时进行攻击
-            pass
-        elif self.status == self.settings.hero_status["squat"]:
+            if self.direction == self.settings.hero_direction["left"]:
+                self.image = self.attack_left_images[self.image_order]
+            elif self.direction == self.settings.hero_direction["right"]:
+                self.image = self.attack_right_images[self.image_order]
+            self.display_frame(self.attack_size)
+        elif self.status == self.settings.hero_status["squat_attack"]:
             #下蹲时进行攻击
-            pass
-
+            if self.direction == self.settings.hero_direction["left"]:
+                self.image = self.attack_left_images[self.image_order]
+            elif self.direction == self.settings.hero_direction["right"]:
+                self.image = self.attack_right_images[self.image_order]
+            self.display_frame(self.attack_size)
 
     def jump_image(self):
         #跳跃动画
@@ -138,6 +161,10 @@ class Hero():
     def squat_image(self):
         #下蹲动画
         pass
+        if self.direction == self.settings.hero_direction["left"]:
+            self.image = self.move_left_images[self.image_order]
+        elif self.direction == self.settings.hero_direction["right"]:
+            self.image = self.move_left_images[self.image_order] 
 
     def fall_image(self):
         #坠落图片
@@ -153,13 +180,7 @@ class Hero():
                 self.image = self.move_left_images[self.image_order]
             elif self.direction == self.settings.hero_direction["right"]:
                 self.image = self.move_left_images[self.image_order]
-            self.frame_order += 1
-            if self.frame_order == self.frame_size:      #切换图片
-                self.frame_order = 0
-                self.image_order += 1
-                if self.image_order == self.move_size:
-                    self.image_order = 0
-                    self.status = self.settings.hero_status["stay"]
+            self.display_frame(self.move_size)
         if self.status == self.settings.hero_status["stay"] and self.moving_left != self.moving_right:
             #由stay状态变成移动状态
             self.status = self.settings.hero_status["move"]
