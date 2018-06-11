@@ -3,7 +3,7 @@ import game_functions as gf
 import threading
 from map import Map
 from settings import Settings
-from hero import Ship
+from ship import Ship
 from hero import Hero
 from state_display import StateDisplay
 if __name__ == '__main__':
