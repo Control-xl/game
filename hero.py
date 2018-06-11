@@ -52,7 +52,8 @@ class Hero():
         self.settings = settings
         self.frame_size = 5         #代表一个图片要放的帧数目
         self.frame_order = 0
-        self.stay_left_image = pygame.image.load('game/images/stay_left.jpeg')
+        self.stay_right_image = pygame.image.load('images/stay_right.jpeg')
+        self.stay_left_image = pygame.image.load('images/stay_left.jpeg')
         self.move_left_images = []
         self.move_right_images = []
         self.jump_right_images = []
