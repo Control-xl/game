@@ -3,6 +3,8 @@ import sys
 import threading
 
 def check_keydown_events(event, settings, screen, hero):
+    if event.key == pygame.K_ESCAPE:
+        print("tse")
     if event.key == pygame.K_RIGHT:
          # 右移
         hero.moving_right = True
