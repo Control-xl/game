@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="58b47976-73ba-47b9-8e13-acbfc4745616" name="Default" comment="">
+    <list default="true" id="58b47976-73ba-47b9-8e13-acbfc4745616" name="Default" comment="Merge branch 'master' of https://github.com/Control-xl/game&#10;&#10;# Conflicts:&#10;#&#9;__pycache__/game_functions.cpython-36.pyc&#10;#&#9;__pycache__/map.cpython-36.pyc&#10;#&#9;__pycache__/settings.cpython-36.pyc">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hero.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ship.py" beforeDir="false" afterPath="$PROJECT_DIR$/ship.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -16,8 +19,8 @@
       <file leaf-file-name="main.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="630">
-              <caret line="37" column="14" selection-start-line="37" selection-start-column="14" selection-end-line="37" selection-end-column="14" />
+            <state relative-caret-position="420">
+              <caret line="20" column="10" lean-forward="true" selection-start-line="20" selection-start-column="10" selection-end-line="20" selection-end-column="10" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -37,23 +40,20 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="state_display.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="state_display.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/state_display.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="672">
-              <caret line="32" selection-start-line="32" selection-end-line="32" />
+            <state relative-caret-position="342">
+              <caret line="25" column="41" lean-forward="true" selection-start-line="25" selection-start-column="41" selection-end-line="25" selection-end-column="41" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="hero.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/hero.py">
+      <file leaf-file-name="ship.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ship.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="490">
-              <caret line="84" column="32" selection-start-line="84" selection-start-column="32" selection-end-line="84" selection-end-column="32" />
-              <folding>
-                <element signature="e#0#13#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="21">
+              <caret line="1" selection-start-line="1" selection-end-line="1" />
             </state>
           </provider>
         </entry>
@@ -110,16 +110,17 @@
       <list>
         <option value="$PROJECT_DIR$/settings.py" />
         <option value="$PROJECT_DIR$/map.py" />
-        <option value="$PROJECT_DIR$/main.py" />
         <option value="$PROJECT_DIR$/hero.py" />
         <option value="$PROJECT_DIR$/game_functions.py" />
         <option value="$PROJECT_DIR$/state_display.py" />
+        <option value="$PROJECT_DIR$/ship.py" />
+        <option value="$PROJECT_DIR$/main.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="80" />
-    <option name="y" value="119" />
+    <option name="x" value="342" />
+    <option name="y" value="109" />
     <option name="width" value="1470" />
     <option name="height" value="889" />
   </component>
@@ -145,7 +146,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -157,6 +157,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -257,12 +258,12 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="80" y="119" width="1470" height="889" extended-state="0" />
+    <frame x="342" y="109" width="1470" height="889" extended-state="0" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.23246217" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.23246217" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.50138503" side_tool="true" weight="0.31406045" />
-      <window_info active="true" anchor="bottom" id="Version Control" order="7" sideWeight="0.49861497" visible="true" weight="0.24838293" />
+      <window_info anchor="bottom" id="Version Control" order="7" sideWeight="0.49861497" visible="true" weight="0.24838293" />
       <window_info anchor="bottom" id="Python Console" order="7" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.23786983" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -323,16 +324,10 @@
     <MESSAGE value="find some trouble&#10;&#10;test github" />
     <MESSAGE value="find some trouble&#10;test github" />
     <MESSAGE value="add blood factor" />
-    <option name="LAST_COMMIT_MESSAGE" value="add blood factor" />
+    <MESSAGE value="create a ship for test" />
+    <option name="LAST_COMMIT_MESSAGE" value="create a ship for test" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/state_display.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="672">
-          <caret line="32" selection-start-line="32" selection-end-line="32" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/map.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="609">
@@ -732,16 +727,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="630">
-          <caret line="37" column="14" selection-start-line="37" selection-start-column="14" selection-end-line="37" selection-end-column="14" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/game_functions.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
@@ -749,13 +734,6 @@
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/state_display.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="672">
-          <caret line="32" selection-start-line="32" selection-end-line="32" />
         </state>
       </provider>
     </entry>
@@ -769,13 +747,37 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/hero.py">
+    <entry file="file://$PROJECT_DIR$/ship.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="490">
-          <caret line="84" column="32" selection-start-line="84" selection-start-column="32" selection-end-line="84" selection-end-column="32" />
+        <state relative-caret-position="21">
+          <caret line="1" selection-start-line="1" selection-end-line="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="20" column="10" lean-forward="true" selection-start-line="20" selection-start-column="10" selection-end-line="20" selection-end-column="10" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hero.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4801">
+          <caret line="233" column="31" lean-forward="true" selection-start-line="233" selection-start-column="31" selection-end-line="233" selection-end-column="31" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/state_display.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="342">
+          <caret line="25" column="41" lean-forward="true" selection-start-line="25" selection-start-column="41" selection-end-line="25" selection-end-column="41" />
         </state>
       </provider>
     </entry>
