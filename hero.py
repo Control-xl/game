@@ -45,17 +45,24 @@ class Ship():
         
         
 class Hero():
-    def __init__(self, screen, map_):
+    def __init__(self, screen, map_, settings):
         self.screen = screen
         self.map = map_
-        self.frame_num = 20
+        self.settings = settings
+        self.frame_num = 5
         self.frame_order = 0
         self.stay_right_image = pygame.image.load('game/images/stay_right.jpeg')
         self.stay_left_image = pygame.image.load('game/images/stay_left.jpeg')
         self.move_left_images = []
         self.move_right_images = []
-        self.jump_images = []
-        self.down_images = []
+        self.jump_right_images = []
+        self.jump_left_images = []
+        self.down_right_images = []
+        self.down_left_images = []
+        self.hurt_left_images = []
+        self.hurt_right_images = []
+        self.attack_left_images = []
+        self.attack_right_images = []
         for i in range(1, 8):
             image_path = 'game/images/move_left_images/' + str(i) + '.jpeg'
             self.move_left_images.append(pygame.image.load(image_path))
@@ -65,35 +72,30 @@ class Hero():
         self.rect = self.image.get_rect()
         self.rect.centerx = self.screen.get_rect().centerx
         self.rect.bottom = self.screen.get_rect().bottom
+        self.status = settings.hero_status["stay_right"]
+        self.direction = settings.hero_direction["right"]
         self.moving_left = False
+        self.moving_right = False
+        self.getting_hurt_left = False
+        self.getting_hurt_right = False
+        self.attacking = False
+        self.jumping = False
+        self.squating = False
         self.move_left_order = 0
         self.move_left_num = 0
         self.move_left_size = 7
-        self.moving_right = False
         self.move_right_order = 0
         self.move_right_num = 0
         self.move_right_size = 7
+        self.attack_size = 7
+        self.jump_size = 7
+        self.hurt_size = 7
         self.speedx = 1
         self.speedy = 1
-        self.hurt_time = 0
-        self.jump = 0
-        self.attack = 0
+
 
     def update_image(self):
-        if self.attack > 0:
-            #攻击
-            self.image = self.attack_image
-            self.attack -= 1
-        elif self.jump > 0:
-            #跳跃
-            if self.jump % 50 == 0 and self.jump > 250:
-                #self.image = self.jump_image
-                self.rect.bottom -= 10
-            elif self.jump % 50 == 0:
-                #self.image = self.jump_image
-                self.rect.bottom += 10
-            self.jump -= 1
-        elif self.move_left_num > 0:
+        if self.move_left_num > 0:
             #播放向左移动的动画
             self.image = self.move_left_images[self.move_left_order]
             self.frame_order += 1
@@ -126,23 +128,53 @@ class Hero():
         else :
             self.image = self.stay_right_image
 
+    def update_status(self):
+        #根据旧状态即status的值继续状态;或者根据按键(即or后面)更改状态.更新image
+        #可以改变方向的只有 移动键和受伤
+        if self.status == self.settings.hero_status["hurt"]:
+            #受伤的优先级最高, 要更新图形
+            self.hurt_image()
+            pass
+        elif self.status == self.settings.hero_status["attack"] or self.attacking :
+            #攻击优先级次之
+            self.attack_image()
+            pass
+        elif self.status == self.settings.hero_status["jump"] or \
+             self.status == self.settings.hero_status["squad"] :
+            # 跳跃，下蹲，第三
+            pass
+        elif self.status == self.settings.hero_status["move"] :
+            # 最后是移动
+            self.move_image()
+            pass
+        else :
+            # 静止状态
+
     def update_pos(self):
-        if self.moving_left:
+        self.update_herox()
+        pass
+
+    def update_herox(self):
+        if self.move_left_num and self.rect.left > 0 and self.rect.bottom <= 800: #self.map.gety(self.rect.left - self.speedx) :
             self.rect.centerx -= self.speedx
-        if self.moving_right:
+        if self.move_right_num and self.rect.right < 1200 and self.rect.bottom <= 800: #self.map.gety(self.rect.right + self.speedx):
             self.rect.centerx += self.speedx
 
-    def move_x(self):
-        if self.moving_left and self.rect.left > 0 and self.rect.bottom <= self.map.gety(self.rect.left - self.speedx) :
-            self.rect.centerx -= self.speedx
-        if self.moving_right and self.rect.right < 1200 and self.rect.bottom <= self.map.gety(self.rect.right + self.speedx):
-            self.rect.centerx += self.speedx
-
-    def move_y(self):
+    def update_heroy(self):
         #跳起与坠落
+        if self.status == self.settings.hero_status["jump"]:
+            pass
+        elif self.rect.bottom < self.map.gety(self.rect.centerx):
+            self.rect.bottom += self.speedy + self.map.gety(self.rect.centerx)
         pass
 
     def get_hurt(self, direction):
+        # 发生碰撞时，调用的接口函数，
+        # 更新人物方向，设置人物状态
+        # 若人物已经受伤，不再受伤
+        if self.status != self.settings.hero_status["getting_hurt"]:
+            self.direction = direction
+            self.status = self.settings.hero_status["getting_hurt"]
         pass
 
     def attack(self):
@@ -152,7 +184,7 @@ class Hero():
         pass
 
     def hurt_image(self):
-        #受伤动画
+        #受伤动画，播完动画则结束受伤状态
         pass
 
     def attack_image(self):
@@ -167,6 +199,10 @@ class Hero():
         #坠落图片
         pass
 
+    def move_image(self):
+        #移动动画
+        pass
+
     def update(self):
         self.update_image()
         self.move_x()
@@ -179,16 +215,18 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode((1200, 800), 0, 0)
     settings = Settings()
     map_ = Map(screen, settings)
-    hero = Hero(screen, map_)
+    hero = Hero(screen, map_, settings)
+    clock = pygame.time.Clock()
     while True:
+        clock.tick(100)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_j:
-                    hero.attack = 100
+                    hero.attacking = True
                 if event.key == pygame.K_w:
-                    hero.jump = 500
+                    hero.jumping = True
                 if event.key == pygame.K_a:
                     hero.moving_left = True
                 if event.key == pygame.K_d:

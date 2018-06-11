@@ -15,9 +15,33 @@ class Settings():
         # 屏幕位置
         self.screen_width = 1200
         self.screen_height = 800
-        # 英雄位置
+        # 英雄位置,状态
         self.hero_bottom = 800
         self.hero_center = 600
+        self.hero_status = {
+            "stay" : 0,
+            "stay_right" : 1,
+            "stay_left" : 2,
+            "move" : 3,
+            "move_right" : 4,
+            "move_left" : 5,
+            "jump" : 6,
+            "jump_right" : 7,
+            "jump_left" : 8,
+            "fall" : 9,
+            "fall_right" : 10,
+            "fall_left" : 11,
+            "squat" : 12,
+            "squat_right" : 13,
+            "squat_left" : 14,
+            "attack" : 15,
+            "attack_right" : 16,
+            "attack_left" : 17,
+            "hurt" : 18,
+            "hurt_right" : 19,
+            "hurt_left" : 20,
+        }
+        self.hero_direction = {"left" : 0, "right" : 1}
         # 屏幕背景颜色
         self.bg_color = (230, 230, 230)
 
