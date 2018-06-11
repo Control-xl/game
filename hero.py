@@ -89,41 +89,6 @@ class Hero():
         self.speedx = 1
         self.speedy = 1
 
-
-    def update_image(self):
-        if self.move_left_num > 0:
-            #播放向左移动的动画
-            self.image = self.move_left_images[self.move_left_order]
-            self.frame_order += 1
-            if self.frame_order == self.frame_size:      #切换图片
-                self.frame_order = 0
-                self.move_left_order += 1
-                if self.move_left_order == self.move_left_size:
-                    self.move_left_order = 0
-                    self.move_left_num -= 1
-                    if self.moving_left == True and self.moving_right == False:
-                        self.move_left_num = 1
-        elif self.move_right_num > 0:
-            #播放向右移动的动画
-            self.image = self.move_right_images[self.move_right_order]
-            self.frame_order += 1
-            if self.frame_order == self.frame_num:      #切换图片
-                self.frame_order = 0
-                self.move_right_order += 1
-                if self.move_right_order == self.move_right_size:
-                    self.move_right_order = 0
-                    self.move_right_num -= 1
-                    if self.moving_right == True and self.moving_left == False:
-                        self.move_right_num = 1
-        elif self.moving_left != self.moving_right :
-            #初始化移动动画, move_left_num表示向左移动的动画的数目
-            if self.moving_left:
-                self.move_left_num = 1
-            else :
-                self.move_right_num = 1
-        else :
-            self.image = self.stay_right_image
-
     def update_status(self):
         #根据旧状态即status的值继续状态;或者根据按键(即or后面)更改状态.更新image
         #可以改变方向的只有 移动键和受伤
@@ -253,11 +218,15 @@ if __name__ == '__main__':
                     hero.moving_left = True
                 if event.key == pygame.K_d:
                     hero.moving_right = True
+                if event.key == pygame.K_s:
+                    hero.squating = True
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_a:
                     hero.moving_left = False
                 if event.key == pygame.K_d:
                     hero.moving_right = False
+                if event.key == pygame.K_s:
+                    hero.squating = False
         screen.fill((255, 255, 255))
         hero.update()
         hero.blitme()
