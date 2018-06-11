@@ -15,6 +15,20 @@ class Settings():
         # 屏幕位置
         self.screen_width = 1200
         self.screen_height = 800
+        # 屏幕背景颜色
+        self.bg_color = (230, 230, 230)
+
+        # 地图在屏幕上显示的左边界和右边界
+        self.left_border = 0
+        self.right_border = 1200
+
+        # 整个地图的最大长度
+        self.map_max = 12000
+
+        # for test
+        self.ship_speed_factor = 2
+
+
         # 英雄位置,状态
         self.hero_bottom = 800
         self.hero_center = 600
@@ -42,21 +56,8 @@ class Settings():
             #"hurt_left" : 20,
         }
         self.hero_direction = {"left" : 0, "right" : 1}
-        # 屏幕背景颜色
-        self.bg_color = (230, 230, 230)
 
-
-
-        # 地图在屏幕上显示的左边界和右边界
-        self.left_border = 0
-        self.right_border = 1200
-
-        # 整个地图的最大长度
-        self.map_max = 12000
-
-
-        # for test
-
-        self.ship_speed_factor = 1
-
+        # 英雄初始血量
+        self.hero_init_blood = 3
+        self.hero_init_magic = 1
 

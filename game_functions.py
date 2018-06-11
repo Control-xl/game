@@ -9,6 +9,10 @@ def check_keydown_events(event, settings, screen, hero):
     if event.key == pygame.K_LEFT:
         # left移
         hero.moving_left = True
+    if event.key == pygame.K_DOWN:
+        hero.blood -= 1
+    if event.key == pygame.K_UP:
+        hero.blood += 1
 
 
 def check_keyup_events(event, hero):
@@ -28,10 +32,11 @@ def check_events(settings, screen, hero):
             check_keyup_events(event, hero)
 
 
-def update_screen(settings, screen, hero, map):
+def update_screen(settings, screen, hero, map1, state_display):
     screen.fill(settings.bg_color)
     hero.blitme()
-    map.blitme()
+    map1.blitme()
+    state_display.blitme()
 
 
 
