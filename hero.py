@@ -1,5 +1,6 @@
 import pygame
 import sys
+from settings import Settings
 from map import Map
 
 class Ship():
@@ -60,7 +61,7 @@ class Hero():
             self.move_left_images.append(pygame.image.load(image_path))
             image_path = 'game/images/move_right_images/' + str(i) + '.jpeg'
             self.move_right_images.append(pygame.image.load(image_path))
-        self.image = self.stay_image
+        self.image = self.stay_right_image
         self.rect = self.image.get_rect()
         self.rect.centerx = self.screen.get_rect().centerx
         self.rect.bottom = self.screen.get_rect().bottom
@@ -123,7 +124,7 @@ class Hero():
             else :
                 self.move_right_num = 1
         else :
-            self.image = self.stay_image
+            self.image = self.stay_right_image
 
     def update_pos(self):
         if self.moving_left:
@@ -132,9 +133,9 @@ class Hero():
             self.rect.centerx += self.speedx
 
     def move_x(self):
-        if self.moving_left and self.rect.left > 0 and self.rect.bottom <= 800: #self.map.get_y(self.rect.left - self.speed) :
+        if self.moving_left and self.rect.left > 0 and self.rect.bottom <= self.map.gety(self.rect.left - self.speedx) :
             self.rect.centerx -= self.speedx
-        if self.moving_right and self.rect.right < 1200 and self.rect.bottom <= 800:# self.map.get_y(self.rect.right + self.speed):
+        if self.moving_right and self.rect.right < 1200 and self.rect.bottom <= self.map.gety(self.rect.right + self.speedx):
             self.rect.centerx += self.speedx
 
     def move_y(self):
@@ -176,7 +177,9 @@ class Hero():
 if __name__ == '__main__':
     pygame.init()
     screen = pygame.display.set_mode((1200, 800), 0, 0)
-    hero = Hero(screen, 1)
+    settings = Settings()
+    map_ = Map(screen, settings)
+    hero = Hero(screen, map_)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -199,4 +202,3 @@ if __name__ == '__main__':
         hero.update()
         hero.blitme()
         pygame.display.update()
-        pass
