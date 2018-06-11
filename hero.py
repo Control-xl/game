@@ -12,14 +12,16 @@ class Hero():
         self.frame_order = 0
         self.stay_right_image = pygame.image.load('game/images/stay_right.jpeg')
         self.stay_left_image = pygame.image.load('game/images/stay_left.jpeg')
+        self.squat_left_image = []
+        self.squat_right_image = []
         self.move_left_images = []
         self.move_right_images = []
+        self.squat_move_left_images = []
+        self.squat_move_right_images = []
         self.jump_right_images = []
         self.jump_left_images = []
         self.fall_right_images = []
         self.fall_left_images = []
-        self.squat_left_image = []
-        self.squat_right_image = []
         self.hurt_left_images = []
         self.hurt_right_images = []
         self.attack_left_images = []
@@ -162,9 +164,9 @@ class Hero():
         #下蹲动画
         pass
         if self.direction == self.settings.hero_direction["left"]:
-            self.image = self.move_left_images[self.image_order]
+            self.image = self.squat_left_image
         elif self.direction == self.settings.hero_direction["right"]:
-            self.image = self.move_left_images[self.image_order] 
+            self.image = self.squat_right_image
 
     def fall_image(self):
         #坠落图片
@@ -188,7 +190,6 @@ class Hero():
                 self.direction = self.settings.hero_direction["left"]
             elif self.moving_right == True:
                 self.direction = self.settings.hero_direction["right"]
-
 
     def update_pos(self):
         self.update_herox()
