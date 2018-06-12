@@ -93,15 +93,15 @@ class Hero():
             #受伤的优先级最高, 要更新图形
             self.hurt_image()
         elif self.status == self.settings.hero_status["attack"] :
-            #攻击优先级次之
+            #攻击动画
             self.attack_image()
         elif self.status == self.settings.hero_status["jump_attack"] :
-            #跳起攻击
+            #跳起攻击动画
             self.jump_attack_image()
         elif self.status == self.settings.hero_status["squat_attack"] :
-            #下蹲攻击
+            #下蹲攻击动画
             self.squat_attack_image()
-        elif self.attacking : #当按下攻击键时
+        elif self.attacking : #当按下攻击键时，进入攻击状态
             self.attacking = False
             if self.status == self.settings.hero_status["jump"] :
                 self.status = self.settings.hero_status["jump_attack"]
@@ -116,26 +116,36 @@ class Hero():
         elif self.status == self.settings.hero_status["jump"] :
             # 跳起
             self.jump_image()
+            """
         elif self.status == self.settings.hero_status["fall"] :
             # 掉落，第三
             pass
+            """
+        elif self.status == self.settings.hero_status["squat_move"]:
+            #蹲着移动
+            self.squat_move()
+        elif self.squating :
+            #下蹲键, 按着蹲下键时，无法跳跃，即按跳起键无效。当此时有移动按键时，将变成蹲着移动
+            self.status = self.settings.hero_status["squat"]
+            self.squat_image()
         elif self.jumping :
             #跳跃键
             self.status = self.settings.hero_status["jump"]
-        elif self.squating :
-            #下蹲键
-            self.status = self.settings.hero_status["squat"]
-            self.squat_image()
+            """
         elif self.falling :
             #self.falling 应该改成判断self高度
             pass
-        elif self.status == self.settings.hero_status["squat_move"]:
-            #蹲着移动
-            pass
-        elif self.status == self.settings.hero_status["move"] or self.moving_left != self.moving_right:
+            """
+        elif self.status == self.settings.hero_status["move"] :
             # 最后是移动
             self.move_image()
-            pass
+        elif self.moving_left != self.moving_right :
+            # 进入移动状态
+            self.status = self.settings.hero_status["move"]
+            if self.moving_left == True:
+                self.direction = self.settings.hero_direction["left"]
+            elif self.moving_right == True:
+                self.direction = self.settings.hero_direction["right"]
         else : #self.status == self.settings.hero_status["stay"]
             # 静止状态
             self.status = self.settings.hero_status["stay"]
@@ -199,8 +209,14 @@ class Hero():
         self.display_frame(self.jump_size)
 
     def squat_image(self):
-        #下蹲动画
-        if self.direction == self.settings.hero_direction["left"]:
+        #下蹲动画,有方向时变成滚动了
+        if self.moving_left != self.moving_right :
+            self.status = self.settings.hero_status["squat_move"]
+            if self.moving_left == True:
+                self.direction = self.settings.hero_direction["left"]
+            elif self.moving_right == True:
+                self.direction = self.settings.hero_direction["right"]
+        elif self.direction == self.settings.hero_direction["left"]:
             self.change_image(self.squat_left_image)
         elif self.direction == self.settings.hero_direction["right"]:
             self.change_image(self.squat_right_image)
@@ -213,20 +229,22 @@ class Hero():
         #移动动画, 如果是状态发生改变
         self.velocityx = self.speedx * self.direction
         self.velocityy = -self.speedy
-        if self.status == self.settings.hero_status["move"]:
-            #动画未播放完整，继续动画
-            if self.direction == self.settings.hero_direction["left"]:
-                self.change_image(self.move_left_images[self.image_order])
-            elif self.direction == self.settings.hero_direction["right"]:
-                self.change_image(self.move_right_images[self.image_order])
-            self.display_frame(self.move_size)
-        if self.status == self.settings.hero_status["stay"] and self.moving_left != self.moving_right:
-            #由stay状态变成移动状态
-            self.status = self.settings.hero_status["move"]
-            if self.moving_left == True:
-                self.direction = self.settings.hero_direction["left"]
-            elif self.moving_right == True:
-                self.direction = self.settings.hero_direction["right"]
+        #动画未播放完整，继续动画
+        if self.direction == self.settings.hero_direction["left"]:
+            self.change_image(self.move_left_images[self.image_order])
+        elif self.direction == self.settings.hero_direction["right"]:
+            self.change_image(self.move_right_images[self.image_order])
+        self.display_frame(self.move_size)
+
+    def squat_move(self):
+        self.velocityx = 2 * self.speedx * self.direction
+        self.velocityy = -self.speedy
+        #动画未播放完整，继续动画
+        if self.direction == self.settings.hero_direction["left"]:
+            self.change_image(self.squat_move_left_images[self.image_order])
+        elif self.direction == self.settings.hero_direction["right"]:
+            self.change_image(self.squat_move_right_images[self.image_order])
+        self.display_frame(self.squat_move_size)
 
     def stay_image(self):
         if self.direction == self.settings.hero_direction["left"]:
