@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="58b47976-73ba-47b9-8e13-acbfc4745616" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="58b47976-73ba-47b9-8e13-acbfc4745616" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -28,8 +26,8 @@
       <file leaf-file-name="game_functions.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/game_functions.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="189">
-              <caret line="9" column="32" lean-forward="true" selection-start-line="9" selection-start-column="32" selection-end-line="9" selection-end-column="32" />
+            <state relative-caret-position="378">
+              <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -58,8 +56,8 @@
       <file leaf-file-name="hero.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/hero.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1050">
-              <caret line="53" column="26" selection-start-line="53" selection-start-column="26" selection-end-line="53" selection-end-column="26" />
+            <state relative-caret-position="1722">
+              <caret line="85" column="26" selection-start-line="85" selection-start-column="26" selection-end-line="85" selection-end-column="26" />
             </state>
           </provider>
         </entry>
@@ -125,8 +123,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="66" />
-    <option name="y" value="62" />
+    <option name="x" value="350" />
+    <option name="y" value="48" />
     <option name="width" value="1295" />
     <option name="height" value="931" />
   </component>
@@ -148,11 +146,21 @@
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
-    <navigator proportions="" version="1">
+    <navigator currentView="Scope" currentSubView="Project Files" proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
+      <pane id="Scope">
+        <subPane subId="Project Files">
+          <expand>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="game" type="cbb8eebc:String" user="game" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -176,6 +184,270 @@
         <option name="mySdkHome" value="C:\python\python.exe" />
       </console-settings>
     </option>
+  </component>
+  <component name="RestoreUpdateTree" date="Moments ago" ActionInfo="_Update">
+    <UpdatedFiles>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Updated from server" />
+        <option name="myStatusName" value="Changed on server" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="CHANGED_ON_SERVER" />
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Updated" />
+          <option name="myStatusName" value="Changed" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="UPDATED" />
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/__pycache__/settings.cpython-36.pyc</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/hero.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/squat_attack_right_images/squat_1.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/squat_left.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/squat_right.jpeg</PATH>
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Created" />
+          <option name="myStatusName" value="Created" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="CREATED" />
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/attack_left_images/attack_1.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/attack_left_images/attack_2.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/attack_left_images/attack_3.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/attack_left_images/attack_4.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/attack_left_images/attack_5.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/attack_left_images/attack_6.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/attack_left_images/attack_7.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/attack_left_images/attack_8.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_left_images/jump_attack_1.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_left_images/jump_attack_10.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_left_images/jump_attack_11.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_left_images/jump_attack_12.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_left_images/jump_attack_13.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_left_images/jump_attack_14.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_left_images/jump_attack_15.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_left_images/jump_attack_2.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_left_images/jump_attack_3.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_left_images/jump_attack_4.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_left_images/jump_attack_5.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_left_images/jump_attack_6.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_left_images/jump_attack_7.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_left_images/jump_attack_8.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_left_images/jump_attack_9.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_right_images/jump_attack_1.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_right_images/jump_attack_10.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_right_images/jump_attack_11.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_right_images/jump_attack_12.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_right_images/jump_attack_13.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_right_images/jump_attack_14.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_right_images/jump_attack_15.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_right_images/jump_attack_2.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_right_images/jump_attack_3.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_right_images/jump_attack_4.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_right_images/jump_attack_5.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_right_images/jump_attack_6.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_right_images/jump_attack_7.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_right_images/jump_attack_8.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_right_images/jump_attack_9.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_left_images/jump_1.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_left_images/jump_10.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_left_images/jump_11.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_left_images/jump_12.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_left_images/jump_13.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_left_images/jump_14.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_left_images/jump_15.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_left_images/jump_2.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_left_images/jump_3.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_left_images/jump_4.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_left_images/jump_5.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_left_images/jump_6.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_left_images/jump_7.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_left_images/jump_8.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_left_images/jump_9.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_right_images/jump_1.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_right_images/jump_10.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_right_images/jump_11.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_right_images/jump_12.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_right_images/jump_13.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_right_images/jump_14.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_right_images/jump_15.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_right_images/jump_2.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_right_images/jump_3.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_right_images/jump_4.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_right_images/jump_5.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_right_images/jump_6.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_right_images/jump_7.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_right_images/jump_8.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_right_images/jump_9.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/move_left_images/move_1.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/move_left_images/move_2.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/move_left_images/move_3.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/move_left_images/move_4.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/move_left_images/move_5.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/move_left_images/move_6.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/move_left_images/move_7.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/move_right_images/move_1.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/move_right_images/move_2.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/move_right_images/move_3.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/move_right_images/move_4.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/move_right_images/move_5.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/move_right_images/move_6.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/move_right_images/move_7.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/squat_attack_left_images/squat_1.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/squat_attack_left_images/squat_2.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/squat_attack_left_images/squat_3.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/squat_attack_left_images/squat_4.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/squat_attack_left_images/squat_5.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/squat_attack_left_images/squat_6.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/squat_attack_left_images/squat_7.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/squat_attack_left_images/squat_8.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/squat_attack_left_images/squat_9.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/squat_move_left_images/squat_move_1.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/squat_move_left_images/squat_move_10.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/squat_move_left_images/squat_move_2.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/squat_move_left_images/squat_move_3.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/squat_move_left_images/squat_move_4.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/squat_move_left_images/squat_move_5.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/squat_move_left_images/squat_move_6.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/squat_move_left_images/squat_move_7.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/squat_move_left_images/squat_move_8.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/squat_move_left_images/squat_move_9.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/squat_move_right_images/squat_move_1.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/squat_move_right_images/squat_move_10.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/squat_move_right_images/squat_move_2.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/squat_move_right_images/squat_move_3.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/squat_move_right_images/squat_move_4.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/squat_move_right_images/squat_move_5.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/squat_move_right_images/squat_move_6.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/squat_move_right_images/squat_move_7.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/squat_move_right_images/squat_move_8.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/squat_move_right_images/squat_move_9.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/stay_left.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/stay_right.jpeg</PATH>
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Deleted" />
+          <option name="myStatusName" value="Deleted" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="true" />
+          <option name="myId" value="REMOVED_FROM_REPOSITORY" />
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_images/jump_attack_1.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_images/jump_attack_10.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_images/jump_attack_11.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_images/jump_attack_12.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_images/jump_attack_13.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_images/jump_attack_14.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_images/jump_attack_15.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_images/jump_attack_2.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_images/jump_attack_3.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_images/jump_attack_4.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_images/jump_attack_5.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_images/jump_attack_6.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_images/jump_attack_7.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_images/jump_attack_8.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_attack_images/jump_attack_9.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_images/jump_1.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_images/jump_10.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_images/jump_11.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_images/jump_12.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_images/jump_13.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_images/jump_14.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_images/jump_15.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_images/jump_2.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_images/jump_3.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_images/jump_4.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_images/jump_5.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_images/jump_6.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_images/jump_7.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_images/jump_8.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/jump_images/jump_9.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/move_images/move_1.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/move_images/move_2.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/move_images/move_3.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/move_images/move_4.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/move_images/move_5.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/move_images/move_6.jpeg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/move_images/move_7.jpeg</PATH>
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Restored" />
+          <option name="myStatusName" value="Will be restored" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="RESTORED" />
+        </FILE-GROUP>
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Modified" />
+        <option name="myStatusName" value="Modified" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="MODIFIED" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Skipped" />
+        <option name="myStatusName" value="Skipped" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="SKIPPED" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Merged with conflicts" />
+        <option name="myStatusName" value="Will be merged with conflicts" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="MERGED_WITH_CONFLICTS" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Merged with tree conflicts" />
+        <option name="myStatusName" value="Merged with tree conflicts" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="MERGED_WITH_TREE_CONFLICT" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Merged with property conflicts" />
+        <option name="myStatusName" value="Will be merged with property conflicts" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="MERGED_WITH_PROPERTY_CONFLICT" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Merged" />
+        <option name="myStatusName" value="Will be merged" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="MERGED" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Not in repository" />
+        <option name="myStatusName" value="Not in repository" />
+        <option name="mySupportsDeletion" value="true" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="UNKNOWN" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Locally added" />
+        <option name="myStatusName" value="Locally added" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="LOCALLY_ADDED" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Locally removed" />
+        <option name="myStatusName" value="Locally removed" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="LOCALLY_REMOVED" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Switched" />
+        <option name="myStatusName" value="Switched" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="SWITCHED" />
+      </FILE-GROUP>
+    </UpdatedFiles>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -274,11 +546,18 @@
       <option name="project" value="LOCAL" />
       <updated>1528738354894</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="test">
+      <created>1528788301150</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1528788301150</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="66" y="62" width="1295" height="931" extended-state="0" />
+    <frame x="350" y="48" width="1295" height="931" extended-state="0" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.26426896" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -347,7 +626,8 @@
     <MESSAGE value="create a ship for test" />
     <MESSAGE value="add ship for test" />
     <MESSAGE value="test for esc" />
-    <option name="LAST_COMMIT_MESSAGE" value="test for esc" />
+    <MESSAGE value="test" />
+    <option name="LAST_COMMIT_MESSAGE" value="test" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/map.py">
@@ -742,8 +1022,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/hero.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1050">
-          <caret line="53" column="26" selection-start-line="53" selection-start-column="26" selection-end-line="53" selection-end-column="26" />
+        <state relative-caret-position="1722">
+          <caret line="85" column="26" selection-start-line="85" selection-start-column="26" selection-end-line="85" selection-end-column="26" />
         </state>
       </provider>
     </entry>
@@ -783,8 +1063,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/game_functions.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="189">
-          <caret line="9" column="32" lean-forward="true" selection-start-line="9" selection-start-column="32" selection-end-line="9" selection-end-column="32" />
+        <state relative-caret-position="378">
+          <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>
