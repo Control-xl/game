@@ -129,6 +129,9 @@ class Hero():
         elif self.falling :
             #self.falling 应该改成判断self高度
             pass
+        elif self.status == self.settings.hero_status["squat_move"]:
+            #蹲着移动
+            pass
         elif self.status == self.settings.hero_status["move"] or self.moving_left != self.moving_right:
             # 最后是移动
             self.move_image()
@@ -140,7 +143,6 @@ class Hero():
             self.stay_image()
         #重置
         self.jumping = False
-
 
     def get_hurt(self, direction):
         # 发生碰撞时，调用的接口函数，
@@ -162,13 +164,6 @@ class Hero():
         elif self.direction == self.settings.hero_direction["right"]:
             self.image = self.hurt_right_images[self.image_order]
         self.display_frame(self.hurt_size)
-        self.frame_order += 1
-        if self.frame_order == self.frame_size:      #切换图片
-            self.frame_order = 0
-            self.image_order += 1
-            if self.image_order == self.hurt_size:
-                self.image_order = 0
-                self.status = self.settings.hero_status["stay"]
 
     def attack_image(self):
         #攻击动画
@@ -179,7 +174,6 @@ class Hero():
         elif self.direction == self.settings.hero_direction["right"]:
             self.change_image(self.attack_right_images[self.image_order])
         self.display_frame(self.attack_size)
-
 
     def squat_attack_image(self):
         if self.direction == self.settings.hero_direction["left"]:
@@ -210,7 +204,6 @@ class Hero():
             self.change_image(self.squat_left_image)
         elif self.direction == self.settings.hero_direction["right"]:
             self.change_image(self.squat_right_image)
-
 
     def fall_image(self):
         #坠落图片
@@ -266,7 +259,6 @@ class Hero():
             self.rect.bottom += self.velocityy
         pass
 
-
     def update(self):
         if self.moving_left == self.moving_right:
             self.velocityx = 0
@@ -286,7 +278,6 @@ class Hero():
                 else:
                     self.status = self.settings.hero_status["stay"]
 
-
     def change_image(self, image):
         rect_centerx = self.rect.centerx
         rect_bottom = self.rect.bottom
@@ -297,7 +288,7 @@ class Hero():
 
     def blitme(self):
         self.screen.blit(self.image, self.rect)
-    
+
 if __name__ == '__main__':
     pygame.init()
     screen = pygame.display.set_mode((1200, 800), 0, 0)
