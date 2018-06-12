@@ -8,30 +8,60 @@ class Hero():
         self.screen = screen
         self.map = map_
         self.settings = settings
-        self.frame_size = 5         #代表一个图片要放的帧数目
-        self.frame_order = 0
+        self.frame_order = 0     #正播放的帧序号
+        self.frame_size = 5      #代表一个图片要放的帧数目
+        self.image_order = 0     #正播放的图片序号
+        self.move_size = 7       #移动图片的总数目
+        self.attack_size = 8
+        self.squat_attack_size = 9
+        self.jump_attack_size = 15
+        self.jump_size = 15
+        self.hurt_size = 7
         self.stay_right_image = pygame.image.load('game/images/stay_right.jpeg')
         self.stay_left_image = pygame.image.load('game/images/stay_left.jpeg')
         self.squat_left_image = pygame.image.load('game/images/squat_left.jpeg')
         self.squat_right_image = pygame.image.load('game/images/squat_right.jpeg')
         self.move_left_images = []
         self.move_right_images = []
-        for i in range(1, 8):
+        for i in range(1, self.move_size+1):
             image_path = 'game/images/move_left_images/move_' + str(i) + '.jpeg'
             self.move_left_images.append(pygame.image.load(image_path))
             image_path = 'game/images/move_right_images/move_' + str(i) + '.jpeg'
             self.move_right_images.append(pygame.image.load(image_path))
-        self.squat_move_left_images = []
-        self.squat_move_right_images = []
+        self.attack_left_images = []
+        self.attack_right_images = []
+        for i in range(1, self.attack_size+1):
+            image_path = 'game/images/attack_left_images/attack_' + str(i) + '.jpeg'
+            self.attack_left_images.append(pygame.image.load(image_path))
+            image_path = 'game/images/attack_right_images/attack_' + str(i) + '.jpeg'
+            self.attack_right_images.append(pygame.image.load(image_path))
+        self.squat_attack_left_images = []
+        self.squat_attack_right_images = []
+        for i in range(1, self.squat_attack_size+1):
+            image_path = 'game/images/squat_attack_left_images/squat_' + str(i) + '.jpeg'
+            self.squat_attack_left_images.append(pygame.image.load(image_path))
+            image_path = 'game/images/squat_attack_right_images/squat_' + str(i) + '.jpeg'
+            self.squat_attack_right_images.append(pygame.image.load(image_path))
         self.jump_right_images = []
         self.jump_left_images = []
+        for i in range(1, self.jump_size+1):
+            image_path = 'game/images/jump_left_images/jump_' + str(i) + '.jpeg'
+            self.jump_left_images.append(pygame.image.load(image_path))
+            image_path = 'game/images/jump_right_images/jump_' + str(i) + '.jpeg'
+            self.jump_right_images.append(pygame.image.load(image_path))
+        self.jump_attack_left_images = []
+        self.jump_attack_right_images = []
+        for i in range(1, self.jump_attack_size+1):
+            image_path = 'game/images/jump_attack_left_images/jump_attack_' + str(i) + '.jpeg'
+            self.jump_attack_left_images.append(pygame.image.load(image_path))
+            image_path = 'game/images/jump_attack_right_images/jump_attack_' + str(i) + '.jpeg'
+            self.jump_attack_right_images.append(pygame.image.load(image_path))
+        self.squat_move_left_images = []
+        self.squat_move_right_images = []
         self.fall_right_images = []
         self.fall_left_images = []
         self.hurt_left_images = []
         self.hurt_right_images = []
-        self.attack_left_images = []
-        self.attack_right_images = []
-
         self.image = self.stay_right_image
         self.rect = self.image.get_rect()
         self.rect.centerx = self.screen.get_rect().centerx
@@ -45,11 +75,6 @@ class Hero():
         self.jumping = False
         self.squating = False
         self.falling = False
-        self.image_order = 0     #正播放的图片序号
-        self.move_size = 7       #移动图片的总数目
-        self.attack_size = 8
-        self.jump_size = 15
-        self.hurt_size = 7
         self.speedx = 1
         self.speedy = 1
         self.velocityx = 0
@@ -61,33 +86,39 @@ class Hero():
         if self.status == self.settings.hero_status["hurt"]:
             #受伤的优先级最高, 要更新图形
             self.hurt_image()
-            pass
         elif self.status == self.settings.hero_status["attack"] :
             #攻击优先级次之
             self.attack_image()
-            pass
         elif self.status == self.settings.hero_status["jump_attack"] :
             #跳起攻击
-            pass
+            self.jump_attack_image()
         elif self.status == self.settings.hero_status["squat_attack"] :
-            pass
+            #下蹲攻击
+            self.squat_attack_image()
         elif self.attacking : #当按下攻击键时
+            self.attacking = False
             if self.status == self.settings.hero_status["jump"] :
                 self.status = self.settings.hero_status["jump_attack"]
-            elif self.status == self.settings.hero_status["squat"] :
+            elif self.status == self.settings.hero_status["squat"]:
+                self.frame_order = 0
+                self.image_order = 0
                 self.status = self.settings.hero_status["squat_attack"]
             else :
+                self.frame_order = 0
+                self.image_order = 0
                 self.status = self.settings.hero_status["attack"]
-        elif self.status == self.settings.hero_status["jump"] or \
-             self.status == self.settings.hero_status["squat"] or \
-             self.status == self.settings.hero_status["fall"] :
-            # 跳跃，下蹲，掉落，第三
+        elif self.status == self.settings.hero_status["jump"] :
+            # 跳起
+            self.jump_image()
+        elif self.status == self.settings.hero_status["fall"] :
+            # 掉落，第三
             pass
         elif self.jumping :
             #跳跃键
-            pass
+            self.status = self.settings.hero_status["jump"]
         elif self.squating :
             #下蹲键
+            self.status = self.settings.hero_status["squat"]
             self.squat_image()
         elif self.falling :
             #self.falling 应该改成判断self高度
@@ -100,15 +131,11 @@ class Hero():
             # 静止状态
             self.status = self.settings.hero_status["stay"]
             self.velocityx = 0
+            self.stay_image()
+        #重置
+        
+        self.jumping = False
 
-    def display_frame(self, image_size):
-        self.frame_order += 1
-        if self.frame_order == self.frame_size:      #切换图片
-            self.frame_order = 0
-            self.image_order += 1
-            if self.image_order == image_size:
-                self.image_order = 0
-                self.status = self.settings.hero_status["stay"]
 
     def get_hurt(self, direction):
         # 发生碰撞时，调用的接口函数，
@@ -142,38 +169,43 @@ class Hero():
         #攻击动画
         #self.velocityx 不变
         self.velocityy = -self.speedy
-        if self.status == self.settings.hero_status["attack"] :
-            if self.direction == self.settings.hero_direction["left"]:
-                self.image = self.attack_left_images[self.image_order]
-            elif self.direction == self.settings.hero_direction["right"]:
-                self.image = self.attack_right_images[self.image_order]
-            self.display_frame(self.attack_size)
-        elif self.status == self.settings.hero_status["jump_attack"]:
-            #跳起时进行攻击
-            if self.direction == self.settings.hero_direction["left"]:
-                self.image = self.attack_left_images[self.image_order]
-            elif self.direction == self.settings.hero_direction["right"]:
-                self.image = self.attack_right_images[self.image_order]
-            self.display_frame(self.attack_size)
-        elif self.status == self.settings.hero_status["squat_attack"]:
-            #下蹲时进行攻击
-            if self.direction == self.settings.hero_direction["left"]:
-                self.image = self.attack_left_images[self.image_order]
-            elif self.direction == self.settings.hero_direction["right"]:
-                self.image = self.attack_right_images[self.image_order]
-            self.display_frame(self.attack_size)
+        if self.direction == self.settings.hero_direction["left"]:
+            self.change_image(self.attack_left_images[self.image_order])
+        elif self.direction == self.settings.hero_direction["right"]:
+            self.change_image(self.attack_right_images[self.image_order])
+        self.display_frame(self.attack_size)
+
+
+    def squat_attack_image(self):
+        if self.direction == self.settings.hero_direction["left"]:
+            self.change_image(self.squat_attack_left_images[self.image_order])
+        elif self.direction == self.settings.hero_direction["right"]:
+            self.change_image(self.squat_attack_right_images[self.image_order])
+        self.display_frame(self.squat_attack_size)
+
+    def jump_attack_image(self):
+        #跳起时进行攻击
+        if self.direction == self.settings.hero_direction["left"]:
+            self.change_image(self.jump_attack_left_images[self.image_order])
+        elif self.direction == self.settings.hero_direction["right"]:
+            self.change_image(self.jump_attack_right_images[self.image_order])
+        self.display_frame(self.jump_attack_size)
 
     def jump_image(self):
         #跳跃动画
-        pass
+        if self.direction == self.settings.hero_direction["left"]:
+            self.change_image(self.jump_left_images[self.image_order]) 
+        elif self.direction == self.settings.hero_direction["right"]:
+            self.change_image(self.jump_right_images[self.image_order])
+        self.display_frame(self.jump_size)
 
     def squat_image(self):
         #下蹲动画
-        pass
         if self.direction == self.settings.hero_direction["left"]:
-            self.image = self.squat_left_image
+            self.change_image(self.squat_left_image)
         elif self.direction == self.settings.hero_direction["right"]:
-            self.image = self.squat_right_image
+            self.change_image(self.squat_right_image)
+
 
     def fall_image(self):
         #坠落图片
@@ -186,9 +218,9 @@ class Hero():
         if self.status == self.settings.hero_status["move"]:
             #动画未播放完整，继续动画
             if self.direction == self.settings.hero_direction["left"]:
-                self.image = self.move_left_images[self.image_order]
+                self.change_image(self.move_left_images[self.image_order])
             elif self.direction == self.settings.hero_direction["right"]:
-                self.image = self.move_right_images[self.image_order]
+                self.change_image(self.move_right_images[self.image_order])
             self.display_frame(self.move_size)
         if self.status == self.settings.hero_status["stay"] and self.moving_left != self.moving_right:
             #由stay状态变成移动状态
@@ -197,6 +229,12 @@ class Hero():
                 self.direction = self.settings.hero_direction["left"]
             elif self.moving_right == True:
                 self.direction = self.settings.hero_direction["right"]
+
+    def stay_image(self):
+        if self.direction == self.settings.hero_direction["left"]:
+            self.change_image(self.stay_left_image)
+        elif self.direction == self.settings.hero_direction["right"]:
+            self.change_image(self.stay_right_image)
 
     def update_pos(self):
         self.update_herox()
@@ -229,6 +267,28 @@ class Hero():
             self.velocityx = 0
         self.update_status()
         self.update_pos()
+
+
+    def display_frame(self, image_size):
+        self.frame_order += 1
+        if self.frame_order == self.frame_size:      #切换图片
+            self.frame_order = 0
+            self.image_order += 1
+            if self.image_order == image_size:
+                self.image_order = 0
+                if self.squating:
+                    self.status = self.settings.hero_status["squat"]
+                else:
+                    self.status = self.settings.hero_status["stay"]
+
+
+    def change_image(self, image):
+        rect_centerx = self.rect.centerx
+        rect_bottom = self.rect.bottom
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.rect.centerx = rect_centerx
+        self.rect.bottom = rect_bottom
 
     def blitme(self):
         self.screen.blit(self.image, self.rect)
