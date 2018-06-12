@@ -17,7 +17,7 @@ class Hero():
         self.squat_attack_size = 9
         self.jump_attack_size = 15
         self.jump_size = 15
-        self.hurt_size = 7
+        self.hurt_size = 8
         self.stay_right_image = pygame.image.load('game/images/stay_right.jpeg')
         self.stay_left_image = pygame.image.load('game/images/stay_left.jpeg')
         self.squat_left_image = pygame.image.load('game/images/squat_left.jpeg')
@@ -68,6 +68,11 @@ class Hero():
         self.fall_left_images = []
         self.hurt_left_images = []
         self.hurt_right_images = []
+        for i in range(1, self.hurt_size+1):
+            image_path = 'game/images/hurt_left_images/hurt_' + str(i) + '.jpeg'
+            self.hurt_left_images.append(pygame.image.load(image_path))
+            image_path = 'game/images/hurt_right_images/hurt_' + str(i) + '.jpeg'
+            self.hurt_right_images.append(pygame.image.load(image_path))
         self.image = self.stay_right_image
         self.rect = self.image.get_rect()
         self.rect.centerx = self.screen.get_rect().centerx
@@ -156,18 +161,17 @@ class Hero():
 
     def get_hurt(self, direction):
         # 发生碰撞时，调用的接口函数，
-        # 更新人物方向，设置人物状态
+        # 更新人物方向，设置人物状态,direction表示来自左边的攻击
         # 若人物已经受伤，不再受伤
         if self.status != self.settings.hero_status["hurt"]:
             self.direction = direction
             self.status = self.settings.hero_status["hurt"]
             self.image_order = 0
             self.frame_order = 0
-        pass
 
     def hurt_image(self):
         #受伤动画，播完动画则结束受伤状态
-        self.velocityx = self.direction * speedx
+        self.velocityx = - self.direction * self.speedx
         self.velocityy = -self.speedy
         if self.direction == self.settings.hero_direction["left"]:
             self.image = self.hurt_left_images[self.image_order]
@@ -320,6 +324,10 @@ if __name__ == '__main__':
             if event.type == pygame.QUIT:
                 sys.exit()
             if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_k:
+                    hero.get_hurt(settings.hero_direction["left"])
+                if event.key == pygame.K_l:
+                    hero.get_hurt(settings.hero_direction["right"])
                 if event.key == pygame.K_j:
                     hero.attacking = True
                 if event.key == pygame.K_w:
