@@ -287,7 +287,6 @@ class Hero():
         self.update_status()
         self.update_pos()
 
-
     def display_frame(self, image_size):
         self.frame_order += 1
         if self.frame_order == self.frame_size:      #切换图片
