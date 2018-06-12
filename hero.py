@@ -12,6 +12,7 @@ class Hero():
         self.frame_size = 5      #代表一个图片要放的帧数目
         self.image_order = 0     #正播放的图片序号
         self.move_size = 7       #移动图片的总数目
+        self.squat_move_size = 10
         self.attack_size = 8
         self.squat_attack_size = 9
         self.jump_attack_size = 15
@@ -58,6 +59,11 @@ class Hero():
             self.jump_attack_right_images.append(pygame.image.load(image_path))
         self.squat_move_left_images = []
         self.squat_move_right_images = []
+        for i in range(1, self.squat_move_size+1):
+            image_path = 'game/images/squat_move_left_images/squat_move_' + str(i) + '.jpeg'
+            self.squat_move_left_images.append(pygame.image.load(image_path))
+            image_path = 'game/images/squat_move_right_images/squat_move_' + str(i) + '.jpeg'
+            self.squat_move_right_images.append(pygame.image.load(image_path))
         self.fall_right_images = []
         self.fall_left_images = []
         self.hurt_left_images = []
@@ -133,7 +139,6 @@ class Hero():
             self.velocityx = 0
             self.stay_image()
         #重置
-        
         self.jumping = False
 
 
