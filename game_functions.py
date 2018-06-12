@@ -4,7 +4,12 @@ import threading
 
 def check_keydown_events(event, settings, screen, hero):
     if event.key == pygame.K_ESCAPE:
-        print("tse")
+        if settings.pause:
+            settings.pause = False
+        else:
+            settings.pause = True
+        print(settings.pause)
+        return
     if event.key == pygame.K_RIGHT:
          # 右移
         hero.moving_right = True
@@ -34,11 +39,20 @@ def check_events(settings, screen, hero):
             check_keyup_events(event, hero)
 
 
-def update_screen(settings, screen, hero, map1, state_display):
+def update_screen(settings, screen, background_pic,hero, map1, state_display):
     screen.fill(settings.bg_color)
-    hero.blitme()
-    map1.blitme()
-    state_display.blitme()
+    if not settings.pause:
+        background_pic.set_alpha(255)
+        hero.blitme()
+        map1.blitme()
+        state_display.blitme()
+    else:
+        hero.blitme()
+        map1.blitme()
+        state_display.blitme()
+        screen.blit(background_pic, (0, 0))
+        background_pic.set_alpha(150)
+
 
 
 

@@ -16,7 +16,7 @@ class Settings():
         self.screen_width = 1200
         self.screen_height = 800
         # 屏幕背景颜色
-        self.bg_color = (230, 230, 230)
+        self.bg_color = (252, 252, 252)
 
         # 地图在屏幕上显示的左边界和右边界
         self.left_border = 0
@@ -25,6 +25,9 @@ class Settings():
         # 整个地图的最大长度
         self.map_max = 12000
 
+        # 暂停选项
+        self.pause = False
+        self.pause_bg_color = (157, 157, 157)
         # for test
         self.ship_speed_factor = 2
 

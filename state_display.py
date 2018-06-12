@@ -9,6 +9,7 @@ class StateDisplay():
         # 设置显示的血量
         self.blood = settings.hero_init_blood
         self.blood_ico = pygame.image.load('images/heart.ico')
+        self.blood_ico.convert()
         self.blood_rect = self.blood_ico.get_rect()
         self.blood_ico_list = []
         for i in range(self.blood):

@@ -22,23 +22,32 @@ if __name__ == '__main__':
     pygame.display.set_caption("game")
     # 生成窗口
     screen = pygame.display.set_mode((settings.screen_width, settings.screen_height))
+    # screen.fill(settings.bg_color)
+    # pygame.image.save(screen, 'images/background.jpeg')
+    background_pic = pygame.image.load('images/background.jpeg')
+    background_pic.convert(screen)
 
+
+    # pygame.image.save(screen, 'background.tga')
     # 初始化状态展示信息，之后根据英雄的状态变化
     state_display = StateDisplay(screen, settings)
 
     map1 = Map(screen, settings)
     # hero = Hero(screen, map1, settings)
     hero = Ship(settings, screen)
-    gf.play_bg_music("music/b.mp3")
+    # gf.play_bg_music("music/b.mp3")
     clock = pygame.time.Clock()
 
     while True:
-        clock.tick(1000)
+        # clock.tick(1000)
         gf.check_events(settings, screen, hero)
-        hero.update()
-        map1.update(hero)
-        state_display.update(hero)
-        gf.update_screen(settings, screen, hero, map1, state_display)
+        if settings.pause == False:
+            hero.update()
+            map1.update(hero)
+            state_display.update(hero)
+
+        gf.update_screen(settings, screen, background_pic, hero, map1, state_display, )
         pygame.display.flip()
+
 #run()
 
