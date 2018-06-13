@@ -35,6 +35,12 @@ class Settings():
         # 英雄位置,状态
         self.hero_bottom = 800
         self.hero_center = 600
+        self.hero_weapon_size = 3
+        self.hero_weapon = {
+            "fist" : 0,
+            "sword" : 1,
+            "gun" : 2,
+        }
         self.hero_status = {
             "stay" : 0,
             "move" : 1,
