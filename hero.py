@@ -11,68 +11,34 @@ class Hero():
         self.frame_order = 0     #正播放的帧序号
         self.frame_size = 5      #代表一个图片要放的帧数目
         self.image_order = 0     #正播放的图片序号
-        self.move_size = 7       #移动图片的总数目
-        self.squat_move_size = 10
-        self.attack_size = 8
-        self.squat_attack_size = 9
-        self.jump_attack_size = 15
-        self.jump_size = 15
+        self.move_size = 6       #移动图片的总数目
+        self.attack_size = 11
+        self.jump_size = 17
+        self.jump_attack_size = 17
         self.hurt_size = 8
+        self.squat_move_size = 10
+        self.squat_attack_size = 9
         self.stay_right_image = pygame.image.load('game/images/stay_right.jpeg')
         self.stay_left_image = pygame.image.load('game/images/stay_left.jpeg')
-        self.squat_left_image = pygame.image.load('game/images/squat_left.jpeg')
-        self.squat_right_image = pygame.image.load('game/images/squat_right.jpeg')
         self.move_left_images = []
         self.move_right_images = []
-        for i in range(1, self.move_size+1):
-            image_path = 'game/images/move_left_images/move_' + str(i) + '.jpeg'
-            self.move_left_images.append(pygame.image.load(image_path))
-            image_path = 'game/images/move_right_images/move_' + str(i) + '.jpeg'
-            self.move_right_images.append(pygame.image.load(image_path))
         self.attack_left_images = []
         self.attack_right_images = []
-        for i in range(1, self.attack_size+1):
-            image_path = 'game/images/attack_left_images/attack_' + str(i) + '.jpeg'
-            self.attack_left_images.append(pygame.image.load(image_path))
-            image_path = 'game/images/attack_right_images/attack_' + str(i) + '.jpeg'
-            self.attack_right_images.append(pygame.image.load(image_path))
-        self.squat_attack_left_images = []
-        self.squat_attack_right_images = []
-        for i in range(1, self.squat_attack_size+1):
-            image_path = 'game/images/squat_attack_left_images/squat_' + str(i) + '.jpeg'
-            self.squat_attack_left_images.append(pygame.image.load(image_path))
-            image_path = 'game/images/squat_attack_right_images/squat_' + str(i) + '.jpeg'
-            self.squat_attack_right_images.append(pygame.image.load(image_path))
         self.jump_right_images = []
         self.jump_left_images = []
-        for i in range(1, self.jump_size+1):
-            image_path = 'game/images/jump_left_images/jump_' + str(i) + '.jpeg'
-            self.jump_left_images.append(pygame.image.load(image_path))
-            image_path = 'game/images/jump_right_images/jump_' + str(i) + '.jpeg'
-            self.jump_right_images.append(pygame.image.load(image_path))
         self.jump_attack_left_images = []
         self.jump_attack_right_images = []
-        for i in range(1, self.jump_attack_size+1):
-            image_path = 'game/images/jump_attack_left_images/jump_attack_' + str(i) + '.jpeg'
-            self.jump_attack_left_images.append(pygame.image.load(image_path))
-            image_path = 'game/images/jump_attack_right_images/jump_attack_' + str(i) + '.jpeg'
-            self.jump_attack_right_images.append(pygame.image.load(image_path))
-        self.squat_move_left_images = []
-        self.squat_move_right_images = []
-        for i in range(1, self.squat_move_size+1):
-            image_path = 'game/images/squat_move_left_images/squat_move_' + str(i) + '.jpeg'
-            self.squat_move_left_images.append(pygame.image.load(image_path))
-            image_path = 'game/images/squat_move_right_images/squat_move_' + str(i) + '.jpeg'
-            self.squat_move_right_images.append(pygame.image.load(image_path))
-        self.fall_right_images = []
-        self.fall_left_images = []
         self.hurt_left_images = []
         self.hurt_right_images = []
-        for i in range(1, self.hurt_size+1):
-            image_path = 'game/images/hurt_left_images/hurt_' + str(i) + '.jpeg'
-            self.hurt_left_images.append(pygame.image.load(image_path))
-            image_path = 'game/images/hurt_right_images/hurt_' + str(i) + '.jpeg'
-            self.hurt_right_images.append(pygame.image.load(image_path))
+        self.squat_left_image = pygame.image.load('game/images/squat_left.jpeg')
+        self.squat_right_image = pygame.image.load('game/images/squat_right.jpeg')
+        self.squat_attack_left_images = []
+        self.squat_attack_right_images = []
+        self.squat_move_left_images = []
+        self.squat_move_right_images = []
+        self.fall_right_images = []
+        self.fall_left_images = []
+        self.load_images()
         self.image = self.stay_right_image
         self.rect = self.image.get_rect()
         self.rect.centerx = self.screen.get_rect().centerx
@@ -86,7 +52,7 @@ class Hero():
         self.jumping = False
         self.squating = False
         self.falling = False
-        self.speedx = 1
+        self.speedx = 2
         self.speedy = 1
         self.velocityx = 0
         self.velocityy = -self.speedy
@@ -310,6 +276,44 @@ class Hero():
     def blitme(self):
         self.screen.blit(self.image, self.rect)
 
+    def load_images(self):
+        for i in range(1, self.move_size+1):
+            image_path = 'game/images/move_left_images/move_left_images_' + str(i) + '.jpeg'
+            self.move_left_images.append(pygame.image.load(image_path))
+            image_path = 'game/images/move_right_images/move_right_images_' + str(i) + '.jpeg'
+            self.move_right_images.append(pygame.image.load(image_path))
+        for i in range(1, self.attack_size+1):
+            image_path = 'game/images/attack_left_images/attack_images_' + str(i) + '.jpeg'
+            self.attack_left_images.append(pygame.image.load(image_path))
+            image_path = 'game/images/attack_right_images/attack_images_' + str(i) + '.jpeg'
+            self.attack_right_images.append(pygame.image.load(image_path))
+        for i in range(1, self.jump_size+1):
+            image_path = 'game/images/jump_left_images/jump_images_' + str(i) + '.jpeg'
+            self.jump_left_images.append(pygame.image.load(image_path))
+            image_path = 'game/images/jump_right_images/jump_images_' + str(i) + '.jpeg'
+            self.jump_right_images.append(pygame.image.load(image_path))
+        for i in range(1, self.jump_attack_size+1):
+            image_path = 'game/images/jump_attack_left_images/jump_attack_images_' + str(i) + '.jpeg'
+            self.jump_attack_left_images.append(pygame.image.load(image_path))
+            image_path = 'game/images/jump_attack_right_images/jump_attack_images_' + str(i) + '.jpeg'
+            self.jump_attack_right_images.append(pygame.image.load(image_path))
+        for i in range(1, self.hurt_size+1):
+            image_path = 'game/images/hurt_left_images/hurt_' + str(i) + '.jpeg'
+            self.hurt_left_images.append(pygame.image.load(image_path))
+            image_path = 'game/images/hurt_right_images/hurt_' + str(i) + '.jpeg'
+            self.hurt_right_images.append(pygame.image.load(image_path))
+        for i in range(1, self.squat_attack_size+1):
+            image_path = 'game/images/squat_attack_left_images/squat_' + str(i) + '.jpeg'
+            self.squat_attack_left_images.append(pygame.image.load(image_path))
+            image_path = 'game/images/squat_attack_right_images/squat_' + str(i) + '.jpeg'
+            self.squat_attack_right_images.append(pygame.image.load(image_path))
+        for i in range(1, self.squat_move_size+1):
+            image_path = 'game/images/squat_move_left_images/squat_move_' + str(i) + '.jpeg'
+            self.squat_move_left_images.append(pygame.image.load(image_path))
+            image_path = 'game/images/squat_move_right_images/squat_move_' + str(i) + '.jpeg'
+            self.squat_move_right_images.append(pygame.image.load(image_path))
+
+
 if __name__ == '__main__':
     pygame.init()
     screen = pygame.display.set_mode((1200, 800), 0, 0)
@@ -344,7 +348,7 @@ if __name__ == '__main__':
                     hero.moving_right = False
                 if event.key == pygame.K_s:
                     hero.squating = False
-        screen.fill((0, 0, 0))
+        screen.fill((255, 255, 255))
         hero.update()
         hero.blitme()
         pygame.display.update()
