@@ -155,13 +155,6 @@ class Hero():
             self.change_image(self.attack_right_images[self.image_order])
         self.display_frame(self.attack_size)
 
-    def squat_attack_image(self):
-        if self.direction == self.settings.hero_direction["left"]:
-            self.change_image(self.squat_attack_left_images[self.image_order])
-        elif self.direction == self.settings.hero_direction["right"]:
-            self.change_image(self.squat_attack_right_images[self.image_order])
-        self.display_frame(self.squat_attack_size)
-
     def jump_attack_image(self):
         #跳起时进行攻击
         if self.direction == self.settings.hero_direction["left"]:
@@ -178,6 +171,27 @@ class Hero():
             self.change_image(self.jump_right_images[self.image_order])
         self.display_frame(self.jump_size)
 
+    def move_image(self):
+        #移动动画, 如果是状态发生改变
+        self.velocityx = self.speedx * self.direction
+        self.velocityy = -self.speedy
+        #动画未播放完整，继续动画
+        if self.direction == self.settings.hero_direction["left"]:
+            self.change_image(self.move_left_images[self.image_order])
+        elif self.direction == self.settings.hero_direction["right"]:
+            self.change_image(self.move_right_images[self.image_order])
+        self.display_frame(self.move_size)
+
+    def stay_image(self):
+        if self.direction == self.settings.hero_direction["left"]:
+            self.change_image(self.stay_left_image)
+        elif self.direction == self.settings.hero_direction["right"]:
+            self.change_image(self.stay_right_image)
+
+    def fall_image(self):
+        #坠落图片
+        pass
+
     def squat_image(self):
         #下蹲动画,有方向时变成滚动了
         if self.moving_left != self.moving_right :
@@ -191,21 +205,6 @@ class Hero():
         elif self.direction == self.settings.hero_direction["right"]:
             self.change_image(self.squat_right_image)
 
-    def fall_image(self):
-        #坠落图片
-        pass
-
-    def move_image(self):
-        #移动动画, 如果是状态发生改变
-        self.velocityx = self.speedx * self.direction
-        self.velocityy = -self.speedy
-        #动画未播放完整，继续动画
-        if self.direction == self.settings.hero_direction["left"]:
-            self.change_image(self.move_left_images[self.image_order])
-        elif self.direction == self.settings.hero_direction["right"]:
-            self.change_image(self.move_right_images[self.image_order])
-        self.display_frame(self.move_size)
-
     def squat_move(self):
         self.velocityx = 2 * self.speedx * self.direction
         self.velocityy = -self.speedy
@@ -216,11 +215,12 @@ class Hero():
             self.change_image(self.squat_move_right_images[self.image_order])
         self.display_frame(self.squat_move_size)
 
-    def stay_image(self):
+    def squat_attack_image(self):
         if self.direction == self.settings.hero_direction["left"]:
-            self.change_image(self.stay_left_image)
+            self.change_image(self.squat_attack_left_images[self.image_order])
         elif self.direction == self.settings.hero_direction["right"]:
-            self.change_image(self.stay_right_image)
+            self.change_image(self.squat_attack_right_images[self.image_order])
+        self.display_frame(self.squat_attack_size)
 
     def update_pos(self):
         self.update_herox()
@@ -340,7 +340,7 @@ if __name__ == '__main__':
                 if event.key == pygame.K_d:
                     hero.moving_right = True
                 if event.key == pygame.K_s:
-                    hero.squating = True
+                    hero.squating = False
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_a:
                     hero.moving_left = False
