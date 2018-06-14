@@ -282,6 +282,28 @@ class Hero():
     def blitme(self):
         self.screen.blit(self.image, self.rect)
 
+    def shoot_bullet(self):
+        #发射子弹
+        if self.status == self.settings.hero_status["jump"]:
+            pass
+        elif self.status == self.settings.hero_status["jump_attack"]:
+            pass
+        else :
+            pass
+
+    def change_weapon(self):
+        pass
+        self.weapon += 1
+        if self.weapon == self.weapon_size:
+            self.weapon = 0
+        pass
+
+    def get_attack_rect(self):
+        pass
+
+    def get_body_rect(self):
+        pass
+
     def load_images(self):
         #加载图片,
         for weapon in range(0, self.weapon_size):
