@@ -5,6 +5,8 @@ from map import Map
 from settings import Settings
 from ship import Ship
 from hero import Hero
+from pause_menu import PauseMenu
+
 from state_display import StateDisplay
 if __name__ == '__main__':
     #def run():
@@ -35,18 +37,20 @@ if __name__ == '__main__':
     map1 = Map(screen, settings)
     # hero = Hero(screen, map1, settings)
     hero = Ship(settings, screen)
+    pause_menu = PauseMenu(settings, screen)
+
     # gf.play_bg_music("music/b.mp3")
-    clock = pygame.time.Clock()
+    # clock = pygame.time.Clock()
 
     while True:
         # clock.tick(1000)
         gf.check_events(settings, screen, hero)
-        if settings.pause == False:
-            hero.update()
-            map1.update(hero)
-            state_display.update(hero)
+        # if settings.pause == False:
+        hero.update()
+        map1.update(hero)
+        state_display.update(hero)
 
-        gf.update_screen(settings, screen, background_pic, hero, map1, state_display, )
+        gf.update_screen(settings, screen, background_pic, hero, map1, state_display, pause_menu)
         pygame.display.flip()
 
 #run()

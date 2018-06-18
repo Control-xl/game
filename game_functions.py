@@ -8,6 +8,7 @@ def check_keydown_events(event, settings, screen, hero):
             settings.pause = False
         else:
             settings.pause = True
+
         print(settings.pause)
         return
     if event.key == pygame.K_RIGHT:
@@ -39,7 +40,7 @@ def check_events(settings, screen, hero):
             check_keyup_events(event, hero)
 
 
-def update_screen(settings, screen, background_pic,hero, map1, state_display):
+def update_screen(settings, screen, background_pic,hero, map1, state_display, pause_menu):
     screen.fill(settings.bg_color)
     if not settings.pause:
         background_pic.set_alpha(255)
@@ -47,10 +48,12 @@ def update_screen(settings, screen, background_pic,hero, map1, state_display):
         map1.blitme()
         state_display.blitme()
     else:
+        # 使得飞机、地图和状态元素仍然得到显示
         hero.blitme()
         map1.blitme()
         state_display.blitme()
         screen.blit(background_pic, (0, 0))
+        pause_menu.test()
         background_pic.set_alpha(150)
 
 
