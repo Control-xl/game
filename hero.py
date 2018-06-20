@@ -11,11 +11,11 @@ class Hero():
         self.frame_order = 0     #正播放的帧序号
         self.frame_size = 5      #代表一个图片要放的帧数目
         self.image_order = 0     #正播放的图片序号
-        self.move_size = 6       #移动图片的总数目
-        self.attack_size = 11
-        self.jump_size = 17
-        self.jump_attack_size = 17
-        self.hurt_size = 8
+        self.move_size = 6       #移动图片的总数目 6,12,6
+        self.attack_size = 11    # 11, 11, 11
+        self.jump_size = 17      # 17, 17, 17
+        self.jump_attack_size = 17   #17, 17, 17
+        self.hurt_size = 8       # 4, 4, 4
         self.squat_move_size = 10
         self.squat_attack_size = 9
         self.weapon_size = 1#self.settings.hero_weapon_size
