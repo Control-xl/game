@@ -54,6 +54,7 @@ class Hero():
         self.jumping = False
         self.squating = False
         self.falling = False
+        self.bullets = []
         self.speedx = 2
         self.speedy = 1
         self.velocityx = 0
@@ -74,7 +75,7 @@ class Hero():
         elif self.status == self.settings.hero_status["squat_attack"] :
             #下蹲攻击动画
             self.squat_attack_image()
-        elif self.attacking : #当按下攻击键时，进入攻击状态
+        elif self.attacking and self.weapon != self.settings.hero_weapon["gun"]: #当按下攻击键时，进入攻击状态
             self.attacking = False
             if self.status == self.settings.hero_status["jump"] :
                 self.status = self.settings.hero_status["jump_attack"]
@@ -125,6 +126,10 @@ class Hero():
             self.velocityx = 0
             self.stay_image()
         #重置
+        if self.status != self.settings.hero_status["hurt"]:
+            if self.weapon == self.settings.hero_weapon["gun"] and self.attacking: #gun无攻击状态
+                self.attacking = False
+                self.shoot_bullet()
         self.jumping = False
 
     def get_hurt(self, direction):
@@ -360,7 +365,16 @@ class Hero():
                 """
         
 
-
+class Bullet():
+    def __init__(self, pos, direction, screen):
+        self.screen = screen
+        self.rect = 
+        self.direction = direction
+        self.x = float(self.rect.x)
+    def update(self):
+        self.x += self.direction
+    def draw_bullet(self):
+        pass
 
 
 if __name__ == '__main__':
