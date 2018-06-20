@@ -11,11 +11,11 @@ class Hero():
         self.frame_order = 0     #正播放的帧序号
         self.frame_size = 5      #代表一个图片要放的帧数目
         self.image_order = 0     #正播放的图片序号
-        self.move_size = 6       #移动图片的总数目 6,12,6
+        self.move_size = [6, 12, 6]       #移动图片的总数目 6,12,6
         self.attack_size = 11    # 11, 11, 11
         self.jump_size = 17      # 17, 17, 17
         self.jump_attack_size = 17   #17, 17, 17
-        self.hurt_size = 8       # 4, 4, 4
+        self.hurt_size = 4       # 4, 4, 4
         self.squat_move_size = 10
         self.squat_attack_size = 9
         self.weapon_size = 1#self.settings.hero_weapon_size
@@ -75,7 +75,8 @@ class Hero():
         elif self.status == self.settings.hero_status["squat_attack"] :
             #下蹲攻击动画
             self.squat_attack_image()
-        elif self.attacking and self.weapon != self.settings.hero_weapon["gun"]: #当按下攻击键时，进入攻击状态
+        elif self.attacking and self.weapon != self.settings.hero_weapon["gun"]:
+            #当按下攻击键时，进入攻击状态
             self.attacking = False
             if self.status == self.settings.hero_status["jump"] :
                 self.status = self.settings.hero_status["jump_attack"]
@@ -123,6 +124,8 @@ class Hero():
         else : #self.status == self.settings.hero_status["stay"]
             # 静止状态
             self.status = self.settings.hero_status["stay"]
+            self.image_order = 0
+            self.frame_order = 0
             self.velocityx = 0
             self.stay_image()
         #重置
@@ -191,7 +194,7 @@ class Hero():
             self.change_image(self.move_left_images[self.weapon][self.image_order])
         elif self.direction == self.settings.hero_direction["right"]:
             self.change_image(self.move_right_images[self.weapon][self.image_order])
-        self.display_frame(self.move_size)
+        self.display_frame(self.move_size[self.weapon])
 
     def stay_image(self):
         if self.direction == self.settings.hero_direction["left"]:
@@ -297,11 +300,15 @@ class Hero():
             pass
 
     def change_weapon(self):
-        pass
         self.weapon += 1
         if self.weapon == self.weapon_size:
             self.weapon = 0
-        pass
+        if self.weapon == self.settings.hero_weapon["gun"]:
+            #持枪时无攻击状态
+            if self.status == self.settings.hero_status["attack"]:
+                self.status = self.settings.hero_status["stay"]
+            elif self.status == self.settings.hero_status["jump_attack"]:
+                self.status = self.settings.hero_status["jump"]
 
     def get_attack_rect(self):
         pass
@@ -310,7 +317,7 @@ class Hero():
         pass
 
     def load_images(self):
-        #加载图片,
+        #加载图片
         for weapon in range(0, self.weapon_size):
             self.stay_right_images.append(pygame.image.load('game/images/' + str(weapon) + '_stay_right.jpeg')) 
             self.stay_left_images.append(pygame.image.load('game/images/' + str(weapon) + '_stay_left.jpeg'))
@@ -324,7 +331,7 @@ class Hero():
             self.jump_attack_right_images.append([])
             self.hurt_left_images.append([])
             self.hurt_right_images.append([])
-            for i in range(1, self.move_size+1):
+            for i in range(1, self.move_size[weapon]+1):
                 image_path = 'game/images/' + str(weapon) + '_move_left_images/move_left_images_' + str(i) + '.jpeg'
                 self.move_left_images[weapon].append(pygame.image.load(image_path))
                 image_path = 'game/images/' + str(weapon) + '_move_right_images/move_right_images_' + str(i) + '.jpeg'
@@ -345,9 +352,9 @@ class Hero():
                 image_path = 'game/images/' + str(weapon) + '_jump_attack_right_images/jump_attack_images_' + str(i) + '.jpeg'
                 self.jump_attack_right_images[weapon].append(pygame.image.load(image_path))
             for i in range(1, self.hurt_size+1):
-                image_path = 'game/images/' + str(weapon) + '_hurt_left_images/hurt_' + str(i) + '.jpeg'
+                image_path = 'game/images/' + str(weapon) + '_hurt_left_images/hurt_images_' + str(i) + '.jpeg'
                 self.hurt_left_images[weapon].append(pygame.image.load(image_path))
-                image_path = 'game/images/' + str(weapon) + '_hurt_right_images/hurt_' + str(i) + '.jpeg'
+                image_path = 'game/images/' + str(weapon) + '_hurt_right_images/hurt_images_' + str(i) + '.jpeg'
                 self.hurt_right_images[weapon].append(pygame.image.load(image_path))
                 """
             self.squat_left_images.append(pygame.image.load('game/images/' + str(weapon) + '_squat_left.jpeg')) 
@@ -366,13 +373,15 @@ class Hero():
         
 
 class Bullet():
-    def __init__(self, pos, direction, screen):
+    def __init__(self, screen, pos, velocity):
         self.screen = screen
-        self.rect = 
-        self.direction = direction
+        self.rect = self.pygame.get_rect()
+        self.rect.left = self.pos[0]
+        self.rect.centery = self.pos[1]
+        self.velocity = velocity
         self.x = float(self.rect.x)
     def update(self):
-        self.x += self.direction
+        self.x += self.velocity
     def draw_bullet(self):
         pass
 
