@@ -1,6 +1,7 @@
 import pygame
 import sys
 from settings import Settings
+from weapon import Weapon, Bullet
 from map import Map
 
 class Hero():
@@ -9,7 +10,7 @@ class Hero():
         self.map = map_
         self.settings = settings
         self.frame_order = 0     #正播放的帧序号
-        self.frame_size = 5      #代表一个图片要放的帧数目
+        self.frame_size = 2      #代表一个图片要放的帧数目
         self.image_order = 0     #正播放的图片序号
         self.move_size = [6, 12, 6]       #移动图片的总数目 6,12,6
         self.attack_size = [11, 8, 0]    # 11, 11, 11
@@ -55,9 +56,9 @@ class Hero():
         self.squating = False
         self.falling = False
         self.bullets = []
-        self.shoot_en = 0
+        self.shoot_en = 0                               #shoot_en = 0时才能射击
         self.speedx = 2
-        self.speedy = 1
+        self.speedy = 20
         self.velocityx = 0
         self.velocityy = -self.speedy
 
@@ -155,9 +156,9 @@ class Hero():
         self.velocityx = - self.direction * self.speedx
         self.velocityy = self.speedy
         if self.direction == self.settings.hero_direction["left"]:
-            self.image = self.hurt_left_images[self.weapon][self.image_order]
+            self.change_image(self.hurt_left_images[self.weapon][self.image_order])
         elif self.direction == self.settings.hero_direction["right"]:
-            self.image = self.hurt_right_images[self.weapon][self.image_order]
+            self.change_image(self.hurt_right_images[self.weapon][self.image_order])
         self.display_frame(self.hurt_size)
 
     def attack_image(self):
@@ -174,13 +175,13 @@ class Hero():
         #跳起时进行攻击
         #self.velocityx 不变
         if self.image_order >= 6 and self.image_order <= 7:
-            self.velocityy = -3
+            self.velocityy = -self.speedy
         elif self.image_order >= 8 and self.image_order <= 10:
-            self.velocityy = -6
+            self.velocityy = -2 * self.speedy
         elif self.image_order == 11:
             self.velocityy = 0
         else :
-            self.velocityy = 5
+            self.velocityy = self.speedy
         if self.direction == self.settings.hero_direction["left"]:
             self.change_image(self.jump_attack_left_images[self.weapon][self.image_order])
         elif self.direction == self.settings.hero_direction["right"]:
@@ -190,12 +191,14 @@ class Hero():
     def jump_image(self):
         #跳跃动画
         #self.velocityx 不变
-        if self.image_order >= 6 and self.image_order <= 10:
-            self.velocityy = -5
+        if self.image_order >= 6 and self.image_order <= 7:
+            self.velocityy = -self.speedy
+        elif self.image_order >= 8 and self.image_order <= 10:
+            self.velocityy = - 2 * self.speedy
         elif self.image_order == 11:
             self.velocityy = 0
         else :
-            self.velocityy = 5
+            self.velocityy = self.speedy
         if self.direction == self.settings.hero_direction["left"]:
             self.change_image(self.jump_left_images[self.weapon][self.image_order]) 
         elif self.direction == self.settings.hero_direction["right"]:
@@ -261,14 +264,6 @@ class Hero():
     def update_herox(self):
         if self.rect.centerx > 0 and self.rect.centerx < 1200 and self.rect.bottom <= 800: #self.map.gety(self.rect.centerx + self.velocityx) :
             self.rect.centerx += self.velocityx
-            """
-        if self.status == self.settings.hero_status["move"] and self.direction == self.settings.hero_direction["left"] and \
-           self.rect.left > 0 and self.rect.bottom <= 800: #self.map.gety(self.rect.left - self.speedx) :
-            self.rect.centerx -= self.speedx
-        if self.status == self.settings.hero_status["move"] and self.direction == self.settings.hero_direction["right"] and \
-           self.rect.right < 1200 and self.rect.bottom <= 800: #self.map.gety(self.rect.right + self.speedx):
-            self.rect.centerx += self.speedx
-            """
 
     def update_heroy(self):
         #跳起与坠落
@@ -287,6 +282,105 @@ class Hero():
             self.velocityx = 0
         self.update_status()
         self.update_pos()
+        self.check_collision()
+
+
+
+
+    def shoot_bullet(self):
+        #发射子弹
+        if self.shoot_en > 0:
+            #无法发射子弹
+            return
+        if self.direction == self.settings.hero_direction["right"]:
+            bullet_velocity = 0.1
+            bullet_pos = []
+            bullet_pos.append(self.rect.right)
+        elif self.direction == self.settings.hero_direction["left"]:
+            bullet_velocity = -0.1
+            bullet_pos = []
+            bullet_pos.append(self.rect.left)
+        else :
+            return 
+        if self.status == self.settings.hero_status["stay"]:
+            #不同状态中，枪的纵坐标不同
+            bullet_pos.append(self.rect.bottom + 167)
+        elif self.status == self.settings.hero_status["move"]:
+            bullet_pos.append(self.rect.bottom + 175)
+        elif self.status == self.settings.hero_status["jump"]:
+            bullet_pos.append(self.rect.top - 40)
+        else :
+            return
+        new_bullet = Bullet(self.screen, bullet_pos, bullet_velocity)
+        self.shoot_en = 200
+
+    def change_weapon(self):
+        #更换武器，什么时候适合更换武器，当该使用武器对应的动画
+        self.weapon += 1
+        if self.weapon == self.weapon_size:
+            self.weapon = 0
+        if self.status == self.settings.hero_status["move"] and self.image_order >= 6: 
+            self.image_order -= 6
+        if self.weapon == self.settings.hero_weapon["gun"]:
+            #持枪时无攻击状态
+            if self.status == self.settings.hero_status["attack"]:
+                self.status = self.settings.hero_status["stay"]
+            elif self.status == self.settings.hero_status["jump_attack"]:
+                self.status = self.settings.hero_status["jump"]
+        if self.status == self.settings.hero_status["attack"] and self.image_order >= 8:
+            self.image_order = 7
+
+
+    def get_attack_rect(self):
+        pass
+
+    def get_body_rect(self):
+        rect = pygame.Rect(self.rect.left,self.rect.top, self.rect.width, self.rect.height)
+        return rect
+
+    def check_collision(self):
+        black = (0, 0, 0)
+        white = (255,255,255)
+        count = 0
+        flag = []
+        image_rect = self.get_body_rect()
+        for y in range(image_rect.top, image_rect.bottom):
+            x = image_rect.left
+            while x < image_rect.right:
+                x += 1
+                color = self.screen.get_at((x, y))
+                if color == black:
+                    left_color = self.screen.get_at((x-1, y))
+                    right_color = self.screen.get_at((x+1, y))
+                    up_color = self.screen.get_at((x, y-1))
+                    down_color = self.screen.get_at((x, y+1))
+            # x = self.rect.left
+            # while x < self.rect.right:
+            #     x += 1
+            #     color = self.screen.get_at((x, y))
+            #     if color == black:
+            #         left_color = self.screen.get_at((x-1, y))
+            #         right_color = self.screen.get_at((x+1, y))
+            #         up_color = self.screen.get_at((x, y-1))
+            #         down_color = self.screen.get_at((x, y+1))
+            #         if left_color == white or up_color == white or right_color == white or down_color == white:
+            #             count += 1
+            #             break
+            # x = self.rect.right
+            # while x > self.rect.left:
+            #     x -= 1
+            #     color = self.screen.get_at((x, y))
+            #     if color == black:
+            #         left_color = self.screen.get_at((x-1, y))
+            #         right_color = self.screen.get_at((x+1, y))
+            #         up_color = self.screen.get_at((x, y-1))
+            #         down_color = self.screen.get_at((x, y+1))
+            #         if left_color == white or up_color == white or right_color == white or down_color == white:
+            #             count += 1
+            #             break
+            
+            #print("200")
+
 
     def display_frame(self, image_size):
         #播放帧
@@ -302,7 +396,7 @@ class Hero():
                     self.status = self.settings.hero_status["stay"]
 
     def change_image(self, image):
-        #确保切换图片后，位置没有边
+        #确保切换图片后，位置没有变
         rect_centerx = self.rect.centerx
         rect_bottom = self.rect.bottom
         rect_top = self.rect.top
@@ -313,53 +407,11 @@ class Hero():
         if self.status == self.settings.hero_status["jump"] or self.status == self.settings.hero_status["jump_attack"]:
             if self.image_order == 7:
                 self.rect.top = rect_top
+        if self.rect.bottom > 600 :
+            self.rect.bottom = 600
 
     def blitme(self):
         self.screen.blit(self.image, self.rect)
-
-    def shoot_bullet(self):
-        #发射子弹
-        if self.shoot_en > 0:
-            #无法发射子弹
-            return
-        if self.direction == self.settings.hero_direction["right"]:
-            bullet_velocity = 2
-            bullet_pos = []
-            bullet_pos.append(self.rect.right)
-        elif self.direction == self.settings.hero_direction["left"]:
-            bullet_velocity = -2
-            bullet_pos = []
-            bullet_pos.append(self.rect.left)
-        else :
-            return 
-        if self.status == self.settings.hero_status["stay"]:
-            #不同状态中，枪的纵坐标不同
-            bullet_pos.append(self.rect.bottom + 167)
-        elif self.status == self.settings.hero_status["move"]:
-            bullet_pos.append(self.rect.bottom + 175)
-        elif self.status == self.settings.hero_status["jump"]:
-            bullet_pos.append(self.rect.top - 40)
-        else :
-            return
-        new_bullet = None
-        self.shoot_en = 20
-
-    def change_weapon(self):
-        self.weapon += 1
-        if self.weapon == self.weapon_size:
-            self.weapon = 0
-        if self.weapon == self.settings.hero_weapon["gun"]:
-            #持枪时无攻击状态
-            if self.status == self.settings.hero_status["attack"]:
-                self.status = self.settings.hero_status["stay"]
-            elif self.status == self.settings.hero_status["jump_attack"]:
-                self.status = self.settings.hero_status["jump"]
-
-    def get_attack_rect(self):
-        pass
-
-    def get_body_rect(self):
-        pass
 
     def load_image_file(self, weapon, images, images_path, images_size):
         #加载图片文件夹
@@ -403,7 +455,7 @@ if __name__ == '__main__':
     hero = Hero(screen, map_, settings)
     clock = pygame.time.Clock()
     while True:
-        clock.tick(100)
+        #clock.tick(100)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
