@@ -8,7 +8,7 @@ class Weapon(settings):
             "center": 0
             "radius": 0
         }
-        self.fist = rect
+        self.fist = None
         self.weapon = settings.weapon["fist"]
 
 
