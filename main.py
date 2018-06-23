@@ -6,7 +6,7 @@ from settings import Settings
 from ship import Ship
 from hero import Hero
 from pause_menu import PauseMenu
-from monster import Monster
+from monster import MonsterBall
 from state_display import StateDisplay
 if __name__ == '__main__':
     #def run():
@@ -14,6 +14,7 @@ if __name__ == '__main__':
     """初始化参数"""
     # 获得设定
     settings = Settings()
+
     # 音乐播放初始化
     pygame.mixer.pre_init(44100, 16, 2, 4096)
     # pygame初始化
@@ -29,7 +30,7 @@ if __name__ == '__main__':
     background_pic = pygame.image.load('images/background.jpeg')
     background_pic.convert(screen)
 
-    monster_test = Monster(settings, screen)
+    monster_ball = MonsterBall(settings, screen)
 
 
     # pygame.image.save(screen, 'background.tga')
@@ -46,7 +47,7 @@ if __name__ == '__main__':
 
     while True:
         #clock.tick(1000)
-        monster_test.update()
+        monster_ball.update()
 
         gf.check_events(settings, screen, hero)
         # if settings.pause == False:
@@ -55,7 +56,7 @@ if __name__ == '__main__':
         state_display.update(hero)
 
         gf.update_screen(settings, screen, background_pic,
-                         hero, map1, state_display, pause_menu, monster_test)
+                         hero, map1, state_display, pause_menu, monster_ball)
         pygame.display.flip()
 
 #run()

@@ -16,7 +16,7 @@ class Settings():
         self.screen_width = 1200
         self.screen_height = 800
         # 屏幕背景颜色
-        self.bg_color = (252, 252, 252)
+        self.bg_color = (255, 255, 255)
 
         # 地图在屏幕上显示的左边界和右边界
         self.left_border = 0
@@ -32,9 +32,13 @@ class Settings():
         self.ship_speed_factor = 2
 
         # 怪物1号的中心移动速度
-        self.center_speed = 0.1
+        self.center_speed = 0.03
+        # 怪物1号血量
+        self.blood = 5
         # 怪物1号的保护圈数量
         self.protection_number = 5
+        # 怪物1号保护圈半径
+        self.protection_radius = 75
         # 怪物1号保护圈转动速度
         self.protection_speed = 0.1
         # 怪物1号保护圈离中心距离
