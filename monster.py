@@ -28,11 +28,8 @@ class MonsterBall():
         self.protection_position = 0
 
 
-    # def check_collisions(self, weapon, position):
-
-
-    def update(self):
-
+    def update(self, weapon):
+        self.check_collisions(weapon)
         self.protection_position = (self.protection_position + self.protection_speed) % 360
         self.center_x += self.center_speed
 
@@ -44,9 +41,16 @@ class MonsterBall():
                     math.cos(math.radians(self.protection_position + i * protection_range)))
             pst_y = int(self.center_y + self.protection_center_distance * \
                     math.sin(math.radians(self.protection_position + i * protection_range)))
-            pygame.draw.circle(self.screen, (0, 0, 0), (pst_x, pst_y), self.protection_radius)
+            pygame.draw.circle(self.screen, (50, 50, 50), (pst_x, pst_y), self.protection_radius)
+
+    def check_collisions(self, weapon):
+        for bullet in weapon.bullets:
+            if(self.bullet_collisions(bullet))
 
 
+
+    def bullet_collisions(self, bullet):
+        if
 
 class MonsterPlane():
 
