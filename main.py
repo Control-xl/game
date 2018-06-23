@@ -6,7 +6,7 @@ from settings import Settings
 from ship import Ship
 from hero import Hero
 from pause_menu import PauseMenu
-
+from monster import Monster
 from state_display import StateDisplay
 if __name__ == '__main__':
     #def run():
@@ -29,6 +29,8 @@ if __name__ == '__main__':
     background_pic = pygame.image.load('images/background.jpeg')
     background_pic.convert(screen)
 
+    monster_test = Monster(settings, screen)
+
 
     # pygame.image.save(screen, 'background.tga')
     # 初始化状态展示信息，之后根据英雄的状态变化
@@ -40,17 +42,20 @@ if __name__ == '__main__':
     pause_menu = PauseMenu(settings, screen)
 
     # gf.play_bg_music("music/b.mp3")
-    # clock = pygame.time.Clock()
+    clock = pygame.time.Clock()
 
     while True:
-        # clock.tick(1000)
+        #clock.tick(1000)
+        monster_test.update()
+
         gf.check_events(settings, screen, hero)
         # if settings.pause == False:
         hero.update()
         map1.update(hero)
         state_display.update(hero)
 
-        gf.update_screen(settings, screen, background_pic, hero, map1, state_display, pause_menu)
+        gf.update_screen(settings, screen, background_pic,
+                         hero, map1, state_display, pause_menu, monster_test)
         pygame.display.flip()
 
 #run()

@@ -40,13 +40,14 @@ def check_events(settings, screen, hero):
             check_keyup_events(event, hero)
 
 
-def update_screen(settings, screen, background_pic,hero, map1, state_display, pause_menu):
+def update_screen(settings, screen, background_pic,hero, map1, state_display, pause_menu, monster_test):
     screen.fill(settings.bg_color)
     if not settings.pause:
         background_pic.set_alpha(255)
         hero.blitme()
         map1.blitme()
         state_display.blitme()
+        monster_test.blitme()
     else:
         # 使得飞机、地图和状态元素仍然得到显示
         hero.blitme()

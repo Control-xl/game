@@ -31,6 +31,16 @@ class Settings():
         # for test
         self.ship_speed_factor = 2
 
+        # 怪物1号的中心移动速度
+        self.center_speed = 0.1
+        # 怪物1号的保护圈数量
+        self.protection_number = 5
+        # 怪物1号保护圈转动速度
+        self.protection_speed = 0.1
+        # 怪物1号保护圈离中心距离
+        self.protection_center_distance = 200
+
+
 
         # 英雄位置,状态
         self.hero_bottom = 800
