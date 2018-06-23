@@ -44,10 +44,10 @@ if __name__ == '__main__':
 
     # gf.play_bg_music("music/b.mp3")
     clock = pygame.time.Clock()
-
+    weapon = 1
     while True:
         #clock.tick(1000)
-        monster_ball.update()
+        monster_ball.update(weapon)
 
         gf.check_events(settings, screen, hero)
         # if settings.pause == False:
