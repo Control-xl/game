@@ -319,7 +319,7 @@ class Hero():
     def load_images(self):
         #加载图片
         for weapon in range(0, self.weapon_size):
-            self.stay_right_images.append(pygame.image.load('game/images/' + str(weapon) + '_stay_right.jpeg')) 
+            self.stay_right_images.append(pygame.image.load('game/images/' + str(weapon) + '_stay_1.jpeg')) 
             self.stay_left_images.append(pygame.image.load('game/images/' + str(weapon) + '_stay_left.jpeg'))
             self.move_left_images.append([])
             self.move_right_images.append([])
@@ -372,6 +372,17 @@ class Hero():
                 """
         
 
+class Weapon(settings):
+    self.settings = settings
+    self.bullets = []
+    self.sword = {
+        "center" : 0
+        "radius" : 0
+    }
+    self.fist = rect
+    self.weapon = settings.weapon["fist"]
+
+
 class Bullet():
     def __init__(self, screen, pos, velocity):
         self.screen = screen
@@ -420,7 +431,7 @@ if __name__ == '__main__':
                     hero.moving_right = False
                 if event.key == pygame.K_s:
                     hero.squating = False
-        screen.fill((255, 255, 255))
+        screen.fill((200, 200, 200))
         hero.update()
         hero.blitme()
         pygame.display.update()
