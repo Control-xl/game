@@ -22,5 +22,6 @@ class Bullet():
         self.x = float(self.rect.x)
     def update(self):
         self.x += self.velocity
+        self.rect.x = self.x
     def blitme(self):
         pygame.draw.rect(self.screen, (0,0,0), self.rect)
