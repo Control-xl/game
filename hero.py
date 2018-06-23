@@ -335,10 +335,12 @@ class Hero():
         pass
 
     def get_body_rect(self):
+        #可以直接用get_at先计算出像素点的位置
         rect = pygame.Rect(self.rect.left,self.rect.top, self.rect.width, self.rect.height)
         return rect
 
     def check_collision(self):
+        #get_at(pos)表示读取screen中一个像素点的颜色
         black = (0, 0, 0)
         white = (255,255,255)
         count = 0
@@ -412,6 +414,11 @@ class Hero():
 
     def blitme(self):
         self.screen.blit(self.image, self.rect)
+
+    def get_image_frame(self):
+        #获取火柴人的框架，框架用列表来存取,
+        #self.image_frame[direction][Weapon][status][image_order]代表一个图像，一个图像的框架
+        pass
 
     def load_image_file(self, weapon, images, images_path, images_size):
         #加载图片文件夹
