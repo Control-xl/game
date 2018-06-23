@@ -53,6 +53,10 @@ def update_screen(settings, screen, background_pic,hero, map1, state_display, pa
         hero.blitme()
         map1.blitme()
         state_display.blitme()
+        monster_test.blitme()
+
+
+        # 灰色元素
         screen.blit(background_pic, (0, 0))
         pause_menu.test()
         background_pic.set_alpha(150)

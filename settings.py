@@ -31,6 +31,7 @@ class Settings():
         # for test
         self.ship_speed_factor = 2
 
+
         # 怪物1号的中心移动速度
         self.center_speed = 0.03
         # 怪物1号血量
@@ -43,7 +44,14 @@ class Settings():
         self.protection_speed = 0.1
         # 怪物1号保护圈离中心距离
         self.protection_center_distance = 200
+        # 怪物1号保护圈颜色
+        self.monster_ball_protection_color = [(0xFA, 0x00, 0x00), (0x00, 0x00, 0xC6),
+                                 (0xFF, 0xFF, 0x37), (0x00, 0xBB, 0x00),
+                                 (0xAE, 0x57, 0xA4)]
 
+        self.sword_damage = 2
+        self.bullet_damage = 1
+        self.fist_damage = 1
 
 
         # 英雄位置,状态
