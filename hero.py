@@ -12,13 +12,13 @@ class Hero():
         self.frame_size = 5      #代表一个图片要放的帧数目
         self.image_order = 0     #正播放的图片序号
         self.move_size = [6, 12, 6]       #移动图片的总数目 6,12,6
-        self.attack_size = 11    # 11, 11, 11
+        self.attack_size = [11, 8, 0]    # 11, 11, 11
         self.jump_size = 17      # 17, 17, 17
-        self.jump_attack_size = 17   #17, 17, 17
+        self.jump_attack_size = [17, 17, 0]   #17, 17, 17
         self.hurt_size = 4       # 4, 4, 4
         self.squat_move_size = 10
         self.squat_attack_size = 9
-        self.weapon_size = 1#self.settings.hero_weapon_size
+        self.weapon_size = 3#self.settings.hero_weapon_size
         self.stay_right_images = []
         self.stay_left_images = []
         self.move_left_images = []
@@ -127,6 +127,7 @@ class Hero():
             self.image_order = 0
             self.frame_order = 0
             self.velocityx = 0
+            self.velocityy = self.speedy
             self.stay_image()
         #重置
         if self.status != self.settings.hero_status["hurt"]:
@@ -148,7 +149,7 @@ class Hero():
     def hurt_image(self):
         #受伤动画，播完动画则结束受伤状态
         self.velocityx = - self.direction * self.speedx
-        self.velocityy = -self.speedy
+        self.velocityy = self.speedy
         if self.direction == self.settings.hero_direction["left"]:
             self.image = self.hurt_left_images[self.weapon][self.image_order]
         elif self.direction == self.settings.hero_direction["right"]:
@@ -157,28 +158,40 @@ class Hero():
 
     def attack_image(self):
         #攻击动画
-        #self.velocityx 不变
-        self.velocityy = -self.speedy
+        self.velocityx = 0 #不变dad
+        self.velocityy = self.speedy
         if self.direction == self.settings.hero_direction["left"]:
             self.change_image(self.attack_left_images[self.weapon][self.image_order])
         elif self.direction == self.settings.hero_direction["right"]:
             self.change_image(self.attack_right_images[self.weapon][self.image_order])
-        self.display_frame(self.attack_size)
+        self.display_frame(self.attack_size[self.weapon])
 
     def jump_attack_image(self):
         #跳起时进行攻击
         #self.velocityx 不变
-        #self.velocityy
+        if self.image_order >= 6 and self.image_order <= 7:
+            self.velocityy = -3
+        elif self.image_order >= 8 and self.image_order <= 10:
+            self.velocityy = -6
+        elif self.image_order == 11:
+            self.velocityy = 0
+        else :
+            self.velocityy = 5
         if self.direction == self.settings.hero_direction["left"]:
             self.change_image(self.jump_attack_left_images[self.weapon][self.image_order])
         elif self.direction == self.settings.hero_direction["right"]:
             self.change_image(self.jump_attack_right_images[self.weapon][self.image_order])
-        self.display_frame(self.jump_attack_size)
+        self.display_frame(self.jump_attack_size[self.weapon])
 
     def jump_image(self):
         #跳跃动画
         #self.velocityx 不变
-        #self.velocityy
+        if self.image_order >= 6 and self.image_order <= 10:
+            self.velocityy = -5
+        elif self.image_order == 11:
+            self.velocityy = 0
+        else :
+            self.velocityy = 5
         if self.direction == self.settings.hero_direction["left"]:
             self.change_image(self.jump_left_images[self.weapon][self.image_order]) 
         elif self.direction == self.settings.hero_direction["right"]:
@@ -188,7 +201,7 @@ class Hero():
     def move_image(self):
         #移动动画, 如果是状态发生改变
         self.velocityx = self.speedx * self.direction
-        self.velocityy = -self.speedy
+        self.velocityy = self.speedy
         #动画未播放完整，继续动画
         if self.direction == self.settings.hero_direction["left"]:
             self.change_image(self.move_left_images[self.weapon][self.image_order])
@@ -238,6 +251,7 @@ class Hero():
 
     def update_pos(self):
         self.update_herox()
+        self.update_heroy()
         pass
 
     def update_herox(self):
@@ -254,11 +268,14 @@ class Hero():
 
     def update_heroy(self):
         #跳起与坠落
-        if self.velocityy > 0:
-            self.rect.bottom += self.velocityy
-            pass
-        elif self.rect.bottom < self.map.gety(self.rect.centerx):
-            self.rect.bottom += self.velocityy
+        self.rect.bottom += self.velocityy
+        if self.rect.bottom > 600:
+            self.rect.bottom = 600
+        # if self.velocityy > 0:
+        #     self.rect.bottom += self.velocityy
+        #     pass
+        # elif self.rect.bottom < self.map.gety(self.rect.centerx):
+        #     self.rect.bottom += self.velocityy
         pass
 
     def update(self):
@@ -282,10 +299,14 @@ class Hero():
     def change_image(self, image):
         rect_centerx = self.rect.centerx
         rect_bottom = self.rect.bottom
+        rect_top = self.rect.top
         self.image = image
         self.rect = self.image.get_rect()
         self.rect.centerx = rect_centerx
         self.rect.bottom = rect_bottom
+        if self.status == self.settings.hero_status["jump"] or self.status == self.settings.hero_status["jump_attack"]:
+            if self.image_order == 7:
+                self.rect.top = rect_top
 
     def blitme(self):
         self.screen.blit(self.image, self.rect)
@@ -316,67 +337,42 @@ class Hero():
     def get_body_rect(self):
         pass
 
+    def load_image_file(self, weapon, images, images_path, images_size):
+        images.append([])
+        for i in range(0, images_size):
+            num = str(i)
+            if images_size >= 10 and i < 10:
+                num = '0' + str(i)
+            image_path = 'game/images/' + str(weapon) + images_path + num + '.jpg'
+            images[weapon].append(pygame.image.load(image_path))
+
     def load_images(self):
         #加载图片
         for weapon in range(0, self.weapon_size):
-            self.stay_right_images.append(pygame.image.load('game/images/' + str(weapon) + '_stay_1.jpeg')) 
+            self.stay_right_images.append(pygame.image.load('game/images/' + str(weapon) + '_stay_right.jpeg'))
             self.stay_left_images.append(pygame.image.load('game/images/' + str(weapon) + '_stay_left.jpeg'))
-            self.move_left_images.append([])
-            self.move_right_images.append([])
-            self.attack_left_images.append([])
-            self.attack_right_images.append([])
-            self.jump_right_images.append([])
-            self.jump_left_images.append([])
-            self.jump_attack_left_images.append([])
-            self.jump_attack_right_images.append([])
-            self.hurt_left_images.append([])
-            self.hurt_right_images.append([])
-            for i in range(1, self.move_size[weapon]+1):
-                image_path = 'game/images/' + str(weapon) + '_move_left_images/move_left_images_' + str(i) + '.jpeg'
-                self.move_left_images[weapon].append(pygame.image.load(image_path))
-                image_path = 'game/images/' + str(weapon) + '_move_right_images/move_right_images_' + str(i) + '.jpeg'
-                self.move_right_images[weapon].append(pygame.image.load(image_path))
-            for i in range(1, self.attack_size+1):
-                image_path = 'game/images/' + str(weapon) + '_attack_left_images/attack_images_' + str(i) + '.jpeg'
-                self.attack_left_images[weapon].append(pygame.image.load(image_path))
-                image_path = 'game/images/' + str(weapon) + '_attack_right_images/attack_images_' + str(i) + '.jpeg'
-                self.attack_right_images[weapon].append(pygame.image.load(image_path))
-            for i in range(1, self.jump_size+1):
-                image_path = 'game/images/' + str(weapon) + '_jump_left_images/jump_images_' + str(i) + '.jpeg'
-                self.jump_left_images[weapon].append(pygame.image.load(image_path))
-                image_path = 'game/images/' + str(weapon) + '_jump_right_images/jump_images_' + str(i) + '.jpeg'
-                self.jump_right_images[weapon].append(pygame.image.load(image_path))
-            for i in range(1, self.jump_attack_size+1):
-                image_path = 'game/images/' + str(weapon) + '_jump_attack_left_images/jump_attack_images_' + str(i) + '.jpeg'
-                self.jump_attack_left_images[weapon].append(pygame.image.load(image_path))
-                image_path = 'game/images/' + str(weapon) + '_jump_attack_right_images/jump_attack_images_' + str(i) + '.jpeg'
-                self.jump_attack_right_images[weapon].append(pygame.image.load(image_path))
-            for i in range(1, self.hurt_size+1):
-                image_path = 'game/images/' + str(weapon) + '_hurt_left_images/hurt_images_' + str(i) + '.jpeg'
-                self.hurt_left_images[weapon].append(pygame.image.load(image_path))
-                image_path = 'game/images/' + str(weapon) + '_hurt_right_images/hurt_images_' + str(i) + '.jpeg'
-                self.hurt_right_images[weapon].append(pygame.image.load(image_path))
-                """
-            self.squat_left_images.append(pygame.image.load('game/images/' + str(weapon) + '_squat_left.jpeg')) 
-            self.squat_right_images.append(pygame.image.load('game/images/' + str(weapon) + '_squat_right.jpeg')) 
-            for i in range(1, self.squat_attack_size+1):
-                image_path = 'game/images/' + str(weapon) + '_squat_attack_left_images/squat_' + str(i) + '.jpeg'
-                self.squat_attack_left_images.append(pygame.image.load(image_path))
-                image_path = 'game/images/' + str(weapon) + '_squat_attack_right_images/squat_' + str(i) + '.jpeg'
-                self.squat_attack_right_images.append(pygame.image.load(image_path))
-            for i in range(1, self.squat_move_size+1):
-                image_path = 'game/images/' + str(weapon) + '_squat_move_left_images/squat_move_' + str(i) + '.jpeg'
-                self.squat_move_left_images.append(pygame.image.load(image_path))
-                image_path = 'game/images/' + str(weapon) + '_squat_move_right_images/squat_move_' + str(i) + '.jpeg'
-                self.squat_move_right_images.append(pygame.image.load(image_path))
-                """
-        
+            self.load_image_file(weapon, self.move_left_images, '_move_left_images/move_images', self.move_size[weapon])
+            self.load_image_file(weapon, self.move_right_images, '_move_right_images/move_images', self.move_size[weapon])
+            self.load_image_file(weapon, self.attack_left_images, '_attack_left_images/attack_images', self.attack_size[weapon])
+            self.load_image_file(weapon, self.attack_right_images, '_attack_right_images/attack_images', self.attack_size[weapon])
+            self.load_image_file(weapon, self.jump_left_images, '_jump_left_images/jump_images', self.jump_size)
+            self.load_image_file(weapon, self.jump_right_images, '_jump_right_images/jump_images', self.jump_size)
+            self.load_image_file(weapon, self.jump_attack_left_images, '_jump_attack_left_images/jump_attack_images', self.jump_attack_size[weapon])
+            self.load_image_file(weapon, self.jump_attack_right_images, '_jump_attack_right_images/jump_attack_images', self.jump_attack_size[weapon])
+            self.load_image_file(weapon, self.hurt_left_images, '_hurt_left_images/hurt_images', self.hurt_size)
+            self.load_image_file(weapon, self.hurt_right_images, '_hurt_right_images/hurt_images', self.hurt_size)
+            # self.squat_left_images.append(pygame.image.load('game/images/' + str(weapon) + '_squat_left.jpeg')) 
+            # self.squat_right_images.append(pygame.image.load('game/images/' + str(weapon) + '_squat_right.jpeg'))
+            # self.load_image_file(weapon, self.squat_attack_left_images, '_squat_attack_left_images/squat_attack_images_', self.squat_attack_size)
+            # self.load_image_file(weapon, self.squat_attack_right_images, '_squat_attack_right_images/squat_attack_images_', self.squat_attack_size)
+            # self.load_image_file(weapon, self.squat_move_left_images, '_squat_move_left_images/squat_move_images_', self.squat_move_size)
+            # self.load_image_file(weapon, self.squat_move_right_images, '_squat_move_right_images/squat_move_images_', self.squat_move_size)
 
 
 
 if __name__ == '__main__':
     pygame.init()
-    screen = pygame.display.set_mode((1200, 800), 0, 0)
+    screen = pygame.display.set_mode((1000, 600), 0, 0)
     settings = Settings()
     map_ = Map(screen, settings)
     hero = Hero(screen, map_, settings)
@@ -401,6 +397,8 @@ if __name__ == '__main__':
                     hero.moving_right = True
                 if event.key == pygame.K_s:
                     hero.squating = False
+                if event.key == pygame.K_0:
+                    hero.change_weapon()
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_a:
                     hero.moving_left = False
@@ -408,7 +406,7 @@ if __name__ == '__main__':
                     hero.moving_right = False
                 if event.key == pygame.K_s:
                     hero.squating = False
-        screen.fill((200, 200, 200))
+        screen.fill((255, 255, 255))
         hero.update()
         hero.blitme()
         pygame.display.update()
