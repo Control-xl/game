@@ -55,6 +55,7 @@ class Hero():
         self.squating = False
         self.falling = False
         self.bullets = []
+        self.shoot_en = 0
         self.speedx = 2
         self.speedy = 1
         self.velocityx = 0
@@ -134,7 +135,10 @@ class Hero():
             if self.weapon == self.settings.hero_weapon["gun"] and self.attacking: #gun无攻击状态
                 self.attacking = False
                 self.shoot_bullet()
+        if self.shoot_en > 0:
+            self.shoot_en -= 1
         self.jumping = False
+        
 
     def get_hurt(self, direction):
         # 发生碰撞时，调用的接口函数，
@@ -285,6 +289,7 @@ class Hero():
         self.update_pos()
 
     def display_frame(self, image_size):
+        #播放帧
         self.frame_order += 1
         if self.frame_order == self.frame_size:      #切换图片
             self.frame_order = 0
@@ -297,6 +302,7 @@ class Hero():
                     self.status = self.settings.hero_status["stay"]
 
     def change_image(self, image):
+        #确保切换图片后，位置没有边
         rect_centerx = self.rect.centerx
         rect_bottom = self.rect.bottom
         rect_top = self.rect.top
@@ -313,12 +319,30 @@ class Hero():
 
     def shoot_bullet(self):
         #发射子弹
-        if self.status == self.settings.hero_status["jump"]:
-            pass
-        elif self.status == self.settings.hero_status["jump_attack"]:
-            pass
+        if self.shoot_en > 0:
+            #无法发射子弹
+            return
+        if self.direction == self.settings.hero_direction["right"]:
+            bullet_velocity = 2
+            bullet_pos = []
+            bullet_pos.append(self.rect.right)
+        elif self.direction == self.settings.hero_direction["left"]:
+            bullet_velocity = -2
+            bullet_pos = []
+            bullet_pos.append(self.rect.left)
         else :
-            pass
+            return 
+        if self.status == self.settings.hero_status["stay"]:
+            #不同状态中，枪的纵坐标不同
+            bullet_pos.append(self.rect.bottom + 167)
+        elif self.status == self.settings.hero_status["move"]:
+            bullet_pos.append(self.rect.bottom + 175)
+        elif self.status == self.settings.hero_status["jump"]:
+            bullet_pos.append(self.rect.top - 40)
+        else :
+            return
+        new_bullet = None
+        self.shoot_en = 20
 
     def change_weapon(self):
         self.weapon += 1
@@ -338,6 +362,7 @@ class Hero():
         pass
 
     def load_image_file(self, weapon, images, images_path, images_size):
+        #加载图片文件夹
         images.append([])
         for i in range(0, images_size):
             num = str(i)
