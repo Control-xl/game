@@ -32,15 +32,24 @@ class MonsterBall():
         self.protection_color = settings.monster_ball_protection_color
         self.protection_blood = [20, 20, 20, 20, 20]
 
+        # 是否存活
+        self.alive = True
 
     def update(self, weapon):
-        # self.check_collisions(weapon)
-        self.protection_position = (self.protection_position + self.protection_speed) % 360
-        self.center_x += self.center_speed
+        if self.blood < 0:
+            self.alive = 0
+        else:
+            self.check_collisions(weapon)
+            self.protection_position = (self.protection_position + self.protection_speed) % 360
+            self.center_x += self.center_speed
 
 
     def blitme(self):
-        pygame.draw.circle(self.screen, (0, 0, 0), (int(self.center_x), self.center_y), self.center_radius)
+        if not self.alive:
+            return
+
+        if self.blood > 0:
+            pygame.draw.circle(self.screen, (0, 0, 0), (int(self.center_x), self.center_y), self.center_radius)
 
         for i in range(self.protection_number):
             if self.protection_blood[i] != 0:
@@ -58,11 +67,18 @@ class MonsterBall():
         self.check_fist_coll(weapon.fist)
 
     def check_bullet_coll(self, bullets):
+        # print(len(bullets))
+        bullets_to_delete = []
         for bullet in bullets:
             if self.bullet_protection_collisions(bullet):
-                bullets.remove(bullet)
+                print("ok, in protect remove", bullet)
+                bullets_to_delete.append(bullet)
             elif self.bullet_center_collisions(bullet):
-                bullets.remove(bullet)
+                print("ok, in heart1", bullet)
+                bullets_to_delete.append(bullet)
+
+        for bullet in bullets_to_delete:
+            bullets.remove(bullet)
 
     def bullet_protection_collisions(self, bullet):
         for i in range(self.protection_number):
@@ -95,16 +111,16 @@ class MonsterBall():
     def bullet_center_collisions(self, bullet):
         flag = False
         # 左上
-        if get_distance2(self.center_x, self.center_y, bullet.rect.left, bullet.rect.top) < self.protection_radius**2:
+        if get_distance2(self.center_x, self.center_y, bullet.rect.left, bullet.rect.top) < self.center_radius**2:
             flag = True
         # 右上
-        elif get_distance2(self.center_x, self.center_y, bullet.rect.right, bullet.rect.top) < self.protection_radius**2:
+        elif get_distance2(self.center_x, self.center_y, bullet.rect.right, bullet.rect.top) < self.center_radius**2:
             flag = True
         # 左下
-        elif get_distance2(self.center_x, self.center_y, bullet.rect.left, bullet.rect.top) < self.protection_radius**2:
+        elif get_distance2(self.center_x, self.center_y, bullet.rect.left, bullet.rect.top) < self.center_radius**2:
             flag = True
         # 右下
-        elif get_distance2(self.center_x, self.center_y, bullet.rect.left, bullet.rect.top) < self.protection_radius**2:
+        elif get_distance2(self.center_x, self.center_y, bullet.rect.left, bullet.rect.top) < self.center_radius**2:
             flag = True
 
         if flag:

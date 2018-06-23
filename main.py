@@ -8,6 +8,9 @@ from hero import Hero
 from pause_menu import PauseMenu
 from monster import MonsterBall
 from state_display import StateDisplay
+from weapon import Weapon
+from weapon import Bullet
+
 if __name__ == '__main__':
     #def run():
 
@@ -44,9 +47,14 @@ if __name__ == '__main__':
 
     # gf.play_bg_music("music/b.mp3")
     clock = pygame.time.Clock()
-    weapon = 1
+    weapon = Weapon(settings)
+
     while True:
         #clock.tick(1000)
+        bullet = Bullet(screen, [1000, 400], 0)
+        if len(weapon.bullets) < 1:
+            weapon.bullets.append(bullet)
+
         monster_ball.update(weapon)
 
         gf.check_events(settings, screen, hero)
@@ -55,8 +63,14 @@ if __name__ == '__main__':
         map1.update(hero)
         state_display.update(hero)
 
+
         gf.update_screen(settings, screen, background_pic,
                          hero, map1, state_display, pause_menu, monster_ball)
+
+
+        for i in weapon.bullets:
+            i.blitme()
+
         pygame.display.flip()
 
 #run()
