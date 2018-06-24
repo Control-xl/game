@@ -65,30 +65,13 @@ class Hero():
         self.squat_move_size = 10
         self.squat_attack_size = 9
         self.weapon_size = self.settings.hero_weapon_size
-        self.stay_images = {
-            self.settings.hero_direction["left"] : [] ,
-            self.settings.hero_direction["right"] : [] ,
-        }
-        self.move_images = {
-            self.settings.hero_direction["left"] : [] ,
-            self.settings.hero_direction["right"] : [] ,
-        }
-        self.attack_images = {
-            self.settings.hero_direction["left"] : [] ,
-            self.settings.hero_direction["right"] : [] ,
-        }
-        self.jump_images = {
-            self.settings.hero_direction["left"] : [] ,
-            self.settings.hero_direction["right"] : [] ,
-        }
-        self.jump_attack_images = {
-            self.settings.hero_direction["left"] : [] ,
-            self.settings.hero_direction["right"] : [] ,
-        }
-        self.hurt_images = {
-            self.settings.hero_direction["left"] : [] ,
-            self.settings.hero_direction["right"] : [] ,
-        }
+        #images[direction][weapon]代表一个图片或图片文件夹或空
+        self.stay_images = {}
+        self.move_images = {}
+        self.attack_images = {}
+        self.jump_images = {}
+        self.jump_attack_images = {}
+        self.hurt_images = {}
         # self.squat_images = {}
         # self.squat_attack_images = {}
         # self.squat_move_images = {}
@@ -288,6 +271,20 @@ class Hero():
         pass
 
 
+    def check_collision(self):
+        #碰撞检测
+        white = (255,255,255)
+        frame = self.image_to_frame[self.image]
+        for y in range(frame.top, frame.bottom):
+            x = frame.frame[y]
+            for i in range(0, len(x)):
+                pos = (self.rect.left + x[i], self.rect.top + y)
+                color = self.screen.get_at(pos)
+                if color != (255, 255, 255, 255):
+                    self.get_hurt()
+                    print("hurt")
+
+
     def update(self):
         self.check_collision()
         if self.moving_left == self.moving_right:
@@ -295,6 +292,22 @@ class Hero():
         self.update_status()
         self.update_pos()
 
+
+    def change_weapon(self):
+        #更换武器，什么时候适合更换武器，当该使用武器对应的动画
+        self.weapon += 1
+        if self.weapon == self.weapon_size:
+            self.weapon = 0
+        if self.status == self.settings.hero_status["move"] and self.image_order >= 6: 
+            self.image_order -= 6
+        if self.weapon == self.settings.hero_weapon["gun"]:
+            #持枪时无攻击状态
+            if self.status == self.settings.hero_status["attack"]:
+                self.status = self.settings.hero_status["stay"]
+            elif self.status == self.settings.hero_status["jump_attack"]:
+                self.status = self.settings.hero_status["jump"]
+        if self.status == self.settings.hero_status["attack"] and self.image_order >= 8:
+            self.image_order = 7
 
     def shoot_bullet(self):
         #发射子弹
@@ -322,36 +335,6 @@ class Hero():
             return
         new_bullet = Bullet(self.screen, bullet_pos, bullet_velocity)
         self.shoot_en = 200
-
-    def change_weapon(self):
-        #更换武器，什么时候适合更换武器，当该使用武器对应的动画
-        self.weapon += 1
-        if self.weapon == self.weapon_size:
-            self.weapon = 0
-        if self.status == self.settings.hero_status["move"] and self.image_order >= 6: 
-            self.image_order -= 6
-        if self.weapon == self.settings.hero_weapon["gun"]:
-            #持枪时无攻击状态
-            if self.status == self.settings.hero_status["attack"]:
-                self.status = self.settings.hero_status["stay"]
-            elif self.status == self.settings.hero_status["jump_attack"]:
-                self.status = self.settings.hero_status["jump"]
-        if self.status == self.settings.hero_status["attack"] and self.image_order >= 8:
-            self.image_order = 7
-
-    def check_collision(self):
-        #碰撞检测
-        white = (255,255,255)
-        frame = self.image_to_frame[self.image]
-        for y in range(frame.top, frame.bottom):
-            x = frame.frame[y]
-            for i in range(0, len(x)):
-                pos = (self.rect.left + x[i], self.rect.top + y)
-                color = self.screen.get_at(pos)
-                if color != (255, 255, 255, 255):
-                    self.get_hurt()
-                    print("hurt")
-        # for y in range(frame.top, frame.bottom):
 
 
     def display_frame(self, image_size):
@@ -400,6 +383,12 @@ class Hero():
     def load_images(self):
         #加载图片，图片框架
         for direction in self.settings.hero_direction.keys() :
+            self.stay_images[self.settings.hero_direction[direction]] = []
+            self.move_images[self.settings.hero_direction[direction]] = []
+            self.attack_images[self.settings.hero_direction[direction]] = []
+            self.jump_images[self.settings.hero_direction[direction]] = []
+            self.jump_attack_images[self.settings.hero_direction[direction]] = []
+            self.hurt_images[self.settings.hero_direction[direction]] = []
             for weapon in range(0, self.weapon_size):
                 image = pygame.image.load('game/images/' + str(weapon) + '_' + direction + '_stay.jpeg')
                 self.stay_images[self.settings.hero_direction[direction]].append(image)
