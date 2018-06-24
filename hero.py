@@ -93,6 +93,7 @@ class Hero():
         self.falling = False
         self.bullets = []
         self.shoot_en = 0                               #shoot_en = 0时才能射击
+        self.hurt_en = 0                                #代表可以攻击，非0时代表无敌
         self.speedx = 2
         self.speedy = 5
         self.velocityx = 0
@@ -164,6 +165,8 @@ class Hero():
                 self.shoot_bullet()
         if self.shoot_en > 0:
             self.shoot_en -= 1
+        if self.hurt_en > 0:
+            self.hurt_en -= 1
         self.jumping = False
         
 
@@ -171,11 +174,12 @@ class Hero():
         # 发生碰撞时，调用的接口函数，
         # 更新人物方向，设置人物状态,direction表示来自左边的攻击
         # 若人物已经受伤，不再受伤
-        if self.status != self.settings.hero_status["hurt"]:
+        if self.status != self.settings.hero_status["hurt"] and self.hurt_en == 0:
             self.direction = direction
             self.status = self.settings.hero_status["hurt"]
             self.image_order = 0
             self.frame_order = 0
+            self.hurt_en = 200
 #播放动画
     def hurt_image(self):
         #受伤动画，播完动画则结束受伤状态
@@ -366,7 +370,8 @@ class Hero():
             self.rect.bottom = 600
 
     def blitme(self):
-        self.screen.blit(self.image, self.rect)
+        if self.hurt_en % 6 < 3 :
+            self.screen.blit(self.image, self.rect)
 
     def load_image_file(self, direction, weapon, images, images_path, images_size):
         #加载图片文件夹
