@@ -67,13 +67,14 @@ class Settings():
             "stay" : 0,
             "move" : 1,
             "jump" : 2,
-            "fall" : 3,
-            "squat" : 4,
-            "squat_move" : 5,
-            "attack" : 6,
-            "jump_attack" : 7,
-            "squat_attack" : 8,
-            "hurt" : 9,
+            "attack" : 3,
+            "jump_attack" : 4,
+            "hurt" : 5,
+            "fall" : 6,
+            "squat" : 7,
+            "squat_move" : 8,
+            "squat_attack" : 9,
+            
         }
         self.hero_direction = {"left" : -1, "right" : 1}
 
