@@ -63,6 +63,7 @@ class Settings():
             "sword" : 1,
             "gun" : 2,
         }
+        self.hero_status_size = 6
         self.hero_status = {
             "stay" : 0,
             "move" : 1,
