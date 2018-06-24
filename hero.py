@@ -4,13 +4,58 @@ from settings import Settings
 from weapon import Weapon, Bullet
 from map import Map
 
+class Frame():
+    # 代表一个火柴人的外部框架，用以碰撞检测
+    # 在火柴人的外表加一层白色的颜色层，当这一层东西颜色变了，发生了碰撞
+    def __init__(self, image):
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.rect.top = 0
+        self.rect.left = 0
+        self.frame = [] #表示第几行的人物框架的左端和右端, 左闭右开
+        self.top = self.rect.bottom
+        self.bottom = self.rect.top
+        self.left = self.rect.right
+        self.right = self.rect.left
+        for y in range(self.rect.top, self.rect.bottom):
+            left = 0
+            right = 0
+            x = self.rect.left
+            while x < self.rect.right :
+                (r, g, b, alpha) = image.get_at((x, y))
+                if r < 20 and r == g and r == b:
+                    left = x
+                    break 
+                x += 1
+            x = self.rect.right
+            while x > self.rect.left:
+                x -= 1
+                (r, g, b, alpha) = image.get_at((x, y))
+                if r < 20 and r == g and r == b:
+                    right = x
+                    break
+            if left > 0 :
+                left -= 1
+            if right < self.rect.right-1 and right != 0:
+                right += 1
+            self.frame.append((left, right))
+            if left != right:
+                self.image.set_at((left, y), (255, 255, 255, 255))
+                self.image.set_at((right, y), (255, 255, 255, 255))
+                self.top = min (y, self.top)
+                self.bottom = max(y, self.bottom)
+                self.left = min(self.left+1, left)
+                self.right = max(self.right-1, right)
+
+
+
 class Hero():
     def __init__(self, screen, map_, settings):
         self.screen = screen
         self.map = map_
         self.settings = settings
         self.frame_order = 0     #正播放的帧序号
-        self.frame_size = 2      #代表一个图片要放的帧数目
+        self.frame_size = 5      #代表一个图片要放的帧数目
         self.image_order = 0     #正播放的图片序号
         self.move_size = [6, 12, 6]       #移动图片的总数目 6,12,6
         self.attack_size = [11, 8, 0]    # 11, 11, 11
@@ -41,6 +86,9 @@ class Hero():
         self.fall_right_images = []
         self.fall_left_images = []
         self.load_images()
+        # self.test()
+        self.images_frame = {}
+        self.load_images_frame()
         self.weapon = self.settings.hero_weapon["fist"]
         self.image = self.stay_right_images[self.weapon]
         self.rect = self.image.get_rect()
@@ -58,7 +106,7 @@ class Hero():
         self.bullets = []
         self.shoot_en = 0                               #shoot_en = 0时才能射击
         self.speedx = 2
-        self.speedy = 20
+        self.speedy = 5
         self.velocityx = 0
         self.velocityy = -self.speedy
 
@@ -177,7 +225,7 @@ class Hero():
         if self.image_order >= 6 and self.image_order <= 7:
             self.velocityy = -self.speedy
         elif self.image_order >= 8 and self.image_order <= 10:
-            self.velocityy = -2 * self.speedy
+            self.velocityy = -self.speedy
         elif self.image_order == 11:
             self.velocityy = 0
         else :
@@ -194,7 +242,7 @@ class Hero():
         if self.image_order >= 6 and self.image_order <= 7:
             self.velocityy = -self.speedy
         elif self.image_order >= 8 and self.image_order <= 10:
-            self.velocityy = - 2 * self.speedy
+            self.velocityy = - self.speedy
         elif self.image_order == 11:
             self.velocityy = 0
         else :
@@ -277,14 +325,13 @@ class Hero():
         #     self.rect.bottom += self.velocityy
         pass
 
+
     def update(self):
+        self.check_collision()
         if self.moving_left == self.moving_right:
             self.velocityx = 0
         self.update_status()
         self.update_pos()
-        self.check_collision()
-
-
 
 
     def shoot_bullet(self):
@@ -341,47 +388,19 @@ class Hero():
 
     def check_collision(self):
         #get_at(pos)表示读取screen中一个像素点的颜色
-        black = (0, 0, 0)
         white = (255,255,255)
-        count = 0
-        flag = []
-        image_rect = self.get_body_rect()
-        for y in range(image_rect.top, image_rect.bottom):
-            x = image_rect.left
-            while x < image_rect.right:
-                x += 1
-                color = self.screen.get_at((x, y))
-                if color == black:
-                    left_color = self.screen.get_at((x-1, y))
-                    right_color = self.screen.get_at((x+1, y))
-                    up_color = self.screen.get_at((x, y-1))
-                    down_color = self.screen.get_at((x, y+1))
-            # x = self.rect.left
-            # while x < self.rect.right:
-            #     x += 1
-            #     color = self.screen.get_at((x, y))
-            #     if color == black:
-            #         left_color = self.screen.get_at((x-1, y))
-            #         right_color = self.screen.get_at((x+1, y))
-            #         up_color = self.screen.get_at((x, y-1))
-            #         down_color = self.screen.get_at((x, y+1))
-            #         if left_color == white or up_color == white or right_color == white or down_color == white:
-            #             count += 1
-            #             break
-            # x = self.rect.right
-            # while x > self.rect.left:
-            #     x -= 1
-            #     color = self.screen.get_at((x, y))
-            #     if color == black:
-            #         left_color = self.screen.get_at((x-1, y))
-            #         right_color = self.screen.get_at((x+1, y))
-            #         up_color = self.screen.get_at((x, y-1))
-            #         down_color = self.screen.get_at((x, y+1))
-            #         if left_color == white or up_color == white or right_color == white or down_color == white:
-            #             count += 1
-            #             break
-            
-            #print("200")
+        if self.status == self.settings.hero_status["stay"]:
+            frame = self.images_frame[self.direction][self.weapon][self.status]
+        else :
+            frame = self.images_frame[self.direction][self.weapon][self.status][self.image_order]
+        for y in range(frame.top, frame.bottom+1):
+            x = frame.frame[y]
+            for i in range(0, len(x)):
+                color = self.screen.get_at((x[i],y))
+                if color != (255, 255, 255, 255):
+                    self.get_hurt()
+                    print("hurt")
+        # for y in range(frame.top, frame.bottom):
 
 
     def display_frame(self, image_size):
@@ -412,13 +431,62 @@ class Hero():
         if self.rect.bottom > 600 :
             self.rect.bottom = 600
 
+
+    def load_images_frame(self):
+        #加载图片的框架，以便检测碰撞
+        #self.images_frame[direction][Weapon][status][image_order]代表一个图像，一个图像的框架
+        self.images_frame = {-1 : [], 1 : []}
+        for direction in self.images_frame.keys():
+            self.images_frame[direction] = []
+            for weapon in range(0, self.settings.hero_weapon_size):
+                self.images_frame[direction].append(weapon)
+                self.images_frame[direction][weapon] = []
+                for status in range(0, self.settings.hero_status_size):
+                    self.images_frame[direction][weapon].append(status)
+                    if status == self.settings.hero_status["stay"]:
+                        if direction == "left":
+                            self.images_frame[direction][weapon][status] = Frame(self.stay_left_images[weapon])
+                        else :
+                            self.images_frame[direction][weapon][status] = Frame(self.stay_right_images[weapon])
+                    elif status == self.settings.hero_status["move"]:
+                        self.images_frame[direction][weapon][status] = []
+                        for image_order in range(0, self.move_size[weapon]):
+                            if direction == "left":
+                                self.images_frame[direction][weapon][status].append(Frame(self.move_left_images[weapon][image_order]))
+                            else :
+                                self.images_frame[direction][weapon][status].append(Frame(self.move_right_images[weapon][image_order]))
+                    elif status == self.settings.hero_status["attack"]:
+                        self.images_frame[direction][weapon][status] = []
+                        for image_order in range(0, self.attack_size[weapon]):
+                            if direction == "left":
+                                self.images_frame[direction][weapon][status].append(Frame(self.attack_left_images[weapon][image_order]))
+                            else :
+                                self.images_frame[direction][weapon][status].append(Frame(self.attack_right_images[weapon][image_order]))                                
+                    elif status == self.settings.hero_status["jump"]:
+                        self.images_frame[direction][weapon][status] = []
+                        for image_order in range(0, self.jump_size):
+                            if direction == "left":
+                                self.images_frame[direction][weapon][status].append(Frame(self.jump_left_images[weapon][image_order]))
+                            else :
+                                self.images_frame[direction][weapon][status].append(Frame(self.jump_right_images[weapon][image_order]))
+                    elif status == self.settings.hero_status["jump_attack"]:
+                        self.images_frame[direction][weapon][status] = []
+                        for image_order in range(0, self.jump_attack_size[weapon]):
+                            if direction == "left":
+                                self.images_frame[direction][weapon][status].append(Frame(self.jump_attack_left_images[weapon][image_order]))
+                            else :
+                                self.images_frame[direction][weapon][status].append(Frame(self.jump_attack_right_images[weapon][image_order]))
+                    elif status == self.settings.hero_status["hurt"]:
+                        self.images_frame[direction][weapon][status] = []
+                        for image_order in range(0, self.hurt_size):
+                            if direction == "left":
+                                self.images_frame[direction][weapon][status].append(Frame(self.hurt_left_images[weapon][image_order]))
+                            else :
+                                self.images_frame[direction][weapon][status].append(Frame(self.hurt_right_images[weapon][image_order]))
+
+
     def blitme(self):
         self.screen.blit(self.image, self.rect)
-
-    def get_image_frame(self):
-        #获取火柴人的框架，框架用列表来存取,
-        #self.image_frame[direction][Weapon][status][image_order]代表一个图像，一个图像的框架
-        pass
 
     def load_image_file(self, weapon, images, images_path, images_size):
         #加载图片文件夹
@@ -428,13 +496,24 @@ class Hero():
             if images_size >= 10 and i < 10:
                 num = '0' + str(i)
             image_path = 'game/images/' + str(weapon) + images_path + num + '.jpg'
-            images[weapon].append(pygame.image.load(image_path))
+            image = pygame.image.load(image_path)
+            # rect = image.get_rect()
+            # for y in range(rect.top, rect.bottom):
+            #     for x in range(rect.left, rect.right):
+            #         (r,g,b,alpha)= image.get_at((x,y))
+            #         if r > 128 and g == r and b == r:
+            #             image.set_at((x, y), (255,255,255,255))
+            #         elif r < 10 and g == r and b == r:
+            #             image.set_at((x, y), (0,0,0,255))
+            images[weapon].append(image)
 
     def load_images(self):
         #加载图片
         for weapon in range(0, self.weapon_size):
-            self.stay_right_images.append(pygame.image.load('game/images/' + str(weapon) + '_stay_right.jpeg'))
-            self.stay_left_images.append(pygame.image.load('game/images/' + str(weapon) + '_stay_left.jpeg'))
+            image = pygame.image.load('game/images/' + str(weapon) + '_stay_right.jpeg')
+            self.stay_right_images.append(image)
+            image = pygame.image.load('game/images/' + str(weapon) + '_stay_left.jpeg')
+            self.stay_left_images.append(image)
             self.load_image_file(weapon, self.move_left_images, '_move_left_images/move_images', self.move_size[weapon])
             self.load_image_file(weapon, self.move_right_images, '_move_right_images/move_images', self.move_size[weapon])
             self.load_image_file(weapon, self.attack_left_images, '_attack_left_images/attack_images', self.attack_size[weapon])
@@ -462,7 +541,7 @@ if __name__ == '__main__':
     hero = Hero(screen, map_, settings)
     clock = pygame.time.Clock()
     while True:
-        #clock.tick(100)
+        clock.tick(100)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
