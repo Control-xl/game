@@ -20,7 +20,7 @@ class Frame():
     # 代表一个火柴人的外部框架，用以碰撞检测
     # 在火柴人的外表加一层白色的颜色层，当这一层东西颜色变了，发生了碰撞
     # get_at(pos)， set_at(pos, color)表示读取与设置surface中一个像素点的颜色
-    def __init__(self, image):
+    def __init__(self, image, settings):
         self.image = image
         self.rect = self.image.get_rect()
         self.rect.top = 0
@@ -56,8 +56,8 @@ class Frame():
                 right += 1
             self.frame.append((left, right))
             if left != right:
-                image.set_at((left, y), (255, 255, 255))
-                image.set_at((right, y), (255, 255, 255))
+                image.set_at((left, y), settings.hero_boot_color)
+                image.set_at((right, y), settings.hero_boot_color)
                 self.top = min (y, self.top)
                 self.bottom = max(y, self.bottom)
                 self.left = min(self.left+1, left)
@@ -107,9 +107,11 @@ class Hero():
         self.jumping = False
         self.squating = False
         self.falling = False
-        self.bullets = []
-        #self.weapon_attacks = Weapon()
+        self.weapon_attacks = Weapon()
+        self.blood = self.settings.hero_init_blood
+        self.magic = self.settings.hero_init_magic
         self.shoot_en = 0                               #shoot_en = 0时才能射击
+        self.magic_en = 0                               #magic_en = 0时才能进行魔法攻击
         self.hurt_en = 0                                #代表可以攻击，非0时代表无敌
         self.speedx = 2
         self.speedy = 5
@@ -293,8 +295,8 @@ class Hero():
 
 
     def check_collision(self):
-        #碰撞检测, 碰撞到道具, 
-        white = (255,255,255)
+        #碰撞检测, 碰撞到道具, 敌人攻击, 拳头攻击到敌人
+        protect_color = (255,255,255)
         frame = self.image_to_frame[self.image]
         for y in range(frame.top, frame.bottom):
             (left, right) = frame.frame[y]
@@ -423,7 +425,7 @@ class Hero():
             # image = image.convert_alpha()
             # transparent(image)
             # pygame.image.save(image, image_path)
-            self.image_to_frame[image] = Frame(image)
+            self.image_to_frame[image] = Frame(image, self.settings)
             images[self.settings.hero_direction[direction]][weapon].append(image)
 
 
@@ -442,7 +444,7 @@ class Hero():
                 # image = image.convert_alpha()  
                 # transparent(image)                    #背景透明化
                 # pygame.image.save(image, image_path)
-                self.image_to_frame[image] = Frame(image)
+                self.image_to_frame[image] = Frame(image, self.settings)
                 self.stay_images[self.settings.hero_direction[direction]].append(image)
                 self.load_image_file(direction, weapon, self.move_images, 'move_images', self.move_size[weapon])
                 self.load_image_file(direction, weapon, self.attack_images, 'attack_images', self.attack_size[weapon])
@@ -491,7 +493,7 @@ if __name__ == '__main__':
                 if event.key == pygame.K_s:
                     hero.squating = False
         hero.check_collision()
-        screen.fill((255, 255, 255, 255))
+        screen.fill((255, 255, 255))
         hero.update()
         hero.blitme()
         pygame.display.update()
