@@ -35,9 +35,12 @@ class Frame():
                 if r < 20 and r == g and r == b:
                     right = x
                     break
+            if left > right:
+                left = 0
+                right = 0
             if left > 0 :
                 left -= 1
-            if right < self.rect.right-1 and right != 0:
+            if right != 0 and right + 1 < self.rect.right :
                 right += 1
             self.frame.append((left, right))
             if left != right:
@@ -77,6 +80,7 @@ class Hero():
         # self.squat_move_images = {}
         self.image_to_frame = {}
         self.load_images()
+        print(self.image_to_frame[self.attack_images[1][0][5]].frame)
         self.weapon = self.settings.hero_weapon["fist"]
         self.status = settings.hero_status["stay"]
         self.direction = settings.hero_direction["right"]
@@ -92,6 +96,7 @@ class Hero():
         self.squating = False
         self.falling = False
         self.bullets = []
+        self.weapon_attacks = Weapon()
         self.shoot_en = 0                               #shoot_en = 0时才能射击
         self.hurt_en = 0                                #代表可以攻击，非0时代表无敌
         self.speedx = 2
@@ -289,12 +294,28 @@ class Hero():
                     print("hurt")
 
 
+    def update_weapon_attack(self):
+        if self.status == self.settings.hero_status["attack"]:
+            self.weapon_attacks.sword["centerx"] = self.rect.centerx + 60
+            self.weapon_attacks.sword["centery"] = self.rect.bottom + 150
+            self.weapon_attacks.sword["radius"] = 85
+            self.weapon_attacks.fist.width = 80
+            self.weapon_attacks.fist.height = 15
+            self.weapon_attacks.fist.top = self.rect.bottom - 166
+            self.weapon_attacks.fist.left = self.rect.centerx
+        elif self.status == self.settings.hero_status["jump_attack"]:
+            pass
+        else :
+            pass
+
+
     def update(self):
         self.check_collision()
         if self.moving_left == self.moving_right:
             self.velocityx = 0
         self.update_status()
         self.update_pos()
+        self.update_weapon_attack()
 
 
     def change_weapon(self):
