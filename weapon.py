@@ -1,6 +1,6 @@
 import pygame
 class Weapon():
-    def __init__(self, settings):
+    def __init__(self):
         self.settings = settings
         self.bullets = []
         self.sword = {
@@ -8,9 +8,9 @@ class Weapon():
             "centery": 0,
             "radius": 0
         }
-        self.fist = None
-        # self.weapon = settings.weapon["fist"]
-
+        self.fist = pygame.Rect(0, 0, 1, 1)
+        self.sword_attacking = False
+        self.fist_attacking = False
 
 class Bullet():
     def __init__(self, screen, pos, velocity):
