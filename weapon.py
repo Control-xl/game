@@ -3,6 +3,7 @@ class Weapon():
     def __init__(self, settings):
         self.settings = settings
         self.bullets = []
+        self.magic = pygame.Rect(0, 0, 1, 1)
         self.sword = {
             "centerx": 0,
             "centery": 0,
