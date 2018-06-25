@@ -3,6 +3,7 @@ import sys
 from settings import Settings
 from weapon import Weapon, Bullet
 from map import Map
+import numpy
 
 class Frame():
     # 代表一个火柴人的外部框架，用以碰撞检测
@@ -51,6 +52,13 @@ class Frame():
                 self.left = min(self.left+1, left)
                 self.right = max(self.right-1, right)
 
+def transparent(image, exp_r = 200, exp_g = 200, exp_b = 200, comp = 1):
+    rect = image.get_rect()
+    for x in range(rect.left, rect.right):
+        for y in range(rect.top, rect.bottom):
+            (r, g, b, alpha) = image.get_at((x, y))
+            if r >= 200 and g >= 200 and b >= 200:
+                image.set_at((x, y), (255, 255, 255, 1))
 
 class Hero():
     def __init__(self, screen, map_, settings):
@@ -96,7 +104,7 @@ class Hero():
         self.squating = False
         self.falling = False
         self.bullets = []
-        self.weapon_attacks = Weapon()
+        #self.weapon_attacks = Weapon()
         self.shoot_en = 0                               #shoot_en = 0时才能射击
         self.hurt_en = 0                                #代表可以攻击，非0时代表无敌
         self.speedx = 2
@@ -285,13 +293,18 @@ class Hero():
         white = (255,255,255)
         frame = self.image_to_frame[self.image]
         for y in range(frame.top, frame.bottom):
-            x = frame.frame[y]
-            for i in range(0, len(x)):
-                pos = (self.rect.left + x[i], self.rect.top + y)
+            for x in range(frame.left, frame.right):
+                pos = (self.rect.left + x, self.rect.top + y)
                 color = self.screen.get_at(pos)
-                if color != (255, 255, 255, 255):
-                    self.get_hurt()
-                    print("hurt")
+                print(pos, color)
+            # x = frame.frame[y]
+            # if x[0] < x[1]:
+            #     for i in range(0, len(x)):
+            #         pos = (self.rect.left + x[i], self.rect.top + y)
+            #         color = self.screen.get_at(pos)
+            #         if color != (200, 200, 200):
+            #             #self.get_hurt()
+            #             print(pos, color, "hurt")
 
 
     def update_weapon_attack(self):
@@ -315,7 +328,7 @@ class Hero():
             self.velocityx = 0
         self.update_status()
         self.update_pos()
-        self.update_weapon_attack()
+        #self.update_weapon_attack()
 
 
     def change_weapon(self):
@@ -403,8 +416,12 @@ class Hero():
                 num = '0' + str(i)
             image_path = 'game/images/' + str(weapon) + '_' + direction + '_' + images_path + '/' + images_path + num + '.jpg'
             image = pygame.image.load(image_path)
-            images[self.settings.hero_direction[direction]][weapon].append(image)
+            image = image.convert_alpha()
+            transparent(image)
+            #pygame.image.save(image, image_path)
             self.image_to_frame[image] = Frame(image)
+            images[self.settings.hero_direction[direction]][weapon].append(image)
+
 
     def load_images(self):
         #加载图片，图片框架
@@ -416,9 +433,13 @@ class Hero():
             self.jump_attack_images[self.settings.hero_direction[direction]] = []
             self.hurt_images[self.settings.hero_direction[direction]] = []
             for weapon in range(0, self.weapon_size):
-                image = pygame.image.load('game/images/' + str(weapon) + '_' + direction + '_stay.jpeg')
-                self.stay_images[self.settings.hero_direction[direction]].append(image)
+                image_path = 'game/images/' + str(weapon) + '_' + direction + '_stay.jpeg'
+                image = pygame.image.load(image_path)
+                image = image.convert_alpha()
+                transparent(image)
+                #pygame.image.save(image, image_path)
                 self.image_to_frame[image] = Frame(image)
+                self.stay_images[self.settings.hero_direction[direction]].append(image)
                 self.load_image_file(direction, weapon, self.move_images, 'move_images', self.move_size[weapon])
                 self.load_image_file(direction, weapon, self.attack_images, 'attack_images', self.attack_size[weapon])
                 self.load_image_file(direction, weapon, self.jump_images, 'jump_images', self.jump_size)
@@ -465,7 +486,7 @@ if __name__ == '__main__':
                     hero.moving_right = False
                 if event.key == pygame.K_s:
                     hero.squating = False
-        screen.fill((255, 255, 255))
+        screen.fill((200, 200, 200, 255))
         hero.update()
         hero.blitme()
         pygame.display.update()
