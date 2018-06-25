@@ -45,8 +45,8 @@ class Map():
         point_list = []
         for i in range(self.settings.screen_width):
             point_list.append((i, self.shape[i+self.settings.left_border]))
-        pygame.draw.lines(self.screen, (0, 0, 0), False, point_list, 3)
-
+        # pygame.draw.lines(self.screen, (0, 0, 0), False, point_list, 3)
+        pygame.draw.aalines(self.screen, (0, 0, 0), False, point_list, False)
 
     def gety(self, x):
         if x < self.settings.map_max:
