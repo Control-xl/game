@@ -295,23 +295,33 @@ class Hero():
 
 
     def check_collision(self):
-        #碰撞检测, 碰撞到道具, 敌人攻击, 拳头攻击到敌人
+        #碰撞检测, 碰撞到道具, 拳头攻击到敌人, 敌人攻击
+        #遇到不同颜色，先检查道具，看对应的位置的颜色是否一样，一样则是接触到了道具
+        #再检测是不是正在进行拳头攻击，是的话，某些位置不会成为攻击矩形
+        #否则受到攻击
         protect_color = (255,255,255)
         frame = self.image_to_frame[self.image]
         for y in range(frame.top, frame.bottom):
-            (left, right) = frame.frame[y]
-            if left != 0:
-                pos = (self.rect.left + left, self.rect.top + y)
+            for i in range(0, len(frame.frame[y])) :
+                if x[1] >= x[0]:
+                    break
+                pos = (self.rect.left + x[i], self.rect.top + y)
                 color = self.screen.get_at(pos)
+                #左右无差别，先检测是否碰到道具
                 if color != self.settings.hero_boot_color:
-                    self.get_hurt(self.settings.hero_direction["left"])
-            if right != 0:
-                pos = (self.rect.left + right, self.rect.top + y)
-                color = self.screen.get_at(pos)
-                if color != self.settings.hero_boot_color:
-                    self.get_hurt(self.settings.hero_direction["right"])
+                    if not self.is_get_tool(pos, color):
+                        self.check_attack(pos, i)
+                    #self.get_hurt(self.settings.hero_direction["left"])
                     #print((x[0], y), color, "hurt")
 
+    def is_get_tool(self, pos, color):
+        (x, y) = pos
+        for tool in tools :
+            if x >= tool.rect.left and x < tool.rect.right and y >= tool.rect.top and y < tool.rect.bottom:
+                if color == tool.image.get_at((x - tool.rect.left, y - tool.rect.top)):
+                    #删去这个tool并产生反应
+                    return True
+        return False
 
     def update_weapon_attack(self):
         if self.status == self.settings.hero_status["attack"]:
