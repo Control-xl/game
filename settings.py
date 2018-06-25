@@ -78,7 +78,7 @@ class Settings():
             
         }
         self.hero_direction = {"left" : -1, "right" : 1}
-
+        self.hero_boot_color = (255, 255, 255)
         # 英雄初始血量
         self.hero_init_blood = 3
         self.hero_init_magic = 1
