@@ -67,14 +67,12 @@ class MonsterBall():
         self.check_fist_coll(weapon.fist)
 
     def check_bullet_coll(self, bullets):
-        # print(len(bullets))
         bullets_to_delete = []
         for bullet in bullets:
             if self.bullet_protection_collisions(bullet):
-                print("ok, in protect remove", bullet)
+
                 bullets_to_delete.append(bullet)
             elif self.bullet_center_collisions(bullet):
-                print("ok, in heart1", bullet)
                 bullets_to_delete.append(bullet)
 
         for bullet in bullets_to_delete:
@@ -133,6 +131,7 @@ class MonsterBall():
         self.check_sword_center_collisions(sword)
 
     def check_sword_protection_collisions(self, sword):
+        # 检查剑和保护圈是否有碰撞
         for i in range(self.protection_number):
             if self.protection_blood[i] > 0:
                 pst_x = int(self.center_x + self.protection_center_distance * \
@@ -157,6 +156,132 @@ def get_distance2(x1, y1, x2, y2):
 
 
 class MonsterPlane():
+    def __init__(self, settings, screen):
+        self.settings = settings
+        self.screen = screen
+        # 加载飞船
+        self.image = pygame.image.load("images/plane.png")
+        # 加载飞船蓄力图像
+        self.save_energy_image = []
+        self.save_energy_image.append(pygame.image.load("images/laser/save1.png"))
+        self.save_energy_image.append(pygame.image.load("images/laser/save2.png"))
+        self.save_energy_image.append(pygame.image.load("images/laser/save3.png"))
+        self.save_energy_image.append(pygame.image.load("images/laser/save4.png"))
+        self.save_energy_image.append(pygame.image.load("images/laser/save5.png"))
+        # 蓄力形态
+        self.save_energy_image_cnt = 0
+        # 蓄力图像位置(在飞碟下多少位置
+        self.save_energy_image_down = 28
+        self.rect = self.image.get_rect()
+        self.save_rect = []
+        # 蓄力后的子弹列表
+        self.bullet_list = []
+        self.bullet_rect_list = []
+        self.bullet_center_list = []
+        self.bullet_dir_list = []
+        self.bullet_ud_list = [1, 1, 1, 1, 1, 1]
+        # 蓄力状态
+        self.save_state = False
+        # 开火状态
+        self.fire_state = False
+        # 子弹速度
+        self.bullet_speed = 0.2
+        # 子弹位置
 
-    def __init__(self):
-        self.a = 1
+        for i in range(5):
+            self.save_rect.append(self.save_energy_image[i].get_rect())
+        self.clock = pygame.time.Clock()
+        self.time_passed = 0
+        self.blood = 10
+        self.rect.x = 400
+        self.rect.y = 400
+
+
+    def update(self, hero):
+        # 更新子弹位置
+        self.update_bullet()
+        # 计时
+        self.time_passed += self.clock.tick()
+        # 如果不是在蓄能状态，那么就等待，直到非蓄能状态时间达到5秒
+        if not self.save_state:
+            if self.time_passed > 5000:
+                self.time_passed = 0
+                self.save_state = True
+        else:
+            # 如果在蓄能状态，那就0.25秒更新一次状态图，5次更新后发射
+            if self.time_passed >= 250:
+                self.save_energy_image_cnt = (self.save_energy_image_cnt + 1) % 6
+                if len(self.bullet_list) < 3:
+                    if self.save_energy_image_cnt == 5:
+                        print(len(self.bullet_list))
+                        self.add_bullet(hero)
+                else:
+                    self.save_state = False
+
+                self.time_passed = 0
+            if self.save_energy_image_cnt < 5:
+                self.save_rect[self.save_energy_image_cnt].centerx = self.rect.centerx
+                self.save_rect[self.save_energy_image_cnt].centery = self.rect.bottom + self.save_energy_image_down
+
+    def update_bullet(self):
+
+        if self.bullet_list:
+            image_to_del = []
+            rect_to_del = []
+            center_to_del = []
+            dir_to_del = []
+            for i in range(len(self.bullet_list)):
+                self.bullet_center_list[i] = (self.bullet_center_list[i][0] +
+                                              math.sin(self.bullet_dir_list[i]) *
+                                              self.bullet_speed * self.bullet_ud_list[i],
+                                              self.bullet_center_list[i][1] +
+                                              math.cos(self.bullet_dir_list[i]) *
+                                              self.bullet_speed * self.bullet_ud_list[i])
+                self.bullet_rect_list[i].centerx = self.bullet_center_list[i][0]
+                self.bullet_rect_list[i].centery = self.bullet_center_list[i][1]
+                # 如果飞出屏幕外，加入删除列表
+                if self.bullet_rect_list[i].centerx < -300 or self.bullet_rect_list[i].centerx > 1500 or \
+                    self.bullet_rect_list[i].centery < -300 or self.bullet_rect_list[i].centery > 1100:
+                    image_to_del.append(self.bullet_list[i])
+                    rect_to_del.append(self.bullet_rect_list[i])
+                    center_to_del.append(self.bullet_center_list[i])
+                    dir_to_del.append(self.bullet_dir_list[i])
+            # 删除子弹列表中有的子弹
+            for i in range(len(image_to_del)):
+                self.bullet_list.remove(image_to_del[i])
+                self.bullet_rect_list.remove(rect_to_del[i])
+                self.bullet_center_list.remove(center_to_del[i])
+                self.bullet_dir_list.remove(dir_to_del[i])
+        return
+
+    def add_bullet(self, hero):
+        bullet = pygame.image.load('images/laser/bullet.png')
+        i = len(self.bullet_list)
+        self.bullet_list.append(bullet)
+        rect = bullet.get_rect()
+        rect.centerx = self.rect.centerx
+        rect.centery = self.rect.bottom + self.save_energy_image_down
+        self.bullet_rect_list.append(rect)
+        self.bullet_center_list.append((self.bullet_rect_list[-1].centerx, self.bullet_rect_list[-1].centery))
+        if rect.centery != hero.rect.centery:
+            k = (hero.rect.centerx - rect.centerx) / (hero.rect.centery - rect.centery)
+        else:
+            k = 99999999
+        if rect.centery < hero.rect.centery:
+            self.bullet_ud_list[i] = 1
+        else:
+            self.bullet_ud_list[i] = -1
+        theta = math.atan(k)
+        self.bullet_dir_list.append(theta)
+
+    def blitme(self):
+        self.screen.blit(self.image, self.rect)
+        if self.save_energy_image_cnt < 5 and self.save_state :
+            self.screen.blit(self.save_energy_image[self.save_energy_image_cnt], self.save_rect[self.save_energy_image_cnt])
+        for i in range(len(self.bullet_list)):
+            # print(self.bullet_rect_list[i].centerx, self.bullet_rect_list[i].centery)
+            self.screen.blit(self.bullet_list[i], self.bullet_rect_list[i])
+
+        # print(self.save_energy_image[self.save_energy_image_cnt].get_rect())
+
+

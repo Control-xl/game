@@ -40,28 +40,28 @@ def check_events(settings, screen, hero):
             check_keyup_events(event, hero)
 
 
-def update_screen(settings, screen, background_pic,hero, map1, state_display, pause_menu, monster_test):
+def update_screen(settings, screen, background_pic,hero, map1, state_display, pause_menu,
+                  monster_ball, monster_plane):
     screen.fill(settings.bg_color)
     if not settings.pause:
         background_pic.set_alpha(255)
         hero.blitme()
         map1.blitme()
         state_display.blitme()
-        monster_test.blitme()
+        monster_ball.blitme()
+        monster_plane.blitme()
     else:
         # 使得飞机、地图和状态元素仍然得到显示
         hero.blitme()
         map1.blitme()
         state_display.blitme()
-        monster_test.blitme()
-
+        monster_ball.blitme()
+        monster_plane.blitme()
 
         # 灰色元素
         screen.blit(background_pic, (0, 0))
         pause_menu.test()
         background_pic.set_alpha(150)
-
-
 
 
 def play_short_music(music_name,  volume = 0.1, loops = 0):

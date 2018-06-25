@@ -58,7 +58,7 @@ def transparent(image, exp_r = 200, exp_g = 200, exp_b = 200, comp = 1):
         for y in range(rect.top, rect.bottom):
             (r, g, b, alpha) = image.get_at((x, y))
             if r >= 200 and g >= 200 and b >= 200:
-                image.set_at((x, y), (255, 255, 255, 1))
+                image.set_at((x, y), (255, 255, 255, 0))
 
 class Hero():
     def __init__(self, screen, map_, settings):
@@ -414,7 +414,7 @@ class Hero():
             num = str(i)
             if images_size >= 10 and i < 10:
                 num = '0' + str(i)
-            image_path = 'game/images/' + str(weapon) + '_' + direction + '_' + images_path + '/' + images_path + num + '.jpg'
+            image_path = 'images/' + str(weapon) + '_' + direction + '_' + images_path + '/' + images_path + num + '.jpg'
             image = pygame.image.load(image_path)
             image = image.convert_alpha()
             transparent(image)
@@ -433,11 +433,11 @@ class Hero():
             self.jump_attack_images[self.settings.hero_direction[direction]] = []
             self.hurt_images[self.settings.hero_direction[direction]] = []
             for weapon in range(0, self.weapon_size):
-                image_path = 'game/images/' + str(weapon) + '_' + direction + '_stay.jpeg'
+                image_path = 'images/' + str(weapon) + '_' + direction + '_stay.jpeg'
                 image = pygame.image.load(image_path)
                 image = image.convert_alpha()
                 transparent(image)
-                #pygame.image.save(image, image_path)
+                pygame.image.save(image, image_path)
                 self.image_to_frame[image] = Frame(image)
                 self.stay_images[self.settings.hero_direction[direction]].append(image)
                 self.load_image_file(direction, weapon, self.move_images, 'move_images', self.move_size[weapon])
