@@ -1,6 +1,6 @@
 import pygame
 class Weapon():
-    def __init__(self):
+    def __init__(self, settings):
         self.settings = settings
         self.bullets = []
         self.sword = {
