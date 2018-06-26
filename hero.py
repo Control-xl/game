@@ -305,7 +305,6 @@ class Hero():
             self.rect.bottom = self.map.gety(self.x)
 
 
-
     def check_collision(self):
         #碰撞检测, 碰撞到地图, 道具, 拳头攻击到敌人, 敌人攻击
         #遇到不同颜色，先检查道具，看对应的位置的颜色是否一样，一样则是接触到了道具
@@ -350,13 +349,16 @@ class Hero():
 
     def update_weapon_attack(self):
         if self.status == self.settings.hero_status["attack"]:
-            self.weapon_attacks.sword["centerx"] = self.rect.centerx + 60 * self.direction
-            self.weapon_attacks.sword["centery"] = self.rect.bottom + 150
-            self.weapon_attacks.sword["radius"] = 85
             self.weapon_attacks.fist.width = 80
             self.weapon_attacks.fist.height = 15
             self.weapon_attacks.fist.top = self.rect.bottom - 166
-            self.weapon_attacks.fist.left = self.rect.centerx
+            if self.direction == self.settings.hero_direction["left"]:
+                self.weapon_attacks.fist.right = self.rect.centerx
+            elif self.direction == self.settings.hero_direction["right"]:
+                self.weapon_attacks.fist.left = self.rect.centerx
+            self.weapon_attacks.sword["centerx"] = self.rect.centerx + 60 * self.direction
+            self.weapon_attacks.sword["centery"] = self.rect.bottom + 150
+            self.weapon_attacks.sword["radius"] = 85
             if self.weapon == self.settings.hero_weapon["fist"] and self.image_order >= 5 and self.image_order <= 6:
                 self.weapon_attacks.fist_attacking = True
                 self.weapon_attacks.sword_attacking = False
@@ -367,13 +369,16 @@ class Hero():
                 self.weapon_attacks.fist_attacking = False
                 self.weapon_attacks.sword_attacking = False
         elif self.status == self.settings.hero_status["jump_attack"]:
+            self.weapon_attacks.fist.width = 80
+            self.weapon_attacks.fist.height = 15
+            self.weapon_attacks.fist.top = self.rect.bottom - 48
+            if self.direction == self.settings.hero_direction["left"]:
+                self.weapon_attacks.fist.right = self.rect.centerx
+            elif self.direction == self.settings.hero_direction["right"]:
+                self.weapon_attacks.fist.left = self.rect.centerx
             self.weapon_attacks.sword["centerx"] = self.rect.centerx + 60 * self.direction
             self.weapon_attacks.sword["centery"] = self.rect.bottom + 150
             self.weapon_attacks.sword["radius"] = 85
-            self.weapon_attacks.fist.width = 80
-            self.weapon_attacks.fist.height = 15
-            self.weapon_attacks.fist.top = self.rect.bottom - 166
-            self.weapon_attacks.fist.left = self.rect.centerx
             if self.weapon == self.settings.hero_weapon["fist"] and self.image_order >= 9 and self.image_order <= 11:
                 self.weapon_attacks.fist_attacking = True
                 self.weapon_attacks.sword_attacking = False
