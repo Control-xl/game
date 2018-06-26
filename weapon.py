@@ -7,7 +7,8 @@ class Weapon():
         self.sword = {
             "centerx": 0,
             "centery": 0,
-            "radius": 0
+            "radius": 0,
+            "direction" : self.settings.hero_direction["right"]
         }
         self.fist = pygame.Rect(0, 0, 1, 1)
         self.sword_attacking = False

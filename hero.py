@@ -93,7 +93,7 @@ class Hero():
         # self.squat_move_images = {}
         self.image_to_frame = {}
         self.load_images()
-        print(self.image_to_frame[self.jump_attack_images[1][0][9]].frame)
+        #print(self.image_to_frame[self.jump_attack_images[1][0][9]].frame)
         self.weapon = self.settings.hero_weapon["fist"]
         self.status = settings.hero_status["stay"]
         self.direction = settings.hero_direction["right"]
@@ -317,21 +317,46 @@ class Hero():
                 if x[1] <= x[0]:
                     break
                 pos = (self.rect.left + x[i], self.rect.top + y)
+                if pos[0] < 0 or pos[0] >= self.settings.screen_width or \
+                pos[1] < 0 or pos[1] >= self.settings.screen_height :
+                    continue
                 color = self.screen.get_at(pos)
-                #左右无差别，先检测碰撞到什么碰到道具, 再检测地图
-                #print(color)
                 if color != self.settings.hero_boot_color:
+                    #先检测碰撞到什么
                     touch_object = self.touch_object(pos, color)
                     if touch_object == "tool" : #道具名称
                         pass
-                    elif touch_object == "enemy" : 
-                        self.get_hurt(self.settings.hero_direction["left"])
-                    #print((x[0], y), color, "hurt")
+                    elif touch_object == "enemy" :
+                        # 碰撞到敌人
+                        if self.weapon == self.settings.hero_weapon["fist"] and \
+                        self.status == self.settings.hero_status["attack"] and \
+                        self.image_order >= 5 and  self.image_order <= 6:
+                            # 排除特殊情况 
+                            if self.direction == self.settings.hero_direction["left"] and i == 0 and \
+                            self.x[i] < self.rect.left + 20:
+                                pass
+                            if self.direction == self.settings.hero_direction["right"] and i == 1 and \
+                            self.x[i] > self.rect.right - 20:
+                                pass
+                        elif self.weapon == self.settings.hero_weapon["fist"] and \
+                        self.status == self.settings.hero_status["jump_attack"] and \
+                        self.image_order >= 9 and  self.image_order <= 11:
+                            # 排除特殊情况 
+                            if self.direction == self.settings.hero_direction["left"] and i == 0 and \
+                            self.x[i] < self.rect.left + 20:
+                                pass
+                            if self.direction == self.settings.hero_direction["right"] and i == 1 and \
+                            self.x[i] > self.rect.right - 20:
+                                pass
+                        else :
+                            if i == 0 :
+                                self.get_hurt(self.settings.hero_direction["left"])
+                            elif i == 1 : 
+                                self.get_hurt(self.settings.hero_direction["right"])
 
     def touch_object(self, pos, color):
         # 判断接触到了什么
         (x, y) = pos
-        map_color = (0, 0, 0)
         for i in range(len(self.tools)) :
             if x >= tools[i].rect.left and x < tools[i].rect.right and \
             y >= tools[i].rect.top and y < tools[i].rect.bottom :
@@ -339,7 +364,7 @@ class Hero():
                     name = tools[i].name
                     self.tools.pop(i)
                     return name
-        if color == map_color:
+        if color == self.settings.map_color:
             # 当这个坐标在地图以下时，就是接触到地图了,有可能是一条垂直线
             if self.map.gety(self.settings.left_border + x) <= y or \
             self.map.gety(self.settings.left_border + x - 1) <= y or \
@@ -359,6 +384,7 @@ class Hero():
             self.weapon_attacks.sword["centerx"] = self.rect.centerx + 60 * self.direction
             self.weapon_attacks.sword["centery"] = self.rect.bottom + 150
             self.weapon_attacks.sword["radius"] = 85
+            self.weapon_attacks.sword["direction"] = self.direction
             if self.weapon == self.settings.hero_weapon["fist"] and self.image_order >= 5 and self.image_order <= 6:
                 self.weapon_attacks.fist_attacking = True
                 self.weapon_attacks.sword_attacking = False
@@ -379,6 +405,7 @@ class Hero():
             self.weapon_attacks.sword["centerx"] = self.rect.centerx + 70 * self.direction
             self.weapon_attacks.sword["centery"] = self.rect.bottom + 90
             self.weapon_attacks.sword["radius"] = 85
+            self.weapon_attacks.sword["direction"] = self.direction
             if self.weapon == self.settings.hero_weapon["fist"] and self.image_order >= 9 and self.image_order <= 11:
                 self.weapon_attacks.fist_attacking = True
                 self.weapon_attacks.sword_attacking = False
@@ -468,8 +495,8 @@ class Hero():
         if self.status == self.settings.hero_status["jump"] or self.status == self.settings.hero_status["jump_attack"]:
             if self.image_order == 7:
                 self.rect.top = rect_top
-        if self.rect.bottom > 800 :
-            self.rect.bottom = 800
+        if self.rect.bottom > self.settings.screen_height :
+            self.rect.bottom = self.settings.screen_height
 
     def blitme(self):
         if self.hurt_en % 6 < 3 :
