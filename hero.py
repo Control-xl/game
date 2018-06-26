@@ -93,7 +93,7 @@ class Hero():
         # self.squat_move_images = {}
         self.image_to_frame = {}
         self.load_images()
-        # print(self.image_to_frame[self.attack_images[1][0][5]].frame)
+        print(self.image_to_frame[self.jump_attack_images[1][0][9]].frame)
         self.weapon = self.settings.hero_weapon["fist"]
         self.status = settings.hero_status["stay"]
         self.direction = settings.hero_direction["right"]
@@ -102,7 +102,6 @@ class Hero():
         self.rect.centerx = self.screen.get_rect().centerx
         self.x = self.settings.left_border + self.rect.centerx          #在整个地图中的位置
         self.rect.bottom = self.map.gety(self.rect.centerx)
-        print(self.rect.bottom)
         self.moving_left = False
         self.moving_right = False
         self.getting_hurt = False
@@ -120,7 +119,7 @@ class Hero():
         }
         self.shoot_en = 0                               #shoot_en = 0时才能射击
         self.magic_en = 0                               #magic_en = 0时才能进行魔法攻击
-        self.hurt_en = 0                                #代表可以攻击，非0时代表无敌
+        self.hurt_en = 5                              #代表可以攻击，非0时代表无敌
         self.speedx = 2
         self.speedy = 5
         self.velocityx = 0
@@ -347,7 +346,6 @@ class Hero():
             self.map.gety(self.settings.left_border + x - 1) <= y or \
             self.map.gety(self.settings.left_border + x + 1) <= y : \
             return "map"
-        print(x, self.map.gety(self.settings.left_border + x) , y, color)
         return "enemy"
 
     def update_weapon_attack(self):
