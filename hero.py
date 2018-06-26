@@ -99,7 +99,8 @@ class Hero():
         self.image = self.stay_images[self.direction][self.weapon]
         self.rect = self.image.get_rect()
         self.rect.centerx = self.screen.get_rect().centerx
-        self.rect.bottom = self.screen.get_rect().bottom
+        self.rect.bottom = self.map.gety(self.rect.centerx)
+        print(self.rect.bottom)
         self.moving_left = False
         self.moving_right = False
         self.getting_hurt = False
@@ -284,13 +285,10 @@ class Hero():
     def update_heroy(self):
         #跳起与坠落
         self.rect.bottom += self.velocityy
-        if self.rect.bottom > 600:
-            self.rect.bottom = 600
-        # if self.velocityy > 0:
-        #     self.rect.bottom += self.velocityy
-        #     pass
-        # elif self.rect.bottom < self.map.gety(self.rect.centerx):
-        #     self.rect.bottom += self.velocityy
+        #print(self.rect.bottom, self.map.gety(self.rect.centerx))
+        if self.rect.bottom > self.map.gety(self.settings.left_border + self.rect.centerx):
+            #print(self.rect.bottom, self.map.gety(self.rect.centerx))
+            self.rect.bottom = self.map.gety(self.settings.left_border + self.rect.centerx)
         pass
 
 
@@ -299,10 +297,10 @@ class Hero():
         #遇到不同颜色，先检查道具，看对应的位置的颜色是否一样，一样则是接触到了道具
         #再检测是不是正在进行拳头攻击，是的话，某些位置不会成为攻击矩形
         #否则受到攻击
-        protect_color = (255,255,255)
         frame = self.image_to_frame[self.image]
         for y in range(frame.top, frame.bottom):
-            for i in range(0, len(frame.frame[y])) :
+            x = frame.frame[y]
+            for i in range(0, len(x)) :
                 if x[1] >= x[0]:
                     break
                 pos = (self.rect.left + x[i], self.rect.top + y)
@@ -369,7 +367,7 @@ class Hero():
             self.velocityx = 0
         self.update_status()
         self.update_pos()
-        self.update_weapon_attack()
+        #self.update_weapon_attack()
 
 
     def change_weapon(self):
@@ -441,8 +439,8 @@ class Hero():
         if self.status == self.settings.hero_status["jump"] or self.status == self.settings.hero_status["jump_attack"]:
             if self.image_order == 7:
                 self.rect.top = rect_top
-        if self.rect.bottom > 600 :
-            self.rect.bottom = 600
+        if self.rect.bottom > 800 :
+            self.rect.bottom = 800
 
     def blitme(self):
         if self.hurt_en % 6 < 3 :
@@ -460,7 +458,7 @@ class Hero():
             # image = image.convert_alpha()
             # transparent(image)
             # pygame.image.save(image, image_path)
-            self.image_to_frame[image] = Frame(image, self.settings)
+            # self.image_to_frame[image] = Frame(image, self.settings)
             images[self.settings.hero_direction[direction]][weapon].append(image)
 
 
@@ -479,7 +477,7 @@ class Hero():
                 # image = image.convert_alpha()  
                 # transparent(image)                    #背景透明化
                 # pygame.image.save(image, image_path)
-                self.image_to_frame[image] = Frame(image, self.settings)
+                # self.image_to_frame[image] = Frame(image, self.settings)
                 self.stay_images[self.settings.hero_direction[direction]].append(image)
                 self.load_image_file(direction, weapon, self.move_images, 'move_images', self.move_size[weapon])
                 self.load_image_file(direction, weapon, self.attack_images, 'attack_images', self.attack_size[weapon])
@@ -493,8 +491,8 @@ class Hero():
 
 if __name__ == '__main__':
     pygame.init()
-    screen = pygame.display.set_mode((1000, 600), 0, 0)
     settings = Settings()
+    screen = pygame.display.set_mode((settings.screen_width, settings.screen_height), 0, 0)
     map_ = Map(screen, settings)
     hero = Hero(screen, map_, settings)
     clock = pygame.time.Clock()
@@ -527,8 +525,10 @@ if __name__ == '__main__':
                     hero.moving_right = False
                 if event.key == pygame.K_s:
                     hero.squating = False
-        hero.check_collision()
-        screen.fill((255, 255, 255))
+        #hero.check_collision()
+        screen.fill(settings.bg_color)
         hero.update()
+        map_.update(hero.velocityx, hero.rect)
         hero.blitme()
+        map_.blitme()
         pygame.display.update()

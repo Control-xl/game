@@ -20,21 +20,21 @@ class Map():
             self.shape.append(750)
 
 
-    def update(self, hero):
+    def update(self, velocityx, rect):
         """根据英雄位置更新地图信息"""
         # 如果英雄向右移而且超过了屏幕的一一半位置
-        if hero.moving_right and\
-                hero.rect.right >= self.settings.screen_width/2:
+        if velocityx > 0 and\
+                rect.right >= self.settings.screen_width/2:
             # 且地图的右边界没有到达地图的最大位置
             if self.settings.right_border + self.settings.screen_width < self.settings.map_max:
-                self.settings.left_border += min(hero.speed, self.settings.map_max - self.settings.right_border)
+                self.settings.left_border += min(velocityx, self.settings.map_max - self.settings.right_border)
                 self.settings.right_border = self.settings.left_border + self.settings.screen_width
 
         # 如果英雄向左移而且到了屏幕左方1/10位置
-        if hero.moving_left and hero.rect.left <= self.settings.screen_width/10:
+        if velocityx < 0 and rect.left <= self.settings.screen_width/10:
             # 如果地图左边界没有到最左边的位置
             if self.settings.left_border > 0:
-                self.settings.left_border -= min(hero.speed, self.settings.left_border)
+                self.settings.left_border -= min(-velocityx, self.settings.left_border)
                 self.settings.right_border = self.settings.left_border + self.settings.screen_width
             else:
                 gf.play_short_music("music/forest01_new.ogg")
