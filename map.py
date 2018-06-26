@@ -49,7 +49,9 @@ class Map():
         pygame.draw.aalines(self.screen, (0, 0, 0), False, point_list, False)
 
     def gety(self, x):
-        if x < self.settings.map_max:
+        if x < 0 or x >= self.settings.map_max : 
+            return 0
+        elif x < self.settings.map_max :
             return self.shape[x]
 
 
