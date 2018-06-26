@@ -287,27 +287,19 @@ class Hero():
         pass
 
     def update_herox(self):
-        left = self.settings.left_border + self.velocityx + self.rect.left#image_to_frame[self.image].left
-        right = self.settings.left_border + self.velocityx + self.rect.right#.image_to_frame[self.image].right
-        if self.velocityx < 0 and self.map.gety(left + self.velocityx * 2) < self.rect.bottom :
-            self.velocityx = 0
-        elif self.velocityx > 0 and self.map.gety(right + self.velocityx * 2) < self.rect.bottom :
+        x = self.settings.left_border + self.velocityx + self.rect.centerx
+        if self.map.gety(x + self.velocityx * 2) < self.rect.bottom :
             self.velocityx = 0
         self.x += self.velocityx
         self.map.update(self.velocityx, self.rect)
         self.rect.centerx = self.x - self.settings.left_border
-        
 
     def update_heroy(self):
         #跳起与坠落
         self.rect.bottom += self.velocityy
-        #print(self.rect.bottom, self.map.gety(self.rect.centerx))
-        left = self.settings.left_border + self.rect.left
-        right = self.settings.left_border + self.rect.right
-        if self.rect.bottom > min(self.map.gety(left), self.map.gety(right)):
-            #print(self.rect.bottom, self.map.gety(self.rect.centerx))
-            self.rect.bottom = min(self.map.gety(left), self.map.gety(right))
-        pass
+        if self.rect.bottom > self.map.gety(self.x):
+            self.rect.bottom = self.map.gety(self.x)
+
 
 
     def check_collision(self):
