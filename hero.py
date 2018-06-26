@@ -99,6 +99,7 @@ class Hero():
         self.image = self.stay_images[self.direction][self.weapon]
         self.rect = self.image.get_rect()
         self.rect.centerx = self.screen.get_rect().centerx
+        self.x = self.settings.left_border + self.rect.centerx          #在整个地图中的位置
         self.rect.bottom = self.map.gety(self.rect.centerx)
         print(self.rect.bottom)
         self.moving_left = False
@@ -210,14 +211,17 @@ class Hero():
 
     def attack_image(self):
         #攻击动画
-        self.velocityx = 0 #不变dad
+        self.velocityx = 0
         self.velocityy = self.speedy
         self.change_image(self.attack_images[self.direction][self.weapon][self.image_order])
         self.display_frame(self.attack_size[self.weapon])
 
     def jump_attack_image(self):
         #跳起时进行攻击
-        #self.velocityx 不变
+        if self.moving_left == True and self.moving_right == False:
+            self.velocityx = -self.speedx
+        elif self.moving_left == False and self.moving_right == True:
+            self.velocityx = self.speedx
         if self.image_order >= 6 and self.image_order <= 7:
             self.velocityy = -self.speedy
         elif self.image_order >= 8 and self.image_order <= 10:
@@ -231,7 +235,11 @@ class Hero():
 
     def jump_image(self):
         #跳跃动画
-        #self.velocityx 不变
+        #self.velocityx 随移动键改变
+        if self.moving_left == True and self.moving_right == False:
+            self.velocityx = -self.speedx
+        elif self.moving_left == False and self.moving_right == True:
+            self.velocityx = self.speedx
         if self.image_order >= 6 and self.image_order <= 7:
             self.velocityy = -self.speedy
         elif self.image_order >= 8 and self.image_order <= 10:
@@ -279,8 +287,16 @@ class Hero():
         pass
 
     def update_herox(self):
-        if self.rect.centerx > 0 and self.rect.centerx < 1200 and self.rect.bottom <= 800: #self.map.gety(self.rect.centerx + self.velocityx) :
-            self.rect.centerx += self.velocityx
+        left = self.settings.left_border + self.velocityx + self.rect.left#image_to_frame[self.image].left
+        right = self.settings.left_border + self.velocityx + self.rect.right#.image_to_frame[self.image].right
+        if self.map.gety(left + self.velocityx * 2) < self.rect.bottom :
+            self.velocityx = 0
+        elif self.map.gety(right + self.velocityx * 2) < self.rect.bottom :
+            self.velocityx = 0
+        self.x += self.velocityx
+        self.map.update(self.velocityx, self.rect)
+        self.rect.centerx = self.x - self.settings.left_border
+        
 
     def update_heroy(self):
         #跳起与坠落
@@ -293,7 +309,7 @@ class Hero():
 
 
     def check_collision(self):
-        #碰撞检测, 碰撞到道具, 拳头攻击到敌人, 敌人攻击
+        #碰撞检测, 碰撞到地图, 道具, 拳头攻击到敌人, 敌人攻击
         #遇到不同颜色，先检查道具，看对应的位置的颜色是否一样，一样则是接触到了道具
         #再检测是不是正在进行拳头攻击，是的话，某些位置不会成为攻击矩形
         #否则受到攻击
@@ -363,8 +379,6 @@ class Hero():
 
     def update(self):
         #self.check_collision()
-        if self.moving_left == self.moving_right:
-            self.velocityx = 0
         self.update_status()
         self.update_pos()
         #self.update_weapon_attack()
@@ -528,7 +542,7 @@ if __name__ == '__main__':
         #hero.check_collision()
         screen.fill(settings.bg_color)
         hero.update()
-        map_.update(hero.velocityx, hero.rect)
+        #map_.update(hero.velocityx, hero.rect)
         hero.blitme()
         map_.blitme()
         pygame.display.update()
