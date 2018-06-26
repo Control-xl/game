@@ -376,8 +376,8 @@ class Hero():
                 self.weapon_attacks.fist.right = self.rect.centerx
             elif self.direction == self.settings.hero_direction["right"]:
                 self.weapon_attacks.fist.left = self.rect.centerx
-            self.weapon_attacks.sword["centerx"] = self.rect.centerx + 60 * self.direction
-            self.weapon_attacks.sword["centery"] = self.rect.bottom + 150
+            self.weapon_attacks.sword["centerx"] = self.rect.centerx + 70 * self.direction
+            self.weapon_attacks.sword["centery"] = self.rect.bottom + 90
             self.weapon_attacks.sword["radius"] = 85
             if self.weapon == self.settings.hero_weapon["fist"] and self.image_order >= 9 and self.image_order <= 11:
                 self.weapon_attacks.fist_attacking = True
