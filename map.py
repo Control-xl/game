@@ -36,8 +36,8 @@ class Map():
             if self.settings.left_border > 0:
                 self.settings.left_border -= min(-velocityx, self.settings.left_border)
                 self.settings.right_border = self.settings.left_border + self.settings.screen_width
-            else:
-                gf.play_short_music("music/forest01_new.ogg")
+            # else:
+            #     gf.play_short_music("music/forest01_new.ogg")
 
 
 

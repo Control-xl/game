@@ -65,9 +65,10 @@ class Frame():
 
 
 class Hero():
-    def __init__(self, screen, map_, settings):
+    def __init__(self, screen, map_, tools, settings):
         self.screen = screen
         self.map = map_
+        self.tools = tools
         self.settings = settings
         self.frame_order = 0     #正播放的帧序号
         self.frame_size = 5      #代表一个图片要放的帧数目
@@ -112,6 +113,11 @@ class Hero():
         self.weapon_attacks = Weapon(self.settings)
         self.blood = self.settings.hero_init_blood
         self.magic = self.settings.hero_init_magic
+        self.weapon_en = {
+            self.settings.hero_weapon["fist"] : True,
+            self.settings.hero_weapon["sword"] : False,
+            self.settings.hero_weapon["gun"] : False,
+        }
         self.shoot_en = 0                               #shoot_en = 0时才能射击
         self.magic_en = 0                               #magic_en = 0时才能进行魔法攻击
         self.hurt_en = 0                                #代表可以攻击，非0时代表无敌
@@ -284,7 +290,6 @@ class Hero():
     def update_pos(self):
         self.update_herox()
         self.update_heroy()
-        pass
 
     def update_herox(self):
         x = self.settings.left_border + self.velocityx + self.rect.centerx
@@ -311,25 +316,39 @@ class Hero():
         for y in range(frame.top, frame.bottom):
             x = frame.frame[y]
             for i in range(0, len(x)) :
-                if x[1] >= x[0]:
+                if x[1] <= x[0]:
                     break
                 pos = (self.rect.left + x[i], self.rect.top + y)
                 color = self.screen.get_at(pos)
-                #左右无差别，先检测是否碰到道具
+                #左右无差别，先检测碰撞到什么碰到道具, 再检测地图
+                #print(color)
                 if color != self.settings.hero_boot_color:
-                    if not self.is_get_tool(pos, color):
-                        self.check_attack(pos, i)
-                    #self.get_hurt(self.settings.hero_direction["left"])
+                    touch_object = self.touch_object(pos, color)
+                    if touch_object == "tool" : #道具名称
+                        pass
+                    elif touch_object == "enemy" : 
+                        self.get_hurt(self.settings.hero_direction["left"])
                     #print((x[0], y), color, "hurt")
 
-    def is_get_tool(self, pos, color):
+    def touch_object(self, pos, color):
+        # 判断接触到了什么
         (x, y) = pos
-        for tool in tools :
-            if x >= tool.rect.left and x < tool.rect.right and y >= tool.rect.top and y < tool.rect.bottom:
+        map_color = (0, 0, 0)
+        for i in range(len(self.tools)) :
+            if x >= tools[i].rect.left and x < tools[i].rect.right and \
+            y >= tools[i].rect.top and y < tools[i].rect.bottom :
                 if color == tool.image.get_at((x - tool.rect.left, y - tool.rect.top)):
-                    #删去这个tool并产生反应
-                    return True
-        return False
+                    name = tools[i].name
+                    self.tools.pop(i)
+                    return name
+        if color == map_color:
+            # 当这个坐标在地图以下时，就是接触到地图了,有可能是一条垂直线
+            if self.map.gety(self.settings.left_border + x) <= y or \
+            self.map.gety(self.settings.left_border + x - 1) <= y or \
+            self.map.gety(self.settings.left_border + x + 1) <= y : \
+            return "map"
+        print(x, self.map.gety(self.settings.left_border + x) , y, color)
+        return "enemy"
 
     def update_weapon_attack(self):
         if self.status == self.settings.hero_status["attack"]:
@@ -372,7 +391,6 @@ class Hero():
 
 
     def update(self):
-        #self.check_collision()
         self.update_status()
         self.update_pos()
         #self.update_weapon_attack()
@@ -380,9 +398,9 @@ class Hero():
 
     def change_weapon(self):
         #更换武器，什么时候适合更换武器，当该使用武器对应的动画
-        self.weapon += 1
-        if self.weapon == self.weapon_size:
-            self.weapon = 0
+        self.weapon = (self.weapon + 1) % self.weapon_size
+        while self.weapon_en[self.weapon] == False :
+            self.weapon = (self.weapon + 1) % self.weapon_size
         if self.status == self.settings.hero_status["move"] and self.image_order >= 6: 
             self.image_order -= 6
         if self.weapon == self.settings.hero_weapon["gun"]:
@@ -466,7 +484,7 @@ class Hero():
             # image = image.convert_alpha()
             # transparent(image)
             # pygame.image.save(image, image_path)
-            # self.image_to_frame[image] = Frame(image, self.settings)
+            self.image_to_frame[image] = Frame(image, self.settings)
             images[self.settings.hero_direction[direction]][weapon].append(image)
 
 
@@ -485,7 +503,7 @@ class Hero():
                 # image = image.convert_alpha()  
                 # transparent(image)                    #背景透明化
                 # pygame.image.save(image, image_path)
-                # self.image_to_frame[image] = Frame(image, self.settings)
+                self.image_to_frame[image] = Frame(image, self.settings)
                 self.stay_images[self.settings.hero_direction[direction]].append(image)
                 self.load_image_file(direction, weapon, self.move_images, 'move_images', self.move_size[weapon])
                 self.load_image_file(direction, weapon, self.attack_images, 'attack_images', self.attack_size[weapon])
@@ -502,7 +520,8 @@ if __name__ == '__main__':
     settings = Settings()
     screen = pygame.display.set_mode((settings.screen_width, settings.screen_height), 0, 0)
     map_ = Map(screen, settings)
-    hero = Hero(screen, map_, settings)
+    tools = []
+    hero = Hero(screen, map_, tools, settings)
     clock = pygame.time.Clock()
     while True:
         clock.tick(100)
@@ -533,10 +552,9 @@ if __name__ == '__main__':
                     hero.moving_right = False
                 if event.key == pygame.K_s:
                     hero.squating = False
-        #hero.check_collision()
+        hero.check_collision()
         screen.fill(settings.bg_color)
         hero.update()
-        #map_.update(hero.velocityx, hero.rect)
         hero.blitme()
         map_.blitme()
         pygame.display.update()
