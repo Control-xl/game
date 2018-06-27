@@ -3,17 +3,6 @@ import sys
 from settings import Settings
 from weapon import Weapon, Bullet
 from map import Map
-import json
-
-
-def transparent(image, exp_r = 200, exp_g = 200, exp_b = 200, comp = 1):
-    #将背景改为透明背景
-    rect = image.get_rect()
-    for x in range(rect.left, rect.right):
-        for y in range(rect.top, rect.bottom):
-            (r, g, b, alpha) = image.get_at((x, y))
-            if r >= 200 and g >= 200 and b >= 200:
-                image.set_at((x, y), (255, 255, 255, 1))
 
 
 class Frame():
