@@ -77,4 +77,12 @@ def play_bg_music(music_name, loops = -1):
     pygame.mixer.music.play(loops)
 
 
+def transparent(image, exp_r = 200, exp_g = 200, exp_b = 200, comp = 1):
+    #将背景改为透明背景
+    rect = image.get_rect()
+    for x in range(rect.left, rect.right):
+        for y in range(rect.top, rect.bottom):
+            (r, g, b, alpha) = image.get_at((x, y))
+            if r >= exp_r and g >= exp_g and b >= exp_b:
+                image.set_at((x, y), (255, 255, 255, 0))
 
