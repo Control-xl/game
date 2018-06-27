@@ -14,7 +14,7 @@ class Frame():
         self.rect = self.image.get_rect()
         self.rect.top = 0
         self.rect.left = 0
-        self.frame = [] #表示第几行的人物框架的左端和右端, 左闭右开
+        self.frame = [] #表示第几行的人物外框
         self.top = self.rect.bottom
         self.bottom = self.rect.top
         self.left = self.rect.right
@@ -43,14 +43,42 @@ class Frame():
                 left -= 1
             if right != 0 and right + 1 < self.rect.right :
                 right += 1
-            self.frame.append((left, right))
+            self.frame.append({"left" : [], "right" : []})             #
             if left != right:
-                image.set_at((left, y), settings.hero_boot_color)
-                image.set_at((right, y), settings.hero_boot_color)
                 self.top = min (y, self.top)
                 self.bottom = max(y, self.bottom)
                 self.left = min(self.left+1, left)
                 self.right = max(self.right-1, right)
+                image.set_at((left, y), settings.hero_boot_color)
+                image.set_at((right, y), settings.hero_boot_color)
+                self.frame[-1]["left"].append(left)
+                self.frame[-1]["right"].append(right)
+                if len(self.frame) > 1 and len(self.frame[-2]["left"]) > 0 :
+                    last = self.frame[-2]["left"][0]
+                    this = self.frame[-1]["left"][0]
+                    while this != last :
+                        #当上下行的外框点不连通时, 连一条线
+                        if last > this :
+                            last -= 1
+                            self.frame[-2]["left"].append(last)
+                            image.set_at((last, y-1), settings.hero_boot_color)
+                        else :
+                            this -= 1
+                            self.frame[-1]["left"].append(this)
+                            image.set_at((this, y), settings.hero_boot_color)
+                if len(self.frame) > 1 and len(self.frame[-2]["right"]) > 0 :
+                    last = self.frame[-2]["right"][0]
+                    this = self.frame[-1]["right"][0]
+                    while this != last :
+                        #当上下行的外框点不连通时, 连一条线
+                        if last < this :
+                            last += 1
+                            self.frame[-2]["right"].append(last)
+                            image.set_at((last, y-1), settings.hero_boot_color)
+                        else :
+                            this += 1
+                            self.frame[-1]["right"].append(this)
+                            image.set_at((this, y), settings.hero_boot_color)
 
 
 class Hero():
@@ -82,7 +110,6 @@ class Hero():
         # self.squat_move_images = {}
         self.image_to_frame = {}
         self.load_images()
-        #print(self.image_to_frame[self.jump_attack_images[1][0][9]].frame)
         self.weapon = self.settings.hero_weapon["fist"]
         self.status = settings.hero_status["stay"]
         self.direction = settings.hero_direction["right"]
@@ -301,50 +328,39 @@ class Hero():
         #否则受到攻击
         frame = self.image_to_frame[self.image]
         for y in range(frame.top, frame.bottom):
-            x = frame.frame[y]
-            for i in range(0, len(x)) :
-                if x[1] <= x[0]:
-                    break
-                pos = (self.rect.left + x[i], self.rect.top + y)
-                if pos[0] < 0 or pos[0] >= self.settings.screen_width or \
-                pos[1] < 0 or pos[1] >= self.settings.screen_height :
-                    continue
-                color = self.screen.get_at(pos)
-                if color != self.settings.hero_boot_color:
-                    #先检测碰撞到什么
-                    touch_object = self.touch_object(pos, color)
-                    if touch_object == "tool" : #道具名称
-                        pass
-                    elif touch_object == "enemy" :
-                        # 碰撞到敌人
-                        if self.weapon == self.settings.hero_weapon["fist"] and \
-                        self.status == self.settings.hero_status["attack"] and \
-                        self.image_order >= 5 and  self.image_order <= 6:
-                            # 排除特殊情况 
-                            if self.direction == self.settings.hero_direction["left"] and i == 0 and \
-                            self.x[i] < self.rect.left + 20:
+            for direction, xs in frame.frame[y].items() :
+                for x in xs :
+                    pos = (self.rect.left + x, self.rect.top + y)
+                    if pos[0] < 0 or pos[0] >= self.settings.screen_width or \
+                    pos[1] < 0 or pos[1] >= self.settings.screen_height :
+                        continue
+                    color = self.screen.get_at(pos)
+                    if color != self.settings.hero_boot_color:
+                        #先检测碰撞到什么
+                        touch_object = self.touch_object(pos, color)
+                        i = 0
+                        if touch_object == "tool" : #道具名称
+                            pass
+                        elif touch_object == "enemy" :
+                            # 碰撞到敌人
+                            if self.weapon == self.settings.hero_weapon["fist"] and \
+                            self.status == self.settings.hero_status["attack"] and \
+                            self.image_order >= 5 and  self.image_order <= 6 and \
+                            self.direction == self.settings.hero_direction[direction] and \
+                            y >= 41 and y <= 56:
+                                #特殊情况 拳头部分
                                 pass
-                            if self.direction == self.settings.hero_direction["right"] and i == 1 and \
-                            self.x[i] > self.rect.right - 20:
+                            elif self.weapon == self.settings.hero_weapon["fist"] and \
+                            self.status == self.settings.hero_status["jump_attack"] and \
+                            self.image_order >= 9 and  self.image_order <= 11 and \
+                            self.direction == self.settings.hero_direction[direction] and \
+                            y >= 95 and y <= 110:
                                 pass
-                        elif self.weapon == self.settings.hero_weapon["fist"] and \
-                        self.status == self.settings.hero_status["jump_attack"] and \
-                        self.image_order >= 9 and  self.image_order <= 11:
-                            # 排除特殊情况 
-                            if self.direction == self.settings.hero_direction["left"] and i == 0 and \
-                            self.x[i] < self.rect.left + 20:
-                                pass
-                            if self.direction == self.settings.hero_direction["right"] and i == 1 and \
-                            self.x[i] > self.rect.right - 20:
-                                pass
-                        else :
-                            if i == 0 :
-                                self.get_hurt(self.settings.hero_direction["left"])
-                            elif i == 1 : 
-                                self.get_hurt(self.settings.hero_direction["right"])
+                            else :
+                                self.get_hurt(self.settings.hero_direction[direction])
 
     def touch_object(self, pos, color):
-        # 判断接触到了什么
+        # 判断接触到了什么 ？ 道具, 地图, 技能, 子弹, 敌人
         (x, y) = pos
         for i in range(len(self.tools)) :
             if x >= tools[i].rect.left and x < tools[i].rect.right and \
@@ -357,21 +373,23 @@ class Hero():
             # 当这个坐标在地图以下时，就是接触到地图了,有可能是一条垂直线
             if self.map.gety(self.settings.left_border + x) <= y or \
             self.map.gety(self.settings.left_border + x - 1) <= y or \
-            self.map.gety(self.settings.left_border + x + 1) <= y : \
-            return "map"
+            self.map.gety(self.settings.left_border + x + 1) <= y : 
+                print("map")
+                return "map"
+        print("enemy")
         return "enemy"
 
     def update_weapon_attack(self):
         if self.status == self.settings.hero_status["attack"]:
             self.weapon_attacks.fist.width = 80
-            self.weapon_attacks.fist.height = 15
-            self.weapon_attacks.fist.top = self.rect.bottom - 166
+            self.weapon_attacks.fist.height = 16
+            self.weapon_attacks.fist.top = self.rect.top + 41
             if self.direction == self.settings.hero_direction["left"]:
                 self.weapon_attacks.fist.right = self.rect.centerx
             elif self.direction == self.settings.hero_direction["right"]:
                 self.weapon_attacks.fist.left = self.rect.centerx
             self.weapon_attacks.sword["centerx"] = self.rect.centerx + 60 * self.direction
-            self.weapon_attacks.sword["centery"] = self.rect.bottom + 150
+            self.weapon_attacks.sword["centery"] = self.rect.bottom - 150
             self.weapon_attacks.sword["radius"] = 85
             self.weapon_attacks.sword["direction"] = self.direction
             if self.weapon == self.settings.hero_weapon["fist"] and self.image_order >= 5 and self.image_order <= 6:
@@ -385,14 +403,14 @@ class Hero():
                 self.weapon_attacks.sword_attacking = False
         elif self.status == self.settings.hero_status["jump_attack"]:
             self.weapon_attacks.fist.width = 80
-            self.weapon_attacks.fist.height = 15
-            self.weapon_attacks.fist.top = self.rect.bottom - 48
+            self.weapon_attacks.fist.height = 16
+            self.weapon_attacks.fist.top = self.rect.top + 95
             if self.direction == self.settings.hero_direction["left"]:
                 self.weapon_attacks.fist.right = self.rect.centerx
             elif self.direction == self.settings.hero_direction["right"]:
                 self.weapon_attacks.fist.left = self.rect.centerx
             self.weapon_attacks.sword["centerx"] = self.rect.centerx + 70 * self.direction
-            self.weapon_attacks.sword["centery"] = self.rect.bottom + 90
+            self.weapon_attacks.sword["centery"] = self.rect.bottom - 90
             self.weapon_attacks.sword["radius"] = 85
             self.weapon_attacks.sword["direction"] = self.direction
             if self.weapon == self.settings.hero_weapon["fist"] and self.image_order >= 9 and self.image_order <= 11:
