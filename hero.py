@@ -498,7 +498,7 @@ class Hero():
             num = str(i)
             if images_size >= 10 and i < 10:
                 num = '0' + str(i)
-            image_path = 'game/images/' + str(weapon) + '_' + direction + '_' + images_path + '/' + images_path + num + '.jpg'
+            image_path = 'images/' + str(weapon) + '_' + direction + '_' + images_path + '/' + images_path + num + '.jpg'
             image = pygame.image.load(image_path)
             # image = image.convert_alpha()
             # transparent(image)
@@ -517,7 +517,7 @@ class Hero():
             self.jump_attack_images[self.settings.hero_direction[direction]] = []
             self.hurt_images[self.settings.hero_direction[direction]] = []
             for weapon in range(0, self.weapon_size):
-                image_path = 'game/images/' + str(weapon) + '_' + direction + '_stay.jpeg'
+                image_path = 'images/' + str(weapon) + '_' + direction + '_stay.jpeg'
                 image = pygame.image.load(image_path)
                 # image = image.convert_alpha()  
                 # transparent(image)                    #背景透明化
