@@ -18,10 +18,10 @@ class Settings():
         # 屏幕背景颜色
         self.bg_color = (255, 255, 255)
 
-        # 地图在屏幕上显示的左边界和右边界
+        # 地图状态，包括地图在屏幕上显示的左边界和右边界，以及屏幕锁定状态
         self.left_border = 0
         self.right_border = 1200
-
+        self.map_lock = False
         # 整个地图的最大长度
         self.map_max = 12000
         self.map_color = (0, 0, 0)

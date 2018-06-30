@@ -3,7 +3,6 @@ import game_functions as gf
 import threading
 from map import Map
 from settings import Settings
-from ship import Ship
 from hero import Hero
 from pause_menu import PauseMenu
 from monster import MonsterBall
