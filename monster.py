@@ -180,7 +180,8 @@ class MonsterBall():
                     self.protection_radius ** 2:
                     self.protection_blood[i] -= self.settings.fist_damage
                     return True
-            return False
+
+        return False
 
 
     def check_fist_center_collisions(self, fist):
