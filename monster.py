@@ -236,32 +236,34 @@ class MonsterPlane():
 
 
     def update(self, hero):
-        # 更新子弹位置
-        self.update_bullet()
-        # 检测碰撞
-        self.check_collisions(hero.weapon)
-        # 计时
-        self.time_passed += self.clock.tick()
-        # 如果不是在蓄能状态，那么就等待，直到非蓄能状态时间达到5秒
-        if not self.save_state:
-            if self.time_passed > 5000:
-                self.time_passed = 0
-                self.save_state = True
-        else:
-            # 如果在蓄能状态，那就0.25秒更新一次状态图，5次更新后发射
-            if self.time_passed >= 250:
-                self.save_energy_image_cnt = (self.save_energy_image_cnt + 1) % 6
-                if len(self.bullet_list) < 3:
-                    if self.save_energy_image_cnt == 5:
-                        print(len(self.bullet_list))
-                        self.add_bullet(hero)
-                else:
-                    self.save_state = False
+        if self.blood > 0:
+            # 更新子弹位置
+            self.update_bullet()
+            # 检测碰撞
+            self.check_collisions(hero.weapon)
+            # 计时
+            self.time_passed += self.clock.tick()
+            # 如果不是在蓄能状态，那么就等待，直到非蓄能状态时间达到5秒
+            if not self.save_state:
+                if self.time_passed > 5000:
+                    self.time_passed = 0
+                    self.save_state = True
+            else:
+                # 如果在蓄能状态，那就0.25秒更新一次状态图，5次更新后发射
+                if self.time_passed >= 250:
+                    self.save_energy_image_cnt = (self.save_energy_image_cnt + 1) % 6
+                    if len(self.bullet_list) < 3:
+                        if self.save_energy_image_cnt == 5:
+                            print(len(self.bullet_list))
+                            self.add_bullet(hero)
+                    else:
+                        self.save_state = False
 
-                self.time_passed = 0
-            if self.save_energy_image_cnt < 5:
-                self.save_rect[self.save_energy_image_cnt].centerx = self.rect.centerx
-                self.save_rect[self.save_energy_image_cnt].centery = self.rect.bottom + self.save_energy_image_down
+                    self.time_passed = 0
+                if self.save_energy_image_cnt < 5:
+                    self.save_rect[self.save_energy_image_cnt].centerx = self.rect.centerx
+                    self.save_rect[self.save_energy_image_cnt].centery = self.rect.bottom + self.save_energy_image_down
+
 
     def update_bullet(self):
 
@@ -369,12 +371,14 @@ class MonsterPlane():
 
 
     def blitme(self):
-        self.screen.blit(self.image, self.rect)
-        if self.save_energy_image_cnt < 5 and self.save_state :
-            self.screen.blit(self.save_energy_image[self.save_energy_image_cnt], self.save_rect[self.save_energy_image_cnt])
-        for i in range(len(self.bullet_list)):
-            # print(self.bullet_rect_list[i].centerx, self.bullet_rect_list[i].centery)
-            self.screen.blit(self.bullet_list[i], self.bullet_rect_list[i])
+        if self.blood > 0:
+            self.screen.blit(self.image, self.rect)
+            if self.save_energy_image_cnt < 5 and self.save_state:
+                self.screen.blit(self.save_energy_image[self.save_energy_image_cnt],
+                                 self.save_rect[self.save_energy_image_cnt])
+            for i in range(len(self.bullet_list)):
+                # print(self.bullet_rect_list[i].centerx, self.bullet_rect_list[i].centery)
+                self.screen.blit(self.bullet_list[i], self.bullet_rect_list[i])
 
         # print(self.save_energy_image[self.save_energy_image_cnt].get_rect())
 
