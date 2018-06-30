@@ -4,6 +4,7 @@ from settings import Settings
 from weapon import Weapon, Bullet
 from map import Map
 from monster import MonsterBall, MonsterPlane
+from game_functions import transparent
 
 class Frame():
     # 代表一个火柴人的外部框架，用以碰撞检测
@@ -127,7 +128,7 @@ class Hero():
         self.jumping = False
         self.squating = False
         self.falling = False
-        self.weapon_attacks = Weapon(self.settings)
+        #self.weapon_attacks = Weapon(self.screen, self.settings)
         self.blood = self.settings.hero_init_blood
         self.magic = self.settings.hero_init_magic
         self.weapon_en = {
@@ -286,10 +287,10 @@ class Hero():
 
     def move_image(self):
         #移动动画, 如果是状态发生改变
-        if self.direction == self.settings.hero_direction["left"] and \ 
+        if self.direction == self.settings.hero_direction["left"] and \
         self.moving_left == True and self.moving_right == False :
             self.velocityx = self.speedx * self.direction
-        elif self.direction == self.settings.hero_direction["right"] and \ 
+        elif self.direction == self.settings.hero_direction["right"] and \
         self.moving_right == True and self.moving_left == False :
             self.velocityx = self.speedx * self.direction
         else :
@@ -401,7 +402,8 @@ class Hero():
     def update_weapon_attack(self):
         if self.status == self.settings.hero_status["fire_magic"]:
             if self.weapon == self.settings.hero_weapon["fist"] :
-
+                if self.image_order == 6 :
+                    pass
         if self.status == self.settings.hero_status["attack"]:
             self.weapon_attacks.fist.width = 80
             self.weapon_attacks.fist.height = 16
@@ -465,7 +467,7 @@ class Hero():
             self.image_order -= 6
         if self.weapon == self.settings.hero_weapon["gun"]:
             #持枪时无攻击状态
-            if self.status == self.settings.hero_status["attack"] or \ 
+            if self.status == self.settings.hero_status["attack"] or \
             self.status == self.settings.hero_status["fire_magic"] :
                 self.status = self.settings.hero_status["stay"]
             elif self.status == self.settings.hero_status["jump_attack"]:
@@ -540,11 +542,11 @@ class Hero():
             num = str(i)
             if images_size >= 10 and i < 10:
                 num = '0' + str(i)
-            image_path = 'images/' + str(weapon) + '_' + direction + '_' + images_path + '/' + images_path + num + '.jpg'
+            image_path = 'images/' + str(weapon) + '_' + direction + '_' + images_path + '/' + images_path + num + '.png'
             image = pygame.image.load(image_path)
             # image = image.convert_alpha()
             # transparent(image)
-            # pygame.image.save(image, image_path)
+            # pygame.image.save(image, png_image_path)
             self.image_to_frame[image] = Frame(image, self.settings)
             images[self.settings.hero_direction[direction]][weapon].append(image)
 
@@ -560,11 +562,11 @@ class Hero():
             self.fire_magic_images[self.settings.hero_direction[direction]] = []
             self.hurt_images[self.settings.hero_direction[direction]] = []
             for weapon in range(0, self.weapon_size):
-                image_path = 'images/' + str(weapon) + '_' + direction + '_stay.jpeg'
+                image_path = 'images/' + str(weapon) + '_' + direction + '_stay.png'
                 image = pygame.image.load(image_path)
                 # image = image.convert_alpha()  
                 # transparent(image)                    #背景透明化
-                # pygame.image.save(image, image_path)
+                # pygame.image.save(image, png_image_path)
                 self.image_to_frame[image] = Frame(image, self.settings)
                 self.stay_images[self.settings.hero_direction[direction]].append(image)
                 self.load_image_file(direction, weapon, self.move_images, 'move_images', self.move_size[weapon])
