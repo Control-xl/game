@@ -95,7 +95,7 @@ class Hero():
         self.attack_size = [11, 8, 0]    # 11, 11, 11
         self.jump_size = 17      # 17, 17, 17
         self.jump_attack_size = [17, 17, 0]   #17, 17, 17
-        self.fire_magic_size = [7, 6, 0]
+        self.fire_magic_size = [8, 8, 0]
         self.hurt_size = 4       # 4, 4, 4
         self.squat_move_size = 10
         self.squat_attack_size = 9
@@ -128,17 +128,17 @@ class Hero():
         self.jumping = False
         self.squating = False
         self.falling = False
-        #self.weapon_attacks = Weapon(self.screen, self.settings)
         self.blood = self.settings.hero_init_blood
         self.magic = self.settings.hero_init_magic
+        self.weapon_attacks = Weapon(self.screen, self.settings)
         self.weapon_en = {
             self.settings.hero_weapon["fist"] : True,
             self.settings.hero_weapon["sword"] : False,
             self.settings.hero_weapon["gun"] : False,
         }
         self.shoot_en = 0                               #shoot_en = 0时才能射击
-        self.magic_en = 0                               #magic_en = 0时才能进行魔法攻击
-        self.hurt_en = 5                              #代表可以攻击，非0时代表无敌
+        self.magic_cd = 0                               #magic_cd = 0时才能进行魔法攻击
+        self.hurt_en = 5                                #代表可以攻击，非0时代表无敌
         self.speedx = 2
         self.speedy = 5
         self.velocityx = 0
@@ -216,6 +216,8 @@ class Hero():
             self.shoot_en -= 1
         if self.hurt_en > 0:
             self.hurt_en -= 1
+        if self.magic_cd > 0:
+            self.magic_cd -= 1
         self.jumping = False
         
 
@@ -400,17 +402,39 @@ class Hero():
         return "enemy"
 
     def update_weapon_attack(self):
+        self.weapon_attacks.update()
         if self.status == self.settings.hero_status["fire_magic"]:
-            if self.weapon == self.settings.hero_weapon["fist"] :
-                if self.image_order == 6 :
-                    pass
-        if self.status == self.settings.hero_status["attack"]:
+            if self.weapon == self.settings.hero_weapon["fist"] and \
+            self.image_order == self.fire_magic_size[self.weapon] - 2:
+                #
+                self.magic -= 1
+                self.magic_cd = 300
+                self.weapon_attacks.image_order = 0
+                self.weapon_attacks.fist_magic_time = self.weapon_attacks.fist_magic_size
+                if self.direction == self.settings.hero_direction["left"] :
+                    self.weapon_attacks.fist_magic_rect.right = self.rect.left - 100
+                elif self.direction == self.settings.hero_direction["right"] :
+                    self.weapon_attacks.fist_magic_rect.left = self.rect.right + 100
+                self.weapon_attacks.fist_magic_rect_x = self.settings.left_border + self.weapon_attacks.fist_magic_rect.centerx
+            elif self.weapon == self.settings.hero_weapon["sword"] and \
+            self.image_order == self_sword_magic_size[self.weapon] - 2:
+                self.magic -= 1
+                self.magic_cd = 300
+                self.weapon_attacks.image_order = 0
+                self.weapon_attacks.sword_magic_time = 100
+                self.weapon_attacks.sword_magic_rect.bottom = self.rect.bottom
+                if self.direction == self.settings.hero_direction["left"] :
+                    self.weapon_attacks.sword_magic_rect.right = self.rect.left
+                elif self.direction == self.settings.hero_direction["right"] :
+                    self.weapon_attacks.sword_magic_rect.left = self.rect.right
+                self.weapon_attacks.sword_magic_rect_x = self.settings.left_border + self.weapon_attacks.sword_magic_rect.centerx
+        elif self.status == self.settings.hero_status["attack"]:
             self.weapon_attacks.fist.width = 80
             self.weapon_attacks.fist.height = 16
             self.weapon_attacks.fist.top = self.rect.top + 41
-            if self.direction == self.settings.hero_direction["left"]:
+            if self.direction == self.settings.hero_direction["left"] :
                 self.weapon_attacks.fist.right = self.rect.centerx
-            elif self.direction == self.settings.hero_direction["right"]:
+            elif self.direction == self.settings.hero_direction["right"] :
                 self.weapon_attacks.fist.left = self.rect.centerx
             self.weapon_attacks.sword["centerx"] = self.rect.centerx + 60 * self.direction
             self.weapon_attacks.sword["centery"] = self.rect.bottom - 150
@@ -499,7 +523,8 @@ class Hero():
             bullet_pos.append(self.rect.top - 40)
         else :
             return
-        new_bullet = Bullet(self.screen, bullet_pos, bullet_velocity)
+        new_bullet = Bullet(self.screen, self.settings, bullet_pos, bullet_velocity)
+        self.weapon_attacks.bullets.append(new_bullet)
         self.shoot_en = 200
 
 
@@ -542,8 +567,8 @@ class Hero():
             num = str(i)
             if images_size >= 10 and i < 10:
                 num = '0' + str(i)
-            image_path = 'images/' + str(weapon) + '_' + direction + '_' + images_path + '/' + images_path + num + '.png'
-            image = pygame.image.load(image_path)
+            png_image_path = 'images/' + str(weapon) + '_' + direction + '_' + images_path + '/' + images_path + num + '.png'
+            image = pygame.image.load(png_image_path)
             # image = image.convert_alpha()
             # transparent(image)
             # pygame.image.save(image, png_image_path)
@@ -562,8 +587,8 @@ class Hero():
             self.fire_magic_images[self.settings.hero_direction[direction]] = []
             self.hurt_images[self.settings.hero_direction[direction]] = []
             for weapon in range(0, self.weapon_size):
-                image_path = 'images/' + str(weapon) + '_' + direction + '_stay.png'
-                image = pygame.image.load(image_path)
+                png_image_path = 'images/' + str(weapon) + '_' + direction + '_stay.png'
+                image = pygame.image.load(png_image_path)
                 # image = image.convert_alpha()  
                 # transparent(image)                    #背景透明化
                 # pygame.image.save(image, png_image_path)

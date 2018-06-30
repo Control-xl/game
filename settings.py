@@ -16,6 +16,8 @@ class Settings():
         self.screen_width = 1200
         self.screen_height = 800
         # 屏幕背景颜色
+        self.white_color = (255, 255, 255)
+        self.black_color = (0, 0, 0)
         self.bg_color = (255, 255, 255)
 
         # 地图状态，包括地图在屏幕上显示的左边界和右边界，以及屏幕锁定状态
