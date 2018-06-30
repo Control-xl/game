@@ -284,7 +284,14 @@ class Hero():
 
     def move_image(self):
         #移动动画, 如果是状态发生改变
-        self.velocityx = self.speedx * self.direction
+        if self.direction == self.settings.hero_direction["left"] and \ 
+        self.moving_left == True and self.moving_right == False :
+            self.velocityx = self.speedx * self.direction
+        elif self.direction == self.settings.hero_direction["right"] and \ 
+        self.moving_right == True and self.moving_left == False :
+            self.velocityx = self.speedx * self.direction
+        else :
+            self.velocityx = 0
         self.velocityy = self.speedy
         #动画未播放完整，继续动画
         self.change_image(self.move_images[self.direction][self.weapon][self.image_order])
