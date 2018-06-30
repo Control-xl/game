@@ -147,6 +147,8 @@ class Hero():
         if self.status == self.settings.hero_status["hurt"]:
             #受伤的优先级最高, 要更新图形
             self.hurt_image()
+        elif self.status == self.settings.hero_status["fire_magic"]:
+            self.fire_magic_image()
         elif self.status == self.settings.hero_status["attack"] :
             #攻击动画
             self.attack_image()
@@ -156,6 +158,8 @@ class Hero():
         elif self.status == self.settings.hero_status["squat_attack"] :
             #下蹲攻击动画
             self.squat_attack_image()
+        elif self.fire_magicing == True:
+            self.fire_magic_image()
         elif self.attacking and self.weapon != self.settings.hero_weapon["gun"]:
             #当按下攻击键时，进入攻击状态
             self.attacking = False
@@ -273,7 +277,10 @@ class Hero():
         self.display_frame(self.jump_size)
 
     def fire_magic_image(self):
-        pass
+        self.velocityx = 0
+        self.velocityy = self.speedy
+        self.change_image(self.attack_images[self.direction][self.weapon][self.image_order])
+        self.display_frame(self.attack_size[self.weapon])
 
     def move_image(self):
         #移动动画, 如果是状态发生改变
