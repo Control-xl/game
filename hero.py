@@ -377,9 +377,9 @@ class Hero():
             if self.map.gety(self.settings.left_border + x) <= y or \
             self.map.gety(self.settings.left_border + x - 1) <= y or \
             self.map.gety(self.settings.left_border + x + 1) <= y : 
-                print("map")
+                # print("map")
                 return "map"
-        print("enemy")
+        # print("enemy")
         return "enemy"
 
     def update_weapon_attack(self):
@@ -567,15 +567,15 @@ if __name__ == '__main__':
     monsterplane = MonsterPlane(settings, screen)
     clock = pygame.time.Clock()
     while True:
-        clock.tick(100)
+        #clock.tick(100)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_k:
-                    hero.get_hurt(settings.hero_direction["left"])
-                if event.key == pygame.K_l:
-                    hero.get_hurt(settings.hero_direction["right"])
+                # if event.key == pygame.K_k:
+                #     hero.get_hurt(settings.hero_direction["left"])
+                # if event.key == pygame.K_l:
+                #     hero.get_hurt(settings.hero_direction["right"])
                 if event.key == pygame.K_j:
                     hero.attacking = True
                 if event.key == pygame.K_w:
