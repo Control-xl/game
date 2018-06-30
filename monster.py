@@ -152,6 +152,7 @@ class MonsterBall():
         return False
 
     def check_sword_center_collisions(self, sword):
+        # 检测剑和中心的碰撞
         if get_distance2(self.center_x, self.center_y, sword["centerx"], sword["centery"]) < \
                 (sword["radius"] + self.center_radius) ** 2:
             if (sword["centerx"] < self.center_x and sword["direction"] == 1) or \
@@ -161,6 +162,7 @@ class MonsterBall():
         return False
 
     def check_fist_coll(self, fist):
+        # 检测拳头的碰撞
         flag1 = self.check_fist_protection_collisions(fist)
         flag2 = self.check_fist_center_collisions(fist)
         return flag1 | flag2
@@ -176,12 +178,13 @@ class MonsterBall():
                 if get_distance2(pst_x, pst_y, fist.right, fist.top) < \
                     self.protection_radius ** 2 or get_distance2(pst_x, pst_y, fist.right, fist.bottom) < \
                     self.protection_radius ** 2:
-                    self.blood -= self.settings.fist_damage
+                    self.protection_blood[i] -= self.settings.fist_damage
                     return True
             return False
 
 
     def check_fist_center_collisions(self, fist):
+        # 检测拳头和中心的碰撞
         if get_distance2(self.center_x, self.center_y, fist.right, fist.top) < self.center_radius ** 2 or \
                 get_distance2(self.center_x, self.center_y, fist.right, fist.bottom) < self.center_radius ** 2:
             self.blood -= self.settings.fist_damage
