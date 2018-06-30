@@ -30,7 +30,7 @@ class MonsterBall():
         self.protection_position = 0
         # 保护圈颜色
         self.protection_color = settings.monster_ball_protection_color
-        self.protection_blood = [20, 20, 20, 20, 20]
+        self.protection_blood = [1 for i in range(5)]
 
         # 是否存活
         self.alive = True
@@ -41,7 +41,7 @@ class MonsterBall():
         else:
             self.check_collisions(weapon)
             self.protection_position = (self.protection_position + self.protection_speed) % 360
-            self.center_x += self.center_speed
+            self.center_x -= self.center_speed
 
 
     def blitme(self):
@@ -240,7 +240,7 @@ class MonsterPlane():
             # 更新子弹位置
             self.update_bullet()
             # 检测碰撞
-            self.check_collisions(hero.weapon)
+            self.check_collisions(hero.weapon_attacks)
             # 计时
             self.time_passed += self.clock.tick()
             # 如果不是在蓄能状态，那么就等待，直到非蓄能状态时间达到5秒
