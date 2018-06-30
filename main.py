@@ -73,7 +73,7 @@ if __name__ == '__main__':
         if not settings.pause:
             monster_ball.update(weapon)
         hero.update()
-        map1.update(hero)
+        # map1.update(hero)
         state_display.update(hero)
 
 

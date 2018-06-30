@@ -61,16 +61,17 @@ class MonsterBall():
 
     def check_collisions(self, weapon):
         self.check_bullet_coll(weapon.bullets)
-        # TODO:需要一个剑和出拳的状态标志
-        self.check_sword_coll(weapon.sword)
-
-        self.check_fist_coll(weapon.fist)
+        if weapon.sword_attacking:
+            if self.check_sword_coll(weapon.sword):
+                weapon.sword_attacking = False
+        if weapon.fist_attacking:
+            if self.check_fist_coll(weapon.fist):
+                weapon.fist_attacking = False
 
     def check_bullet_coll(self, bullets):
         bullets_to_delete = []
         for bullet in bullets:
             if self.bullet_protection_collisions(bullet):
-
                 bullets_to_delete.append(bullet)
             elif self.bullet_center_collisions(bullet):
                 bullets_to_delete.append(bullet)
@@ -127,8 +128,9 @@ class MonsterBall():
         return flag
 
     def check_sword_coll(self, sword):
-        self.check_sword_protection_collisions(sword)
-        self.check_sword_center_collisions(sword)
+        flag1 = self.check_sword_protection_collisions(sword)
+        flag2 = self.check_sword_center_collisions(sword)
+        return flag1 | flag2
 
     def check_sword_protection_collisions(self, sword):
         # 检查剑和保护圈是否有碰撞
@@ -138,17 +140,53 @@ class MonsterBall():
                             math.cos(math.radians(self.protection_position + i * self.protection_range)))
                 pst_y = int(self.center_y + self.protection_center_distance * \
                             math.sin(math.radians(self.protection_position + i * self.protection_range)))
+
+                # 先判断两圆是否相交
                 if get_distance2(pst_x, pst_y, sword["centerx"], sword["centery"]) < \
                         (sword["radius"] + self.protection_radius) ** 2:
-                    self.protection_blood[i] -= self.settings.blood_damage
+                    # 判断方向和位置
+                    if (sword["centerx"] < pst_x and sword["direction"] == 1) or \
+                            (sword["centerx"] > pst_x and sword["direction"] == -1):
+                        self.protection_blood[i] -= self.settings.sword_damage
+                        return True
+        return False
 
     def check_sword_center_collisions(self, sword):
         if get_distance2(self.center_x, self.center_y, sword["centerx"], sword["centery"]) < \
                 (sword["radius"] + self.center_radius) ** 2:
-            self.blood -= self.settings.blood_damage
+            if (sword["centerx"] < self.center_x and sword["direction"] == 1) or \
+                    (sword["centerx"] > self.center_x and sword["direction"] == -1):
+                self.blood -= self.settings.sword_damage
+                return True
+        return False
 
     def check_fist_coll(self, fist):
-        return 1
+        flag1 = self.check_fist_protection_collisions(fist)
+        flag2 = self.check_fist_center_collisions(fist)
+        return flag1 | flag2
+
+    def check_fist_protection_collisions(self, fist):
+        # 检查拳头和保护圈的碰撞
+        for i in range(self.protection_number):
+            if self.protection_blood[i] > 0:
+                pst_x = int(self.center_x + self.protection_center_distance * \
+                            math.cos(math.radians(self.protection_position + i * self.protection_range)))
+                pst_y = int(self.center_y + self.protection_center_distance * \
+                            math.sin(math.radians(self.protection_position + i * self.protection_range)))
+                if get_distance2(pst_x, pst_y, fist.right, fist.top) < \
+                    self.protection_radius ** 2 or get_distance2(pst_x, pst_y, fist.right, fist.bottom) < \
+                    self.protection_radius ** 2:
+                    self.blood -= self.settings.fist_damage
+                    return True
+            return False
+
+
+    def check_fist_center_collisions(self, fist):
+        if get_distance2(self.center_x, self.center_y, fist.right, fist.top) < self.center_radius ** 2 or \
+                get_distance2(self.center_x, self.center_y, fist.right, fist.bottom) < self.center_radius ** 2:
+            self.blood -= self.settings.fist_damage
+            return True
+        return False
 
 
 def get_distance2(x1, y1, x2, y2):
@@ -200,6 +238,8 @@ class MonsterPlane():
     def update(self, hero):
         # 更新子弹位置
         self.update_bullet()
+        # 检测碰撞
+        self.check_collisions(hero.weapon)
         # 计时
         self.time_passed += self.clock.tick()
         # 如果不是在蓄能状态，那么就等待，直到非蓄能状态时间达到5秒
@@ -273,6 +313,60 @@ class MonsterPlane():
             self.bullet_ud_list[i] = -1
         theta = math.atan(k)
         self.bullet_dir_list.append(theta)
+
+    def check_collisions(self, weapon):
+        self.check_bullet_coll(weapon.bullets)
+        if weapon.sword_attacking:
+            if self.check_sword_coll(weapon.sword):
+                weapon.sword_attacking = False
+        if weapon.fist_attacking:
+            if self.check_fist_coll(weapon.fist):
+                weapon.fist_attacking = False
+
+    def check_bullet_coll(self, bullets):
+        # 判断子弹是否和飞机发生碰撞
+        bullets_to_del = []
+        for bullet in bullets:
+            # 子弹左上角或者左下角碰到飞船
+            if self.point_coll(bullet.rect.right, bullet.rect.top) or self.point_coll(bullet.rect.right, bullet.rect.bottom):
+                bullets_to_del.append(bullet)
+                self.blood -= self.settings.bullet_damage
+        for bullet in bullets_to_del:
+            bullets.remove(bullet)
+
+    def check_sword_coll(self, sword):
+        # 矩形的四个点在圆中或者半圆的三个最远点在矩形中，则视为碰撞
+        # 依次判断左上角、左下角、右下角、右上角
+        if get_distance2(sword["centerx"], sword["centery"], self.rect.left, self.rect.top) < sword["radius"] ** 2 \
+                or \
+                get_distance2(sword["centerx"], sword["centery"], self.rect.left, self.rect.bottom) < sword["radius"] ** 2 \
+                or \
+                get_distance2(sword["centerx"], sword["centery"], self.rect.right, self.rect.bottom) < sword["radius"] ** 2 \
+                or \
+                get_distance2(sword["centerx"], sword["centery"], self.rect.right, self.rect.top) < sword["radius"] ** 2:
+            self.blood -= self.settings.sword_damage
+            return True
+        # 判断半圆三个点，依次为上，前，下
+        if self.point_coll(sword["centerx"], sword["centery"] + sword["radius"]) or \
+            self.point_coll(sword["centerx"] + sword["direction"] * sword["radius"], sword["centery"]) or \
+            self.point_coll(sword["centerx"], sword["centery"] - sword["radius"]):
+            self.blood -= self.settings.sword_damage
+            return True
+        return False
+
+
+    def check_fist_coll(self, fist):
+        if self.point_coll(fist.right, fist.top) or self.point_coll(fist.right, fist.bottom):
+            self.blood -= self.settings.fist_damage
+            return True
+        return False
+
+    def point_coll(self, x, y):
+        # 判断点是否在飞船的rect中，有则发生碰撞，返回true
+        if x >= self.rect.left and x <= self.rect.right and y <= self.rect.bottom and y >= self.rect.top:
+            return True
+        return False
+
 
     def blitme(self):
         self.screen.blit(self.image, self.rect)
