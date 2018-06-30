@@ -94,6 +94,7 @@ class Hero():
         self.attack_size = [11, 8, 0]    # 11, 11, 11
         self.jump_size = 17      # 17, 17, 17
         self.jump_attack_size = [17, 17, 0]   #17, 17, 17
+        self.fire_magic_size = [7, 6, 0]
         self.hurt_size = 4       # 4, 4, 4
         self.squat_move_size = 10
         self.squat_attack_size = 9
