@@ -3,7 +3,7 @@ import sys
 from settings import Settings
 from weapon import Weapon, Bullet
 from map import Map
-
+from monster import MonsterBall, MonsterPlane
 
 class Frame():
     # 代表一个火柴人的外部框架，用以碰撞检测
@@ -272,6 +272,9 @@ class Hero():
         self.change_image(self.jump_images[self.direction][self.weapon][self.image_order])
         self.display_frame(self.jump_size)
 
+    def fire_magic_image(self):
+        pass
+
     def move_image(self):
         #移动动画, 如果是状态发生改变
         self.velocityx = self.speedx * self.direction
@@ -428,9 +431,10 @@ class Hero():
 
 
     def update(self):
+        self.check_collision()
         self.update_status()
         self.update_pos()
-        #self.update_weapon_attack()
+        self.update_weapon_attack()
 
 
     def change_weapon(self):
@@ -559,6 +563,8 @@ if __name__ == '__main__':
     map_ = Map(screen, settings)
     tools = []
     hero = Hero(screen, map_, tools, settings)
+    monsterball = MonsterBall(settings, screen)
+    monsterplane = MonsterPlane(settings, screen)
     clock = pygame.time.Clock()
     while True:
         clock.tick(100)
@@ -589,9 +595,12 @@ if __name__ == '__main__':
                     hero.moving_right = False
                 if event.key == pygame.K_s:
                     hero.squating = False
-        hero.check_collision()
-        screen.fill(settings.bg_color)
         hero.update()
+        monsterball.update(hero.weapon_attacks)
+        monsterplane.update(hero)
+        screen.fill(settings.bg_color)
         hero.blitme()
+        monsterball.blitme()
+        monsterplane.blitme()
         map_.blitme()
         pygame.display.update()
