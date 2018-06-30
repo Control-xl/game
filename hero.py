@@ -105,6 +105,7 @@ class Hero():
         self.attack_images = {}
         self.jump_images = {}
         self.jump_attack_images = {}
+        self.fire_magic_images = {}
         self.hurt_images = {}
         # self.squat_images = {}
         # self.squat_attack_images = {}
@@ -398,6 +399,9 @@ class Hero():
         return "enemy"
 
     def update_weapon_attack(self):
+        if self.status == self.settings.hero_status["fire_magic"]:
+            if self.weapon == self.settings.hero_weapon["fist"] :
+
         if self.status == self.settings.hero_status["attack"]:
             self.weapon_attacks.fist.width = 80
             self.weapon_attacks.fist.height = 16
@@ -461,7 +465,8 @@ class Hero():
             self.image_order -= 6
         if self.weapon == self.settings.hero_weapon["gun"]:
             #持枪时无攻击状态
-            if self.status == self.settings.hero_status["attack"]:
+            if self.status == self.settings.hero_status["attack"] or \ 
+            self.status == self.settings.hero_status["fire_magic"] :
                 self.status = self.settings.hero_status["stay"]
             elif self.status == self.settings.hero_status["jump_attack"]:
                 self.status = self.settings.hero_status["jump"]
@@ -552,6 +557,7 @@ class Hero():
             self.attack_images[self.settings.hero_direction[direction]] = []
             self.jump_images[self.settings.hero_direction[direction]] = []
             self.jump_attack_images[self.settings.hero_direction[direction]] = []
+            self.fire_magic_images[self.settings.hero_direction[direction]] = []
             self.hurt_images[self.settings.hero_direction[direction]] = []
             for weapon in range(0, self.weapon_size):
                 image_path = 'images/' + str(weapon) + '_' + direction + '_stay.jpeg'
@@ -565,6 +571,7 @@ class Hero():
                 self.load_image_file(direction, weapon, self.attack_images, 'attack_images', self.attack_size[weapon])
                 self.load_image_file(direction, weapon, self.jump_images, 'jump_images', self.jump_size)
                 self.load_image_file(direction, weapon, self.jump_attack_images, 'jump_attack_images', self.jump_attack_size[weapon])
+                self.load_image_file(direction, weapon, self.fire_magic_images, 'fire_magic_images', self.fire_magic_size[weapon])
                 self.load_image_file(direction, weapon, self.hurt_images, 'hurt_images', self.hurt_size)
                 # self.squat_images[self.direction].append(pygame.image.load('game/images/' + str(weapon) + '_squat_left.jpeg')) 
                 # self.load_image_file(weapon, self.squat_attack_images, 'squat_attack_images', self.squat_attack_size)
