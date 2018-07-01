@@ -112,7 +112,12 @@ class MonsterBall():
                 # 矩形右下角
                 elif get_distance2(pst_x, pst_y, rect.right, rect.bottom) < self.protection_radius**2:
                     flag = True
-
+                init_x = pst_x - self.protection_radius
+                while init_x < pst_x + self.protection_radius:
+                    if rect.left <= init_x <= rect.right:
+                        flag = True
+                        break
+                    init_x += rect.width
                 if flag:
                     self.protection_blood[i] -= damage
                     return True
@@ -149,6 +154,7 @@ class MonsterBall():
 
     def center_rect_collisions(self, rect, damage):
         """判断中心和矩阵有没有碰撞"""
+        # 先判断矩形的四个角是不是有在圆中
         flag = False
         # 左上
         if get_distance2(self.center_x, self.center_y, rect.left, rect.top) < self.center_radius**2:
@@ -162,7 +168,14 @@ class MonsterBall():
         # 右下
         elif get_distance2(self.center_x, self.center_y, rect.left, rect.top) < self.center_radius**2:
             flag = True
-
+        # 再判断圆两端是否在矩形中
+        init_x = self.center_x - self.center_radius
+        while init_x <= self.center_x + self.center_radius:
+            if rect.left <= init_x <= rect.right:
+                flag = True
+                break
+            print(rect, init_x, rect.width, self.center_x + self.center_radius)
+            init_x += rect.width
         if flag:
             self.blood -= damage
 
