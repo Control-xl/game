@@ -335,8 +335,9 @@ class Hero():
         x = self.settings.left_border + self.velocityx + self.rect.centerx
         if self.map.gety(x + self.velocityx * 2) < self.rect.bottom :
             self.velocityx = 0
-        if self.x > self.settings.left_border and\
-        self.x < self.settings.left_border + self.settings.screen_width:
+        if (self.x > self.settings.left_border and self.x < self.settings.left_border + self.settings.screen_width) \
+        or (self.x <= self.settings.left_border and self.velocityx > 0)\
+        or (self.velocityx < 0 and self.x < self.settings.left_border + self.settings.screen_width):
             self.x += self.velocityx
             if self.settings.map_lock or \
             (self.velocityx > 0 and self.rect.right < self.settings.screen_width/2) or \
