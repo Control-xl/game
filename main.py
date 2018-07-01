@@ -54,10 +54,16 @@ if __name__ == '__main__':
                     hero.moving_right = False
                 if event.key == pygame.K_s:
                     hero.squating = False
-        hero.update(monster_list[0])
+        hero.update(monster_list)
         map_.update(hero, monster_list)
+        monster_to_del = []
         for monster in monster_list:
             monster.update(hero)
+            if monster.blood <= 0:
+                monster_to_del.append(monster)
+
+        for monster in monster_to_del:
+            monster_list.remove(monster)
         # monsterball.update(hero)
         # monsterplane.update(hero)
         screen.fill(settings.bg_color)
