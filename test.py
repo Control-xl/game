@@ -1,6 +1,10 @@
 import pygame
 from settings import Settings
-image = pygame.image.load('images/laser/bullet.png')
+from game_functions import transparent
+jpg_image_path = 'images/tools/food.jpg'
+png_image_path = 'images/tools/food.png'
+bg_image_path = 'images/tools/bg_food.jpg'
+jpg_image = pygame.image.load(jpg_image_path)
 rect = image.get_rect()
 rect.top = 0
 rect.left = 0
