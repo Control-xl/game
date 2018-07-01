@@ -143,7 +143,7 @@ class Hero():
         self.magic_cd = 0                               #magic_cd = 0时才能进行魔法攻击
         self.hurt_en = 5                                #代表可以攻击，非0时代表无敌
         self.speedx = 2
-        self.speedy = 5
+        self.speedy = 10
         self.velocityx = 0
         self.velocityy = -self.speedy
 
@@ -165,7 +165,7 @@ class Hero():
             #下蹲攻击动画
             self.squat_attack_image()
         elif self.fire_magicing == True and self.magic_cd == 0:
-            self.fire_magic_image()
+            self.status = self.settings.hero_status["fire_magic"]
         elif self.attacking and self.weapon != self.settings.hero_weapon["gun"]:
             #当按下攻击键时，进入攻击状态
             self.attacking = False
@@ -287,8 +287,8 @@ class Hero():
     def fire_magic_image(self):
         self.velocityx = 0
         self.velocityy = self.speedy
-        self.change_image(self.attack_images[self.direction][self.weapon][self.image_order])
-        self.display_frame(self.attack_size[self.weapon])
+        self.change_image(self.fire_magic_images[self.direction][self.weapon][self.image_order])
+        self.display_frame(self.fire_magic_size[self.weapon])
 
     def move_image(self):
         #移动动画, 如果是状态发生改变
@@ -335,12 +335,14 @@ class Hero():
         x = self.settings.left_border + self.velocityx + self.rect.centerx
         if self.map.gety(x + self.velocityx * 2) < self.rect.bottom :
             self.velocityx = 0
-        self.x += self.velocityx
+        if self.x > self.settings.left_border and self.x < self.settings.left_border + self.settings.screen_width:
+            self.x += self.velocityx
+            if self.settings.map_lock or \
+            (self.velocityx > 0 and self.rect.right < self.settings.screen_width/2) or \
+            (self.velocityx < 0 and self.rect.left > self.settings.screen_width/10):
+                self.rect.centerx += self.velocityx
         # self.map.update(self.velocityx, self.rect)
-        if self.settings.map_lock or \
-        (self.velocityx > 0 and self.rect.right < self.settings.screen_width/2) or \
-        (self.velocityx < 0 and self.rect.left > self.settings.screen_width/10):
-            self.rect.centerx += self.velocityx
+        
         
 
     def update_heroy(self):
@@ -441,6 +443,7 @@ class Hero():
                     bullet_pos = (x - monster_with_bullet.bullet_rect_list[i].left, y - monster_with_bullet.bullet_rect_list[i].top)
                     if color == self.enemy_bullet_image.get_at(bullet_pos):
                         is_bullet = True
+                        
                         image_to_del.append(monster_with_bullet.bullet_list[i])
                         rect_to_del.append(monster_with_bullet.bullet_rect_list[i])
                         center_to_del.append(monster_with_bullet.bullet_center_list[i])
@@ -461,7 +464,8 @@ class Hero():
         self.weapon_attacks.update()
         if self.status == self.settings.hero_status["fire_magic"]:
             if self.weapon == self.settings.hero_weapon["fist"] and \
-            self.image_order == self.fire_magic_size[self.weapon] - 2:
+            self.image_order == self.fire_magic_size[self.weapon] - 2 and \
+            self.magic_cd == 0:
                 #
                 self.magic -= 1
                 self.magic_cd = 300
@@ -472,8 +476,9 @@ class Hero():
                     self.weapon_attacks.fist_magic_rect.right = self.rect.left - 100
                 elif self.direction == self.settings.hero_direction["right"] :
                     self.weapon_attacks.fist_magic_rect.left = self.rect.right + 100
-                self.weapon_attacks.fist_magic_rect_x = self.settings.left_border + self.weapon_attacks.fist_magic_rect.centerx
-                self.weapon_attacks.fist_magic_rect.bottom = self.map.gety(self.weapon_attacks.fist_magic_rect_x)
+                print(self.weapon_attacks.fist_magic_rect.centerx)
+                self.weapon_attacks.fist_magic_centerx = self.settings.left_border + self.weapon_attacks.fist_magic_rect.centerx
+                self.weapon_attacks.fist_magic_rect.bottom = self.map.gety(self.weapon_attacks.fist_magic_centerx)
                 # 初始化攻击范围
                 self.weapon_attacks.fist_magic.height = 0
                 self.weapon_attacks.fist_magic.width = 0
@@ -489,7 +494,7 @@ class Hero():
                     self.weapon_attacks.sword_magic_rect.right = self.rect.left
                 elif self.direction == self.settings.hero_direction["right"] :
                     self.weapon_attacks.sword_magic_rect.left = self.rect.right
-                self.weapon_attacks.sword_magic_rect_x = self.settings.left_border + self.weapon_attacks.sword_magic_rect.centerx
+                self.weapon_attacks.sword_magic_centerx = self.settings.left_border + self.weapon_attacks.sword_magic_rect.centerx
                 self.weapon_attacks.sword_magic_rect.centery = self.rect.top + 60
                 self.weapon_attacks.sword_magic.height = 80
                 self.weapon_attacks.sword_magic.height = 100
@@ -625,6 +630,7 @@ class Hero():
     def blitme(self):
         if self.hurt_en % 6 < 3 :
             self.screen.blit(self.image, self.rect)
+        self.weapon_attacks.blitme()
 
     def load_image_file(self, direction, weapon, images, images_path, images_size):
         #加载图片文件夹
