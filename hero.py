@@ -1,5 +1,6 @@
 import pygame
 import sys
+import math
 from settings import Settings
 from weapon import Weapon, Bullet
 from map import Map
@@ -126,6 +127,7 @@ class Hero():
         self.moving_right = False
         self.getting_hurt = False
         self.attacking = False
+        self.fire_magicing = False
         self.jumping = False
         self.squating = False
         self.falling = False
@@ -162,7 +164,7 @@ class Hero():
         elif self.status == self.settings.hero_status["squat_attack"] :
             #下蹲攻击动画
             self.squat_attack_image()
-        elif self.fire_magicing == True:
+        elif self.fire_magicing == True and self.magic_cd == 0:
             self.fire_magic_image()
         elif self.attacking and self.weapon != self.settings.hero_weapon["gun"]:
             #当按下攻击键时，进入攻击状态
@@ -336,7 +338,7 @@ class Hero():
         self.x += self.velocityx
         # self.map.update(self.velocityx, self.rect)
         if self.settings.map_lock or \
-        (self.velocityx > 0 and self.rect.right < self.settings.screen_width/2)\
+        (self.velocityx > 0 and self.rect.right < self.settings.screen_width/2) or \
         (self.velocityx < 0 and self.rect.left > self.settings.screen_width/10):
             self.rect.centerx += self.velocityx
         
@@ -368,6 +370,8 @@ class Hero():
                         i = 0
                         if touch_object == "tool" : #道具名称
                             pass
+                        elif touch_object == "bullet" :
+                            self.get_hurt(self.settings.hero_direction[direction])
                         elif touch_object == "enemy" :
                             # 碰撞到敌人
                             if self.weapon == self.settings.hero_weapon["fist"] and \
@@ -392,7 +396,7 @@ class Hero():
         for i in range(len(self.tools)) :
             if x >= tools[i].rect.left and x < tools[i].rect.right and \
             y >= tools[i].rect.top and y < tools[i].rect.bottom :
-                if color == tool.image.get_at((x - tool.rect.left, y - tool.rect.top)):
+                if color == tools[i].image.get_at((x - tools[i].rect.left, y - tools[i].rect.top)):
                     name = tools[i].name
                     self.tools.pop(i)
                     return name
@@ -434,7 +438,7 @@ class Hero():
                 # 如果和英雄碰撞，加入删除列表
                 if x >= monster_with_bullet.bullet_rect_list[i].left and x < monster_with_bullet.bullet_rect_list[i].right and \
                 y >= monster_with_bullet.bullet_rect_list[i].top and y < monster_with_bullet.bullet_rect_list[i].bottom :
-                    bullet_pos == (x - monster_with_bullet.bullet_rect_list[i].left, y - monster_with_bullet.bullet_rect_list[i].top)
+                    bullet_pos = (x - monster_with_bullet.bullet_rect_list[i].left, y - monster_with_bullet.bullet_rect_list[i].top)
                     if color == self.enemy_bullet_image.get_at(bullet_pos):
                         is_bullet = True
                         image_to_del.append(monster_with_bullet.bullet_list[i])
@@ -537,8 +541,8 @@ class Hero():
             self.weapon_attacks.sword_attacking = False
 
 
-    def update(self):
-        self.check_collision()
+    def update(self, monster_with_bullet):
+        self.check_collision(monster_with_bullet)
         self.update_status()
         self.update_pos()
         self.update_weapon_attack()
@@ -683,8 +687,8 @@ if __name__ == '__main__':
             if event.type == pygame.QUIT:
                 sys.exit()
             if event.type == pygame.KEYDOWN:
-                # if event.key == pygame.K_k:
-                #     hero.get_hurt(settings.hero_direction["left"])
+                if event.key == pygame.K_k:
+                    hero.fire_magicing = True
                 # if event.key == pygame.K_l:
                 #     hero.get_hurt(settings.hero_direction["right"])
                 if event.key == pygame.K_j:
@@ -700,14 +704,17 @@ if __name__ == '__main__':
                 if event.key == pygame.K_0:
                     hero.change_weapon()
             if event.type == pygame.KEYUP:
+                if event.key == pygame.K_k:
+                    hero.fire_magicing = False
                 if event.key == pygame.K_a:
                     hero.moving_left = False
                 if event.key == pygame.K_d:
                     hero.moving_right = False
                 if event.key == pygame.K_s:
                     hero.squating = False
-        hero.update()
-        monsterball.update(hero.weapon_attacks)
+        hero.update(monsterplane)
+        map_.update()
+        monsterball.update(hero)
         monsterplane.update(hero)
         screen.fill(settings.bg_color)
         hero.blitme()

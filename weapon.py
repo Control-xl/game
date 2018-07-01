@@ -31,11 +31,11 @@ class Weapon():
             self.fist_magic_images.append(image)
         self.fist_magic_rect = self.fist_magic_images[0].get_rect()
         self.fist_magic_centerx = self.fist_magic_rect.centerx
-        self.sword_magic_image = []
+        self.sword_magic_images = []
         self.sword_magic_size = 8
         for i in range(1, self.sword_magic_size + 1):
             image = pygame.image.load('images/magics/sword/' + str(i) + '.png')
-            self.fist_magic_images.append(image)
+            self.sword_magic_images.append(image)
         self.sword_magic_rect = self.sword_magic_images[0].get_rect()
         self.sword_magic_centerx = self.sword_magic_rect.centerx
         self.fist_magic_time = 0
@@ -45,7 +45,7 @@ class Weapon():
         # 更新子弹, 技能位置, image_order
         if self.fist_magic_firing == True :
             self.image_order += 1
-            if self.image_order >= self.fist_magic_size
+            if self.image_order >= self.fist_magic_size :
                 self.image_order = 0
                 self.fist_magic_firing = False
                 # 根据image_order 改变 攻击范围
@@ -71,7 +71,7 @@ class Weapon():
             self.fist_magic_firing = False
         if self.sword_magic_firing == True :
             self.image_order += 1
-            if self.image_order >= self.sword_magic_size
+            if self.image_order >= self.sword_magic_size :
                 self.image_order = 0
                 self.sword_magic_firing = False
                 # 根据image_order 改变 攻击范围
@@ -88,7 +88,7 @@ class Weapon():
             self.sword_magic.center = self.sword_magic_rect.center
         else : 
             self.sword_magic_firing = False
-        i = range(len(self.bullets))
+        i = len(self.bullets)
         while i > 0 :
             i -= 1
             if bullets[i].rect.right < 0 or self.rect.left > self.settings.screen_width :
