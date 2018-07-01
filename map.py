@@ -18,16 +18,23 @@ class Map():
         self.cnt = 0
         self.monster_point = [1200, 3000, 5000, 7000]
         self.monster_list = []
-        # 1飞机
+        # 1飞机，依次为血量，攻击准备时间，蓄力时间
         self.monster_list.append(monster.MonsterPlane(settings, screen, 1, 10000, 500))
         # 2飞机
         self.monster_list.append(monster.MonsterPlane(settings, screen, 2, 5000, 500))
-        # 2球
+        # 3球，以此为保护圈血量，中心血量，保护圈数目，初始位置x，y， 保护转速，中心平移速度
+        self.monster_list.append(monster.MonsterBall(settings, screen, 0, 1, 0, 1000, 500, 0, 0.5))
+        # 4球
+        self.monster_list.append(monster.MonsterBall(settings, screen, 0))
+        # 5飞机
+        self.monster_list.append(monster.MonsterPlane(settings, screen, 5, 5000, 300))
         for i in range(2480):
             self.shape.append(700)
         for i in range(500):
             self.shape.append(600)
         for i in range(500):
+            self.shape.append(700)
+        for i in range(2480):
             self.shape.append(700)
 
 
@@ -37,7 +44,8 @@ class Map():
 
         velocityx = hero.velocityx
         rect = hero.rect
-        if hero.rect.left == self.monster_point[self.cnt]:
+        # print(monster_list)
+        if hero.x >= self.monster_point[self.cnt]:
             monster_list.append(self.monster_list[self.cnt])
             self.cnt += 1
         # 如果有怪物，则锁屏
