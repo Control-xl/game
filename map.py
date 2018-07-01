@@ -20,8 +20,12 @@ class Map():
             self.shape.append(750)
 
 
-    def update(self, velocityx, rect, monster_list):
+    def update(self, hero, monster_list):
         """根据英雄位置和怪物更新地图信息"""
+
+        velocityx = hero.velocityx
+        rect = hero.rect
+
         # 如果有怪物，则锁屏
         if len(monster_list > 0):
             self.settings.map_lock = True
@@ -44,8 +48,6 @@ class Map():
                 if self.settings.left_border > 0:
                     self.settings.left_border -= min(-velocityx, self.settings.left_border)
                     self.settings.right_border = self.settings.left_border + self.settings.screen_width
-
-
 
 
     def blitme(self):
