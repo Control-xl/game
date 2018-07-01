@@ -337,7 +337,7 @@ class Hero():
             self.velocityx = 0
         if (self.x > self.settings.left_border and self.x < self.settings.left_border + self.settings.screen_width) \
         or (self.x <= self.settings.left_border and self.velocityx > 0)\
-        or (self.velocityx < 0 and self.x < self.settings.left_border + self.settings.screen_width):
+        or (self.velocityx < 0 and self.x >= self.settings.left_border + self.settings.screen_width):
             self.x += self.velocityx
             if self.settings.map_lock or \
             (self.velocityx > 0 and self.rect.right < self.settings.screen_width/2) or \
@@ -437,7 +437,6 @@ class Hero():
                     bullet_pos = (x - monster_with_bullet.bullet_rect_list[i].left, y - monster_with_bullet.bullet_rect_list[i].top)
                     if color == self.enemy_bullet_image.get_at(bullet_pos):
                         is_bullet = True
-                        
                         image_to_del.append(monster_with_bullet.bullet_list[i])
                         rect_to_del.append(monster_with_bullet.bullet_rect_list[i])
                         center_to_del.append(monster_with_bullet.bullet_center_list[i])
