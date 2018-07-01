@@ -2,7 +2,8 @@ import math
 import pygame
 
 class MonsterBall():
-    def __init__(self, settings, screen, protection_blood = 1, center_blood = 1, protection_num = 0, x = 1000, y = 500):
+    def __init__(self, settings, screen, protection_blood = 1, center_blood = 1, protection_num = 0, x = 1000, y = 500,
+                 protection_speed = 0.1, center_speed = 0.03):
         self.settings = settings
         self.screen = screen
         # 怪物中心位置
@@ -11,7 +12,7 @@ class MonsterBall():
         # 怪物中心受攻击范围
         self.center_radius = 100
         # 怪物中心移动速度
-        self.center_speed = settings.center_speed
+        self.center_speed = center_speed
         # 怪物血量
         self.blood = center_blood
 
@@ -21,7 +22,7 @@ class MonsterBall():
         # 怪物保护圈数目
         self.protection_number = protection_num
         # 怪物保护圈转动速度
-        self.protection_speed = settings.protection_speed
+        self.protection_speed = protection_speed
         # 怪物保护圈离中心的距离
         self.protection_center_distance = settings.protection_center_distance
         # 保护圈和保护圈之间的间隔
@@ -298,7 +299,7 @@ class MonsterPlane():
         # 子弹上限
         self.max_bullet_num = 3
         # 子弹速度
-        self.bullet_speed = 1
+        self.bullet_speed = 0.5
         # 子弹位置
 
         for i in range(5):
