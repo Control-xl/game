@@ -2,7 +2,7 @@ import math
 import pygame
 
 class MonsterBall():
-    def __init__(self, settings, screen, protection_blood = 1, center_blood = 1, protection_num = 0, x = 1000, y = 500,
+    def __init__(self, settings, screen, protection_blood = 1, center_blood = 1, protection_num = 1, x = 1000, y = 500,
                  protection_speed = 0.1, center_speed = 0.03):
         self.settings = settings
         self.screen = screen
@@ -26,7 +26,11 @@ class MonsterBall():
         # 怪物保护圈离中心的距离
         self.protection_center_distance = settings.protection_center_distance
         # 保护圈和保护圈之间的间隔
-        self.protection_range = int(360 / self.protection_number)
+        self.protection_range = 0
+        if self.protection_number > 0:
+            self.protection_range = int(360 / self.protection_number)
+        else:
+            self.protection_range = 10000
         # 保护圈位置确定
         self.protection_position = 0
         # 保护圈颜色
