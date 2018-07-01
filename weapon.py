@@ -17,7 +17,10 @@ class Weapon():
         self.fist_magic_damage = 5
         self.fist_magic_damage = 5
         self.fist_magic = pygame.Rect(0, 0, 1, 1)
+        self.fist_magic.width = 40
         self.sword_magic = pygame.Rect(0, 0, 1, 1)
+        self.sword_magic.width = 100
+        self.sword_magic.height = 80
         self.fist_magic_firing = False
         self.sword_magic_firing = False
         self.image_order = 0
@@ -40,16 +43,49 @@ class Weapon():
 
     def update(self):
         # 更新子弹, 技能位置, image_order
-        if self.fist_magic_time > 0:
-            self.fist_magic_time -= 1
-            self.fist_magic_firing = True
+        if self.fist_magic_firing == True :
+            self.image_order += 1
+            if self.image_order >= self.fist_magic_size
+                self.image_order = 0
+                self.fist_magic_firing = False
+                # 根据image_order 改变 攻击范围
+                if self.image_order < 1  or self.image_order >= self.fist_magic_size - 1:
+                    self.fist_magic.height = 0
+                elif self.image_order == 1 :
+                    self.fist_magic.height = 200
+                    self.fist_magic.top = self.fist_magic_rect.top
+                elif self.image_order == 2 :
+                    self.fist_magic.height = 390
+                    self.fist_magic.top = self.fist_magic_rect.top
+                elif self.image_order >= 3 and self.image_order <= 4 :
+                    self.fist_magic.height = self.fist_magic_rect.height
+                elif self.image_order == 5 :
+                    self.fist_magic.height = 385
+                    self.fist_magic.bottom = self.fist_magic_rect.bottom
+                elif self.image_order == 6 :
+                    self.fist_magic.height = 60
+                    self.fist_magic.bottom = self.fist_magic_rect.bottom
             self.fist_magic_rect.centerx = self.fist_magic_centerx - self.settings.left_border
+            self.fist_magic.centerx = self.fist_magic_rect.centerx
         else :
             self.fist_magic_firing = False
-        if self.sword_magic_time > 0 :
-            self.sword_magic_time -= 1
-            self.sword_magic_firing = True
-            self.fist_magic_rect.centerx = self.fist_magic_centerx - self.settings.left_border
+        if self.sword_magic_firing == True :
+            self.image_order += 1
+            if self.image_order >= self.sword_magic_size
+                self.image_order = 0
+                self.sword_magic_firing = False
+                # 根据image_order 改变 攻击范围
+                if self.image_order < 0  or self.image_order >= self.fist_magic_size - 2:
+                    self.sword_magic.height = 0
+                    self.sword_magic.width = 0
+                elif self.image_order >= 0 and self.image_order <= 3 :
+                    self.sword_magic.height = 80
+                    self.sword_magic.width = 100
+                elif self.image_order >= 4 and self.image_order <= 5 :
+                    self.sword_magic.height = 80
+                    self.sword_magic.width = 100
+            self.sword_magic_rect.centerx = self.sword_magic_centerx - self.settings.left_border
+            self.sword_magic.center = self.sword_magic_rect.center
         else : 
             self.sword_magic_firing = False
         i = range(len(self.bullets))
