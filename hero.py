@@ -333,8 +333,9 @@ class Hero():
         if self.map.gety(x + self.velocityx * 2) < self.rect.bottom :
             self.velocityx = 0
         self.x += self.velocityx
-        self.map.update(self.velocityx, self.rect)
-        self.rect.centerx = self.x - self.settings.left_border
+        # self.map.update(self.velocityx, self.rect)
+        if self.settings.map_lock : 
+            self.rect.centerx += self.velocityx
 
     def update_heroy(self):
         #跳起与坠落
@@ -343,7 +344,7 @@ class Hero():
             self.rect.bottom = self.map.gety(self.x)
 
 
-    def check_collision(self):
+    def check_collision(self, monster_with_bullet):
         #碰撞检测, 碰撞到地图, 道具, 拳头攻击到敌人, 敌人攻击
         #遇到不同颜色，先检查道具，看对应的位置的颜色是否一样，一样则是接触到了道具
         #再检测是不是正在进行拳头攻击，是的话，某些位置不会成为攻击矩形
@@ -359,7 +360,7 @@ class Hero():
                     color = self.screen.get_at(pos)
                     if color != self.settings.hero_boot_color:
                         #先检测碰撞到什么
-                        touch_object = self.touch_object(pos, color)
+                        touch_object = self.touch_object(pos, color, monster_with_bullet)
                         i = 0
                         if touch_object == "tool" : #道具名称
                             pass
@@ -381,7 +382,7 @@ class Hero():
                             else :
                                 self.get_hurt(self.settings.hero_direction[direction])
 
-    def touch_object(self, pos, color):
+    def touch_object(self, pos, color, monster_with_bullet):
         # 判断接触到了什么 ？ 道具, 地图, 技能, 子弹, 敌人
         (x, y) = pos
         for i in range(len(self.tools)) :
@@ -398,6 +399,53 @@ class Hero():
             self.map.gety(self.settings.left_border + x + 1) <= y : 
                 # print("map")
                 return "map"
+        if self.weapon_attacks.fist_magic_firing == True :
+            if x >= self.weapon_attacks.fist_magic_rect.left and x < self.weapon_attacks.fist_magic_rect.right and \
+            y >= self.weapon_attacks.fist_magic_rect.top and y < self.weapon_attacks.fist_magic_rect.bottom :
+                magic_pos = (x - self.weapon_attacks.fist_magic_rect.left, y - self.weapon_attacks.fist_magic_rect.top)
+                if color == self.weapon_attacks.fist_magic_images[self.weapon_attacks.image_order].get_at(magic_pos):
+                    return "magic"
+        elif self.weapon_attacks.sword_magic_firing == True :
+            if x >= self.weapon_attacks.sword_magic_rect.left and x < self.weapon_attacks.sword_magic_rect.right and \
+            y >= self.weapon_attacks.sword_magic_rect.top and y < self.weapon_attacks.sword_magic_rect.bottom :
+                magic_pos = (x - self.weapon_attacks.sword_magic_rect.left, y - self.weapon_attacks.fist_magic_rect.top)
+                if color == self.weapon_attacks.sword_magic_images[self.weapon_attacks.image_order].get_at(magic_pos):
+                    return "magic"
+        # 敌人子弹
+        if monster_with_bullet.bullet_list:
+            is_bullet = False
+            image_to_del = []
+            rect_to_del = []
+            center_to_del = []
+            dir_to_del = []
+            for i in range(len(monster_with_bullet.bullet_list)):
+                monster_with_bullet.bullet_center_list[i] = (monster_with_bullet.bullet_center_list[i][0] +
+                                              math.sin(monster_with_bullet.bullet_dir_list[i]) *
+                                              monster_with_bullet.bullet_speed * monster_with_bullet.bullet_ud_list[i],
+                                              monster_with_bullet.bullet_center_list[i][1] +
+                                              math.cos(monster_with_bullet.bullet_dir_list[i]) *
+                                              monster_with_bullet.bullet_speed * monster_with_bullet.bullet_ud_list[i])
+                monster_with_bullet.bullet_rect_list[i].centerx = monster_with_bullet.bullet_center_list[i][0]
+                monster_with_bullet.bullet_rect_list[i].centery = monster_with_bullet.bullet_center_list[i][1]
+                # 如果和英雄碰撞，加入删除列表
+                if x >= monster_with_bullet.bullet_rect_list[i].left and x < monster_with_bullet.bullet_rect_list[i].right and \
+                y >= monster_with_bullet.bullet_rect_list[i].top and y < monster_with_bullet.bullet_rect_list[i].bottom :
+                    bullet_pos == (x - monster_with_bullet.bullet_rect_list[i].left, y - monster_with_bullet.bullet_rect_list[i].top)
+                    if True:
+                        is_bullet = True
+                        image_to_del.append(monster_with_bullet.bullet_list[i])
+                        rect_to_del.append(monster_with_bullet.bullet_rect_list[i])
+                        center_to_del.append(monster_with_bullet.bullet_center_list[i])
+                        dir_to_del.append(monster_with_bullet.bullet_dir_list[i])
+            # 删除子弹列表中有的子弹
+            for i in range(len(image_to_del)):
+                is_bullet = True
+                monster_with_bullet.bullet_list.remove(image_to_del[i])
+                monster_with_bullet.bullet_rect_list.remove(rect_to_del[i])
+                monster_with_bullet.bullet_center_list.remove(center_to_del[i])
+                monster_with_bullet.bullet_dir_list.remove(dir_to_del[i])
+            if is_bullet:
+                return "bullet"
         # print("enemy")
         return "enemy"
 
@@ -410,24 +458,29 @@ class Hero():
                 self.magic -= 1
                 self.magic_cd = 300
                 self.weapon_attacks.image_order = 0
-                self.weapon_attacks.fist_magic_time = self.weapon_attacks.fist_magic_size
+                # self.weapon_attacks.fist_magic_time = self.weapon_attacks.fist_magic_size
+                self.weapon_attacks.fist_magic_firing = True
                 if self.direction == self.settings.hero_direction["left"] :
                     self.weapon_attacks.fist_magic_rect.right = self.rect.left - 100
                 elif self.direction == self.settings.hero_direction["right"] :
                     self.weapon_attacks.fist_magic_rect.left = self.rect.right + 100
                 self.weapon_attacks.fist_magic_rect_x = self.settings.left_border + self.weapon_attacks.fist_magic_rect.centerx
+                self.weapon_attacks.fist_magic_rect.bottom = self.map.gety(self.weapon_attacks.fist_magic_rect_x)
             elif self.weapon == self.settings.hero_weapon["sword"] and \
             self.image_order == self_sword_magic_size[self.weapon] - 2:
                 self.magic -= 1
                 self.magic_cd = 300
                 self.weapon_attacks.image_order = 0
-                self.weapon_attacks.sword_magic_time = 100
-                self.weapon_attacks.sword_magic_rect.bottom = self.rect.bottom
+                # self.weapon_attacks.sword_magic_time = 100
+                self.weapon_attacks.sword_magic_firing = True
+                self.weapon_attacks.sword_magic_rect.centery = self.rect.top + 60
                 if self.direction == self.settings.hero_direction["left"] :
                     self.weapon_attacks.sword_magic_rect.right = self.rect.left
                 elif self.direction == self.settings.hero_direction["right"] :
                     self.weapon_attacks.sword_magic_rect.left = self.rect.right
                 self.weapon_attacks.sword_magic_rect_x = self.settings.left_border + self.weapon_attacks.sword_magic_rect.centerx
+                self.weapon_attacks.sword_magic.center = self.weapon_attacks.sword_magic_rect.center
+
         elif self.status == self.settings.hero_status["attack"]:
             self.weapon_attacks.fist.width = 80
             self.weapon_attacks.fist.height = 16
