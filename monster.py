@@ -281,7 +281,7 @@ def get_distance2(x1, y1, x2, y2):
 
 
 class MonsterPlane():
-    def __init__(self, settings, screen, blood = 1, save_time = 5000, fire_time = 250):
+    def __init__(self, settings, screen, blood=1, save_time = 5000, fire_time = 250):
         self.settings = settings
         self.screen = screen
         # 加载飞船
@@ -472,7 +472,7 @@ class MonsterPlane():
 
     def point_coll(self, x, y):
         # 判断点是否在飞船的rect中，有则发生碰撞，返回true
-        if x >= self.rect.left and x <= self.rect.right and y <= self.rect.bottom and y >= self.rect.top:
+        if self.rect.left <= x <= self.rect.right and self.rect.top <= y <= self.rect.bottom:
             return True
         return False
 
