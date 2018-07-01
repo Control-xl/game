@@ -335,7 +335,8 @@ class Hero():
         x = self.settings.left_border + self.velocityx + self.rect.centerx
         if self.map.gety(x + self.velocityx * 2) < self.rect.bottom :
             self.velocityx = 0
-        if self.x > self.settings.left_border and self.x < self.settings.left_border + self.settings.screen_width:
+        if self.x > self.settings.left_border and\
+        self.x < self.settings.left_border + self.settings.screen_width:
             self.x += self.velocityx
             if self.settings.map_lock or \
             (self.velocityx > 0 and self.rect.right < self.settings.screen_width/2) or \
@@ -429,14 +430,6 @@ class Hero():
             center_to_del = []
             dir_to_del = []
             for i in range(len(monster_with_bullet.bullet_list)):
-                monster_with_bullet.bullet_center_list[i] = (monster_with_bullet.bullet_center_list[i][0] +
-                                              math.sin(monster_with_bullet.bullet_dir_list[i]) *
-                                              monster_with_bullet.bullet_speed * monster_with_bullet.bullet_ud_list[i],
-                                              monster_with_bullet.bullet_center_list[i][1] +
-                                              math.cos(monster_with_bullet.bullet_dir_list[i]) *
-                                              monster_with_bullet.bullet_speed * monster_with_bullet.bullet_ud_list[i])
-                monster_with_bullet.bullet_rect_list[i].centerx = monster_with_bullet.bullet_center_list[i][0]
-                monster_with_bullet.bullet_rect_list[i].centery = monster_with_bullet.bullet_center_list[i][1]
                 # 如果和英雄碰撞，加入删除列表
                 if x >= monster_with_bullet.bullet_rect_list[i].left and x < monster_with_bullet.bullet_rect_list[i].right and \
                 y >= monster_with_bullet.bullet_rect_list[i].top and y < monster_with_bullet.bullet_rect_list[i].bottom :
