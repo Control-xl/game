@@ -398,6 +398,18 @@ class Hero():
             self.map.gety(self.settings.left_border + x + 1) <= y : 
                 # print("map")
                 return "map"
+        if self.weapon_attacks.fist_magic_firing == True :
+            if x >= self.weapon_attacks.fist_magic_rect.left and x < self.weapon_attacks.fist_magic_rect.right and \
+            y >= self.weapon_attacks.fist_magic_rect.top and y < self.weapon_attacks.fist_magic_rect.bottom :
+                magic_pos = (x - self.weapon_attacks.fist_magic_rect.left, y - self.weapon_attacks.fist_magic_rect.top)
+                if color == self.weapon_attacks.fist_magic_images[self.weapon_attacks.image_order].get_at(magic_pos):
+                    return "magic"
+        elif self.weapon_attacks.sword_magic_firing == True :
+            if x >= self.weapon_attacks.sword_magic_rect.left and x < self.weapon_attacks.sword_magic_rect.right and \
+            y >= self.weapon_attacks.sword_magic_rect.top and y < self.weapon_attacks.sword_magic_rect.bottom :
+                magic_pos = (x - self.weapon_attacks.sword_magic_rect.left, y - self.weapon_attacks.fist_magic_rect.top)
+                if color == self.weapon_attacks.sword_magic_images[self.weapon_attacks.image_order].get_at(magic_pos):
+                    return "magic"
         # print("enemy")
         return "enemy"
 
@@ -406,22 +418,25 @@ class Hero():
         if self.status == self.settings.hero_status["fire_magic"]:
             if self.weapon == self.settings.hero_weapon["fist"] and \
             self.image_order == self.fire_magic_size[self.weapon] - 2:
-                #
+                                #
                 self.magic -= 1
                 self.magic_cd = 300
                 self.weapon_attacks.image_order = 0
                 self.weapon_attacks.fist_magic_time = self.weapon_attacks.fist_magic_size
+                self.weapon_attacks.fist_magic_firing = True
                 if self.direction == self.settings.hero_direction["left"] :
                     self.weapon_attacks.fist_magic_rect.right = self.rect.left - 100
                 elif self.direction == self.settings.hero_direction["right"] :
                     self.weapon_attacks.fist_magic_rect.left = self.rect.right + 100
                 self.weapon_attacks.fist_magic_rect_x = self.settings.left_border + self.weapon_attacks.fist_magic_rect.centerx
+                self.weapon_attacks.fist_magic_rect.bottom = self.map.gety(self.weapon_attacks.fist_magic_rect_x)
             elif self.weapon == self.settings.hero_weapon["sword"] and \
             self.image_order == self_sword_magic_size[self.weapon] - 2:
                 self.magic -= 1
                 self.magic_cd = 300
                 self.weapon_attacks.image_order = 0
                 self.weapon_attacks.sword_magic_time = 100
+                self.weapon_attacks.fist_magic_firing = True
                 self.weapon_attacks.sword_magic_rect.bottom = self.rect.bottom
                 if self.direction == self.settings.hero_direction["left"] :
                     self.weapon_attacks.sword_magic_rect.right = self.rect.left
