@@ -23,8 +23,8 @@ class Weapon():
         self.fist_magic_size = 8
         for i in range(0, 8):
             self.fist_magic_images.append('images/magics/fist/' + str(i) + '.png')
-        self.fist_magic_rect = self.fist_magic_image.get_rect()
-        self.fist_magic_centerx = self.fist_magic_rect.centerx
+        # self.fist_magic_rect = self.fist_magic_image.get_rect()
+        # self.fist_magic_centerx = self.fist_magic_rect.centerx
         self.sword_magic_image = pygame.image.load('images/magics/sword.png')
         self.sword_magic_rect = self.sword_magic_image.get_rect()
         self.sword_magic_centerx = self.sword_magic_rect.centerx
@@ -48,10 +48,10 @@ class Weapon():
         i = range(len(self.bullets))
         while i > 0 :
             i -= 1
-            if bullets[i].rect.right < 0 or self.rect.left > self.settings.screen_width :
-                bullets.pop(i)
+            if self.bullets[i].rect.right < 0 or self.rect.left > self.settings.screen_width :
+                self.bullets.pop(i)
             else :
-                bullets[i].update()
+                self.bullets[i].update()
 
     def blitme(self):
         if self.fist_magic_firing == True :
