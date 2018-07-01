@@ -427,10 +427,6 @@ class Hero():
         for monster in monster_list :
             if type(monster) == MonsterPlane and monster.bullet_list:
                 is_bullet = False
-                image_to_del = []
-                rect_to_del = []
-                center_to_del = []
-                dir_to_del = []
                 for i in range(len(monster.bullet_list)):
                     # 如果和英雄碰撞，加入删除列表
                     if monster.bullet_alive_list[i]:
