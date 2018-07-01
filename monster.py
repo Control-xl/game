@@ -298,7 +298,7 @@ class MonsterPlane():
         # 子弹上限
         self.max_bullet_num = 3
         # 子弹速度
-        self.bullet_speed = 0.2
+        self.bullet_speed = 1
         # 子弹位置
 
         for i in range(5):
@@ -400,7 +400,9 @@ class MonsterPlane():
             if self.check_rect_coll(weapon.fist, self.settings.fist_damage):
                 weapon.fist_attacking = False
         if weapon.fist_magic_firing:
+            print("magic:", weapon.fist_magic)
             if self.check_rect_coll(weapon.fist_magic, weapon.fist_magic_damage):
+                print("fist magic success!")
                 weapon.fist_magic_firing = False
         if weapon.sword_magic_firing:
             if self.check_rect_coll(weapon.sword_magic, weapon.sword_magic_damage):
