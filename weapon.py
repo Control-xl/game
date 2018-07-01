@@ -66,7 +66,7 @@ class Weapon():
                     self.fist_magic.height = 60
                     self.fist_magic.bottom = self.fist_magic_rect.bottom
             self.fist_magic_rect.centerx = self.fist_magic_centerx - self.settings.left_border
-            self.fist_magic.centerx = self.fist_magic_rect
+            self.fist_magic.centerx = self.fist_magic_rect.centerx
         else :
             self.fist_magic_firing = False
         if self.sword_magic_firing == True :
@@ -98,6 +98,7 @@ class Weapon():
 
     def blitme(self):
         if self.fist_magic_firing == True :
+            print(self.fist_magic_rect)
             self.screen.blit(self.fist_magic_images[self.image_order], self.fist_magic_rect)
         if self.sword_magic_firing == True :
             self.screen.blit(self.sword_magic_image, self.sword_magic_rect)
