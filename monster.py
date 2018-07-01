@@ -304,7 +304,8 @@ class MonsterPlane():
         self.bullet_rect_list = []
         self.bullet_center_list = []
         self.bullet_dir_list = []
-        self.bullet_ud_list = [1, 1, 1, 1, 1, 1]
+        self.bullet_ud_list = []
+        self.bullet_alive_list = []
         # 蓄力状态
         self.save_state = False
         # 蓄力时间/ms
@@ -318,7 +319,6 @@ class MonsterPlane():
         # 子弹速度
         self.bullet_speed = 0.5
         # 子弹位置
-
         for i in range(5):
             self.save_rect.append(self.save_energy_image[i].get_rect())
         self.clock = pygame.time.Clock()
@@ -326,7 +326,8 @@ class MonsterPlane():
         self.blood = blood
         self.rect.x = 400
         self.rect.y = 400
-
+        # 子弹一共存在3发后的停火标志（停止计时）
+        self.full_energy = False
 
     def update(self, hero):
         if self.blood > 0:
@@ -334,8 +335,18 @@ class MonsterPlane():
             self.update_bullet()
             # 检测碰撞
             self.check_collisions(hero.weapon_attacks)
+            # 计算子弹数
+            cnt = 0
+            for i in range(len(self.bullet_list)):
+                if self.bullet_alive_list[i]:
+                    cnt += 1
             # 计时
             self.time_passed += self.clock.tick()
+            if self.full_energy and cnt > 0:
+                self.time_passed = 0
+                return
+            else:
+                self.full_energy = False
             # 如果不是在蓄能状态，那么就等待，直到非蓄能状态时间达到save_time毫秒，默认5秒一次
             if not self.save_state:
                 if self.time_passed > self.save_time:
@@ -345,12 +356,12 @@ class MonsterPlane():
                 # 如果在蓄能状态，那就fire_time毫秒（默认0.25秒）更新一次状态图，5次更新后发射
                 if self.time_passed >= self.fire_time:
                     self.save_energy_image_cnt = (self.save_energy_image_cnt + 1) % 6
-                    if len(self.bullet_list) < self.max_bullet_num:
+                    if cnt < self.max_bullet_num:
                         if self.save_energy_image_cnt == 5:
-                            print(len(self.bullet_list))
                             self.add_bullet(hero)
                     else:
                         self.save_state = False
+                        self.full_energy = True
 
                     self.time_passed = 0
                 if self.save_energy_image_cnt < 5:
@@ -359,13 +370,9 @@ class MonsterPlane():
 
 
     def update_bullet(self):
-
-        if self.bullet_list:
-            image_to_del = []
-            rect_to_del = []
-            center_to_del = []
-            dir_to_del = []
-            for i in range(len(self.bullet_list)):
+        max_ = min(len(self.bullet_list), self.max_bullet_num)
+        for i in range(max_):
+            if self.bullet_alive_list[i]:
                 self.bullet_center_list[i] = (self.bullet_center_list[i][0] +
                                               math.sin(self.bullet_dir_list[i]) *
                                               self.bullet_speed * self.bullet_ud_list[i],
@@ -374,40 +381,60 @@ class MonsterPlane():
                                               self.bullet_speed * self.bullet_ud_list[i])
                 self.bullet_rect_list[i].centerx = self.bullet_center_list[i][0]
                 self.bullet_rect_list[i].centery = self.bullet_center_list[i][1]
-                # 如果飞出屏幕外，加入删除列表
+                # 如果飞出屏幕外，状态改为False
                 if self.bullet_rect_list[i].centerx < -300 or self.bullet_rect_list[i].centerx > 1500 or \
                     self.bullet_rect_list[i].centery < -300 or self.bullet_rect_list[i].centery > 1100:
-                    image_to_del.append(self.bullet_list[i])
-                    rect_to_del.append(self.bullet_rect_list[i])
-                    center_to_del.append(self.bullet_center_list[i])
-                    dir_to_del.append(self.bullet_dir_list[i])
-            # 删除子弹列表中有的子弹
-            for i in range(len(image_to_del)):
-                self.bullet_list.remove(image_to_del[i])
-                self.bullet_rect_list.remove(rect_to_del[i])
-                self.bullet_center_list.remove(center_to_del[i])
-                self.bullet_dir_list.remove(dir_to_del[i])
+                    self.bullet_alive_list[i] = False
         return
 
     def add_bullet(self, hero):
-        bullet = pygame.image.load('images/laser/bullet.png')
-        i = len(self.bullet_list)
-        self.bullet_list.append(bullet)
-        rect = bullet.get_rect()
-        rect.centerx = self.rect.centerx
-        rect.centery = self.rect.bottom + self.save_energy_image_down
-        self.bullet_rect_list.append(rect)
-        self.bullet_center_list.append((self.bullet_rect_list[-1].centerx, self.bullet_rect_list[-1].centery))
-        if rect.centery != hero.rect.centery:
-            k = (hero.rect.centerx - rect.centerx) / (hero.rect.centery - rect.centery)
-        else:
-            k = 99999999
-        if rect.centery < hero.rect.centery:
-            self.bullet_ud_list[i] = 1
-        else:
-            self.bullet_ud_list[i] = -1
-        theta = math.atan(k)
-        self.bullet_dir_list.append(theta)
+        if len(self.bullet_list) < self.max_bullet_num:
+            bullet = pygame.image.load('images/laser/bullet.png')
+            i = len(self.bullet_list)
+            self.bullet_list.append(bullet)
+            rect = bullet.get_rect()
+            rect.centerx = self.rect.centerx
+            rect.centery = self.rect.bottom + self.save_energy_image_down
+            self.bullet_rect_list.append(rect)
+            self.bullet_center_list.append((self.bullet_rect_list[-1].centerx, self.bullet_rect_list[-1].centery))
+            if rect.centery != hero.rect.centery:
+                k = (hero.rect.centerx - rect.centerx) / (hero.rect.centery - rect.centery)
+            else:
+                k = 99999999
+            if rect.centery < hero.rect.centery:
+                self.bullet_ud_list.append(1)
+            else:
+                self.bullet_ud_list.append(-1)
+            theta = math.atan(k)
+            self.bullet_dir_list.append(theta)
+            self.bullet_alive_list.append(True)
+            return
+        fst_disable_bullet = self.max_bullet_num
+        for i in range(self.max_bullet_num):
+            if not self.bullet_alive_list[i]:
+                fst_disable_bullet = i
+                break
+            i += 1
+        if fst_disable_bullet < self.max_bullet_num:
+            bullet = self.bullet_list[fst_disable_bullet]
+            rect = bullet.get_rect()
+            rect.centerx = self.rect.centerx
+            rect.centery = self.rect.bottom + self.save_energy_image_down
+            self.bullet_rect_list[fst_disable_bullet] = rect
+            self.bullet_center_list[fst_disable_bullet] = (self.bullet_rect_list[fst_disable_bullet].centerx,
+                                                           self.bullet_rect_list[fst_disable_bullet].centery)
+            if rect.centery != hero.rect.centery:
+                k = (hero.rect.centerx - rect.centerx) / (hero.rect.centery - rect.centery)
+            else:
+                k = 99999999
+            if rect.centery < hero.rect.centery:
+                self.bullet_ud_list[fst_disable_bullet] = 1
+            else:
+                self.bullet_ud_list[fst_disable_bullet] = -1
+            theta = math.atan(k)
+            self.bullet_dir_list[fst_disable_bullet] = theta
+            self.bullet_alive_list[fst_disable_bullet] = True
+            return
 
     def check_collisions(self, weapon):
         self.check_bullet_coll(weapon.bullets)
@@ -486,7 +513,8 @@ class MonsterPlane():
                                  self.save_rect[self.save_energy_image_cnt])
             for i in range(len(self.bullet_list)):
                 # print(self.bullet_rect_list[i].centerx, self.bullet_rect_list[i].centery)
-                self.screen.blit(self.bullet_list[i], self.bullet_rect_list[i])
+                if self.bullet_alive_list[i]:
+                    self.screen.blit(self.bullet_list[i], self.bullet_rect_list[i])
 
         # print(self.save_energy_image[self.save_energy_image_cnt].get_rect())kw
 
