@@ -333,8 +333,9 @@ class Hero():
         if self.map.gety(x + self.velocityx * 2) < self.rect.bottom :
             self.velocityx = 0
         self.x += self.velocityx
-        self.map.update(self.velocityx, self.rect)
-        self.rect.centerx = self.x - self.settings.left_border
+        # self.map.update(self.velocityx, self.rect)
+        if self.settings.map_lock : 
+            self.rect.centerx += self.velocityx
 
     def update_heroy(self):
         #跳起与坠落
@@ -410,6 +411,7 @@ class Hero():
                 magic_pos = (x - self.weapon_attacks.sword_magic_rect.left, y - self.weapon_attacks.fist_magic_rect.top)
                 if color == self.weapon_attacks.sword_magic_images[self.weapon_attacks.image_order].get_at(magic_pos):
                     return "magic"
+        # 敌人子弹
         # print("enemy")
         return "enemy"
 
@@ -418,7 +420,7 @@ class Hero():
         if self.status == self.settings.hero_status["fire_magic"]:
             if self.weapon == self.settings.hero_weapon["fist"] and \
             self.image_order == self.fire_magic_size[self.weapon] - 2:
-                                #
+                #
                 self.magic -= 1
                 self.magic_cd = 300
                 self.weapon_attacks.image_order = 0
