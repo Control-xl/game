@@ -435,7 +435,7 @@ class Hero():
                 if x >= monster_with_bullet.bullet_rect_list[i].left and x < monster_with_bullet.bullet_rect_list[i].right and \
                 y >= monster_with_bullet.bullet_rect_list[i].top and y < monster_with_bullet.bullet_rect_list[i].bottom :
                     bullet_pos == (x - monster_with_bullet.bullet_rect_list[i].left, y - monster_with_bullet.bullet_rect_list[i].top)
-                    if self.enemy_bullet_image.get_at(bullet_pos):
+                    if color == self.enemy_bullet_image.get_at(bullet_pos):
                         is_bullet = True
                         image_to_del.append(monster_with_bullet.bullet_list[i])
                         rect_to_del.append(monster_with_bullet.bullet_rect_list[i])
