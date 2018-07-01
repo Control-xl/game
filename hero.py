@@ -678,8 +678,9 @@ if __name__ == '__main__':
     map_ = Map(screen, settings)
     tools = []
     hero = Hero(screen, map_, tools, settings)
-    monsterball = MonsterBall(settings, screen)
-    monsterplane = MonsterPlane(settings, screen)
+    monster_list = []
+    monster_list.append(MonsterPlane(settings, screen))
+    # monsterball = MonsterBall(settings, screen)
     clock = pygame.time.Clock()
     while True:
         #clock.tick(100)
@@ -712,13 +713,15 @@ if __name__ == '__main__':
                     hero.moving_right = False
                 if event.key == pygame.K_s:
                     hero.squating = False
-        hero.update(monsterplane)
+        hero.update(monster_list[0])
         map_.update(hero, monster_list)
-        monsterball.update(hero)
-        monsterplane.update(hero)
+        for monster in monster_list:
+            monster.update(hero)
+        # monsterball.update(hero)
+        # monsterplane.update(hero)
         screen.fill(settings.bg_color)
         hero.blitme()
-        monsterball.blitme()
-        monsterplane.blitme()
+        for monster in monster_list:
+            monster.blitme()
         map_.blitme()
         pygame.display.update()
