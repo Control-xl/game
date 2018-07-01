@@ -477,7 +477,7 @@ class Hero():
                 self.weapon_attacks.fist_magic.width = 0
                 self.weapon_attacks.fist_magic.centerx = self.weapon_attacks.fist_magic_rect.centerx
             elif self.weapon == self.settings.hero_weapon["sword"] and \
-            self.image_order == self_sword_magic_size[self.weapon] - 2:
+            self.image_order == self.sword_magic_size[self.weapon] - 2:
                 self.magic -= 1
                 self.magic_cd = 300
                 self.weapon_attacks.image_order = 0
