@@ -713,7 +713,7 @@ if __name__ == '__main__':
                 if event.key == pygame.K_s:
                     hero.squating = False
         hero.update(monsterplane)
-        map_.update()
+        map_.update(hero, monster_list)
         monsterball.update(hero)
         monsterplane.update(hero)
         screen.fill(settings.bg_color)
