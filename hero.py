@@ -102,7 +102,7 @@ class Hero():
         self.squat_attack_size = 9
         self.weapon_size = self.settings.hero_weapon_size
         #images[direction][weapon]代表一个图片或图片文件夹或空
-        self.enemy_bullet_image = pygame.image.load('images/laser/bullet.png')
+        self.enemy_bullet_image = pygame.image.load('images/laser/bg_bullet.png')
         self.stay_images = {}
         self.move_images = {}
         self.attack_images = {}

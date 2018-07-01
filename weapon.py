@@ -91,10 +91,10 @@ class Weapon():
         i = len(self.bullets)
         while i > 0 :
             i -= 1
-            if bullets[i].rect.right < 0 or self.rect.left > self.settings.screen_width :
-                bullets.pop(i)
+            if self.bullets[i].rect.right < 0 or self.rect.left > self.settings.screen_width :
+                self.bullets.pop(i)
             else :
-                bullets[i].update()
+                self.bullets[i].update()
 
     def blitme(self):
         if self.fist_magic_firing == True :
