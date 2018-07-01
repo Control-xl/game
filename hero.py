@@ -354,7 +354,7 @@ class Hero():
             self.rect.bottom = self.map.gety(self.x)
 
 
-    def check_collision(self, monster_with_bullet):
+    def check_collision(self, monster_list):
         #碰撞检测, 碰撞到地图, 道具, 拳头攻击到敌人, 敌人攻击
         #遇到不同颜色，先检查道具，看对应的位置的颜色是否一样，一样则是接触到了道具
         #再检测是不是正在进行拳头攻击，是的话，某些位置不会成为攻击矩形
@@ -370,7 +370,7 @@ class Hero():
                     color = self.screen.get_at(pos)
                     if color != self.settings.hero_boot_color:
                         #先检测碰撞到什么
-                        touch_object = self.touch_object(pos, color, monster_with_bullet)
+                        touch_object = self.touch_object(pos, color, monster_list)
                         i = 0
                         if touch_object == "tool" : #道具名称
                             pass
@@ -394,7 +394,7 @@ class Hero():
                             else :
                                 self.get_hurt(self.settings.hero_direction[direction])
 
-    def touch_object(self, pos, color, monster_with_bullet):
+    def touch_object(self, pos, color, monster_list):
         # 判断接触到了什么 ？ 道具, 地图, 技能, 子弹, 敌人
         (x, y) = pos
         for i in range(len(self.tools)) :
@@ -424,32 +424,33 @@ class Hero():
                 if color == self.weapon_attacks.sword_magic_images[self.weapon_attacks.image_order].get_at(magic_pos):
                     return "magic"
         # 敌人子弹
-        if monster_with_bullet.bullet_list:
-            is_bullet = False
-            image_to_del = []
-            rect_to_del = []
-            center_to_del = []
-            dir_to_del = []
-            for i in range(len(monster_with_bullet.bullet_list)):
-                # 如果和英雄碰撞，加入删除列表
-                if x >= monster_with_bullet.bullet_rect_list[i].left and x < monster_with_bullet.bullet_rect_list[i].right and \
-                y >= monster_with_bullet.bullet_rect_list[i].top and y < monster_with_bullet.bullet_rect_list[i].bottom :
-                    bullet_pos = (x - monster_with_bullet.bullet_rect_list[i].left, y - monster_with_bullet.bullet_rect_list[i].top)
-                    if color == self.enemy_bullet_image.get_at(bullet_pos):
-                        is_bullet = True
-                        image_to_del.append(monster_with_bullet.bullet_list[i])
-                        rect_to_del.append(monster_with_bullet.bullet_rect_list[i])
-                        center_to_del.append(monster_with_bullet.bullet_center_list[i])
-                        dir_to_del.append(monster_with_bullet.bullet_dir_list[i])
-            # 删除子弹列表中有的子弹
-            for i in range(len(image_to_del)):
-                is_bullet = True
-                monster_with_bullet.bullet_list.remove(image_to_del[i])
-                monster_with_bullet.bullet_rect_list.remove(rect_to_del[i])
-                monster_with_bullet.bullet_center_list.remove(center_to_del[i])
-                monster_with_bullet.bullet_dir_list.remove(dir_to_del[i])
-            if is_bullet:
-                return "bullet"
+        for monster in monster_list :
+            if type(monster) == MonsterPlane and monster.bullet_list:
+                is_bullet = False
+                image_to_del = []
+                rect_to_del = []
+                center_to_del = []
+                dir_to_del = []
+                for i in range(len(monster.bullet_list)):
+                    # 如果和英雄碰撞，加入删除列表
+                    if x >= monster.bullet_rect_list[i].left and x < monster.bullet_rect_list[i].right and \
+                    y >= monster.bullet_rect_list[i].top and y < monster.bullet_rect_list[i].bottom :
+                        bullet_pos = (x - monster.bullet_rect_list[i].left, y - monster.bullet_rect_list[i].top)
+                        if color == self.enemy_bullet_image.get_at(bullet_pos):
+                            is_bullet = True
+                            image_to_del.append(monster.bullet_list[i])
+                            rect_to_del.append(monster.bullet_rect_list[i])
+                            center_to_del.append(monster.bullet_center_list[i])
+                            dir_to_del.append(monster.bullet_dir_list[i])
+                # 删除子弹列表中有的子弹
+                for i in range(len(image_to_del)):
+                    is_bullet = True
+                    monster.bullet_list.remove(image_to_del[i])
+                    monster.bullet_rect_list.remove(rect_to_del[i])
+                    monster.bullet_center_list.remove(center_to_del[i])
+                    monster.bullet_dir_list.remove(dir_to_del[i])
+                if is_bullet:
+                    return "bullet"
         # print("enemy")
         return "enemy"
 
@@ -539,8 +540,8 @@ class Hero():
             self.weapon_attacks.sword_attacking = False
 
 
-    def update(self, monster_with_bullet):
-        self.check_collision(monster_with_bullet)
+    def update(self, monster_list):
+        self.check_collision(monster_list)
         self.update_status()
         self.update_pos()
         self.update_weapon_attack()
@@ -667,6 +668,4 @@ class Hero():
                 self.load_image_file(direction, weapon, self.hurt_images, 'hurt_images', self.hurt_size)
                 # self.squat_images[self.direction].append(pygame.image.load('game/images/' + str(weapon) + '_squat_left.jpeg')) 
                 # self.load_image_file(weapon, self.squat_attack_images, 'squat_attack_images', self.squat_attack_size)
-                # self.load_image_file(weapon, self.squat_move_images, 'squat_move_images', self.squat_move_size)
-
-
+                # self.load_image_file(weapon, self.squat_move_images, 'squat_move_images', self.squat_move_size)S
