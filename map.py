@@ -27,14 +27,14 @@ class Map():
         rect = hero.rect
 
         # 如果有怪物，则锁屏
-        if len(monster_list > 0):
+        if len(monster_list) > 0:
             self.settings.map_lock = True
         else:
             self.settings.map_lock = False
 
         # 再非锁屏状态下，地图随人物移动；锁屏状态下，地图不能随
         if not self.settings.map_lock:
-            # 如果英雄向右移而且超过了屏幕的一一半位置
+            # 如果英雄向右移而且超过了屏幕的一一半位置wd
             if velocityx > 0 and\
                     rect.right >= self.settings.screen_width/2:
                 # 且地图的右边界没有到达地图的最大位置
