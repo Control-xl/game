@@ -1,4 +1,5 @@
 import pygame
+import monster
 import game_functions as gf
 
 class Map():
@@ -14,10 +15,17 @@ class Map():
 
         self.shape = [700 for i in range(1000)]
 
+        self.cnt = 0
+        self.monster_point = [1200, 3000, 5000, 7000]
+        self.monster_list = []
+        self.monster_list.append(monster.MonsterPlane(settings, screen))
+        for i in range(2480):
+            self.shape.append(700)
         for i in range(500):
             self.shape.append(600)
-        for i in range(10000):
-            self.shape.append(750)
+        for i in range(500):
+            self.shape.append(700)
+
 
 
     def update(self, hero, monster_list):
@@ -25,7 +33,9 @@ class Map():
 
         velocityx = hero.velocityx
         rect = hero.rect
-
+        if hero.rect.left == self.monster_point[self.cnt]:
+            monster_list.append(self.monster_list[self.cnt])
+            self.cnt += 1
         # 如果有怪物，则锁屏
         if len(monster_list) > 0:
             self.settings.map_lock = True

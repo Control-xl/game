@@ -2,24 +2,24 @@ import math
 import pygame
 
 class MonsterBall():
-    def __init__(self, settings, screen):
+    def __init__(self, settings, screen, protection_blood = 1, center_blood = 1, protection_num = 0, x = 1000, y = 500):
         self.settings = settings
         self.screen = screen
         # 怪物中心位置
-        self.center_x = 1000
-        self.center_y = 500
+        self.center_x = x
+        self.center_y = y
         # 怪物中心受攻击范围
         self.center_radius = 100
         # 怪物中心移动速度
         self.center_speed = settings.center_speed
         # 怪物血量
-        self.blood = settings.blood
+        self.blood = center_blood
 
         # 怪物保护圈半径
         self.protection_radius = settings.protection_radius
 
         # 怪物保护圈数目
-        self.protection_number = settings.protection_number
+        self.protection_number = protection_num
         # 怪物保护圈转动速度
         self.protection_speed = settings.protection_speed
         # 怪物保护圈离中心的距离
@@ -30,7 +30,7 @@ class MonsterBall():
         self.protection_position = 0
         # 保护圈颜色
         self.protection_color = settings.monster_ball_protection_color
-        self.protection_blood = [1 for i in range(5)]
+        self.protection_blood = [protection_blood for i in range(5)]
 
         # 是否存活
         self.alive = True
@@ -263,7 +263,7 @@ def get_distance2(x1, y1, x2, y2):
 
 
 class MonsterPlane():
-    def __init__(self, settings, screen):
+    def __init__(self, settings, screen, blood = 1, save_time = 5000, fire_time = 250):
         self.settings = settings
         self.screen = screen
         # 加载飞船
@@ -289,8 +289,14 @@ class MonsterPlane():
         self.bullet_ud_list = [1, 1, 1, 1, 1, 1]
         # 蓄力状态
         self.save_state = False
+        # 蓄力时间/ms
+        self.save_time = save_time
+        # 开火时间/ms
+        self.fire_time = fire_time
         # 开火状态
         self.fire_state = False
+        # 子弹上限
+        self.max_bullet_num = 3
         # 子弹速度
         self.bullet_speed = 0.2
         # 子弹位置
@@ -299,7 +305,7 @@ class MonsterPlane():
             self.save_rect.append(self.save_energy_image[i].get_rect())
         self.clock = pygame.time.Clock()
         self.time_passed = 0
-        self.blood = 10
+        self.blood = blood
         self.rect.x = 400
         self.rect.y = 400
 
@@ -312,16 +318,16 @@ class MonsterPlane():
             self.check_collisions(hero.weapon_attacks)
             # 计时
             self.time_passed += self.clock.tick()
-            # 如果不是在蓄能状态，那么就等待，直到非蓄能状态时间达到5秒
+            # 如果不是在蓄能状态，那么就等待，直到非蓄能状态时间达到save_time毫秒，默认5秒一次
             if not self.save_state:
-                if self.time_passed > 5000:
+                if self.time_passed > self.save_time:
                     self.time_passed = 0
                     self.save_state = True
             else:
-                # 如果在蓄能状态，那就0.25秒更新一次状态图，5次更新后发射
-                if self.time_passed >= 250:
+                # 如果在蓄能状态，那就fire_time毫秒（默认0.25秒）更新一次状态图，5次更新后发射
+                if self.time_passed >= self.fire_time:
                     self.save_energy_image_cnt = (self.save_energy_image_cnt + 1) % 6
-                    if len(self.bullet_list) < 3:
+                    if len(self.bullet_list) < self.max_bullet_num:
                         if self.save_energy_image_cnt == 5:
                             print(len(self.bullet_list))
                             self.add_bullet(hero)
@@ -462,6 +468,6 @@ class MonsterPlane():
                 # print(self.bullet_rect_list[i].centerx, self.bullet_rect_list[i].centery)
                 self.screen.blit(self.bullet_list[i], self.bullet_rect_list[i])
 
-        # print(self.save_energy_image[self.save_energy_image_cnt].get_rect())
+        # print(self.save_energy_image[self.save_energy_image_cnt].get_rect())kw
 
 
