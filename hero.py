@@ -433,22 +433,13 @@ class Hero():
                 dir_to_del = []
                 for i in range(len(monster.bullet_list)):
                     # 如果和英雄碰撞，加入删除列表
-                    if x >= monster.bullet_rect_list[i].left and x < monster.bullet_rect_list[i].right and \
-                    y >= monster.bullet_rect_list[i].top and y < monster.bullet_rect_list[i].bottom :
-                        bullet_pos = (x - monster.bullet_rect_list[i].left, y - monster.bullet_rect_list[i].top)
-                        if color == self.enemy_bullet_image.get_at(bullet_pos):
-                            is_bullet = True
-                            image_to_del.append(monster.bullet_list[i])
-                            rect_to_del.append(monster.bullet_rect_list[i])
-                            center_to_del.append(monster.bullet_center_list[i])
-                            dir_to_del.append(monster.bullet_dir_list[i])
-                # 删除子弹列表中有的子弹
-                for i in range(len(image_to_del)):
-                    is_bullet = True
-                    monster.bullet_list.remove(image_to_del[i])
-                    monster.bullet_rect_list.remove(rect_to_del[i])
-                    monster.bullet_center_list.remove(center_to_del[i])
-                    monster.bullet_dir_list.remove(dir_to_del[i])
+                    if monster.bullet_alive_list[i]:
+                        if x >= monster.bullet_rect_list[i].left and x < monster.bullet_rect_list[i].right and \
+                                y >= monster.bullet_rect_list[i].top and y < monster.bullet_rect_list[i].bottom :
+                            bullet_pos = (x - monster.bullet_rect_list[i].left, y - monster.bullet_rect_list[i].top)
+                            if color == self.enemy_bullet_image.get_at(bullet_pos):
+                                is_bullet = True
+                                monster.bullet_alive_list[i] = False
                 if is_bullet:
                     return "bullet"
         # print("enemy")
