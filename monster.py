@@ -174,7 +174,7 @@ class MonsterBall():
             if rect.left <= init_x <= rect.right:
                 flag = True
                 break
-            print(rect, init_x, rect.width, self.center_x + self.center_radius)
+            # print(rect, init_x, rect.width, self.center_x + self.center_radius)
             init_x += rect.width
         if flag:
             self.blood -= damage
