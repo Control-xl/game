@@ -136,20 +136,21 @@ class Hero():
         self.weapon_attacks = Weapon(self.screen, self.settings)
         self.weapon_en = {
             self.settings.hero_weapon["fist"] : True,
-            self.settings.hero_weapon["sword"] : False,
-            self.settings.hero_weapon["gun"] : False,
+            self.settings.hero_weapon["sword"] : True,
+            self.settings.hero_weapon["gun"] : True,
         }
         self.shoot_en = 0                               #shoot_en = 0时才能射击
         self.magic_cd = 0                               #magic_cd = 0时才能进行魔法攻击
         self.hurt_en = 5                                #代表可以攻击，非0时代表无敌
-        self.speedx = 2
-        self.speedy = 10
+        self.speedy = 5
         self.velocityx = 0
         self.velocityy = -self.speedy
+        self.speedx = 4
 
     def update_status(self):
         #根据旧状态即status的值继续状态;或者根据按键(即or后面)更改状态.更新image
         #可以改变方向的只有 移动键和受伤
+        self.frame_size = 5
         if self.status == self.settings.hero_status["hurt"]:
             #受伤的优先级最高, 要更新图形
             self.hurt_image()
@@ -255,10 +256,12 @@ class Hero():
             self.velocityx = -self.speedx
         elif self.moving_left == False and self.moving_right == True:
             self.velocityx = self.speedx
-        if self.image_order >= 6 and self.image_order <= 7:
+        if self.image_order >= 4 and self.image_order <= 7:
             self.velocityy = -self.speedy
+            self.frame_size = 8
         elif self.image_order >= 8 and self.image_order <= 10:
             self.velocityy = -self.speedy
+            self.frame_size = 10
         elif self.image_order == 11:
             self.velocityy = 0
         else :
@@ -273,10 +276,12 @@ class Hero():
             self.velocityx = -self.speedx
         elif self.moving_left == False and self.moving_right == True:
             self.velocityx = self.speedx
-        if self.image_order >= 6 and self.image_order <= 7:
+        if self.image_order >= 4 and self.image_order <= 7:
             self.velocityy = -self.speedy
+            self.frame_size = 8
         elif self.image_order >= 8 and self.image_order <= 10:
-            self.velocityy = - self.speedy
+            self.velocityy = -self.speedy
+            self.frame_size = 10
         elif self.image_order == 11:
             self.velocityy = 0
         else :
@@ -398,10 +403,10 @@ class Hero():
         # 判断接触到了什么 ？ 道具, 地图, 技能, 子弹, 敌人
         (x, y) = pos
         for i in range(len(self.tools)) :
-            if x >= tools[i].rect.left and x < tools[i].rect.right and \
-            y >= tools[i].rect.top and y < tools[i].rect.bottom :
-                if color == tools[i].image.get_at((x - tools[i].rect.left, y - tools[i].rect.top)):
-                    name = tools[i].name
+            if x >= self.tools[i].rect.left and x < self.tools[i].rect.right and \
+            y >= self.tools[i].rect.top and y < self.tools[i].rect.bottom :
+                if color == self.tools[i].image.get_at((x - self.tools[i].rect.left, y - self.tools[i].rect.top)):
+                    name = self.tools[i].name
                     self.tools.pop(i)
                     return name
         if color == self.settings.map_color:
@@ -468,7 +473,7 @@ class Hero():
                 self.weapon_attacks.fist_magic.width = 0
                 self.weapon_attacks.fist_magic.centerx = self.weapon_attacks.fist_magic_rect.centerx
             elif self.weapon == self.settings.hero_weapon["sword"] and \
-            self.image_order == self.sword_magic_size[self.weapon] - 2:
+            self.image_order == self.fire_magic_size[self.weapon] - 2:
                 self.magic -= 1
                 self.magic_cd = 300
                 self.weapon_attacks.image_order = 0

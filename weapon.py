@@ -15,7 +15,7 @@ class Weapon():
         self.sword_attacking = False
         self.fist_attacking = False
         self.fist_magic_damage = 5
-        self.fist_magic_damage = 5
+        self.sword_magic_damage = 5
         self.fist_magic = pygame.Rect(0, 0, 1, 1)
         self.fist_magic_width = 60
         self.fist_magic.width = self.fist_magic_width
@@ -111,7 +111,7 @@ class Weapon():
         if self.fist_magic_firing == True :
             self.screen.blit(self.fist_magic_images[self.image_order], self.fist_magic_rect)
         if self.sword_magic_firing == True :
-            self.screen.blit(self.sword_magic_image, self.sword_magic_rect)
+            self.screen.blit(self.sword_magic_images[self.image_order], self.sword_magic_rect)
         for bullet in self.bullets : 
             bullet.blitme()
 
