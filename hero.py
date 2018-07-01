@@ -470,7 +470,6 @@ class Hero():
                     self.weapon_attacks.fist_magic_rect.right = self.rect.left - 100
                 elif self.direction == self.settings.hero_direction["right"] :
                     self.weapon_attacks.fist_magic_rect.left = self.rect.right + 100
-                print(self.weapon_attacks.fist_magic_rect.centerx)
                 self.weapon_attacks.fist_magic_centerx = self.settings.left_border + self.weapon_attacks.fist_magic_rect.centerx
                 self.weapon_attacks.fist_magic_rect.bottom = self.map.gety(self.weapon_attacks.fist_magic_centerx)
                 # 初始化攻击范围
