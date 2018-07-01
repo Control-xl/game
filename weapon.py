@@ -21,11 +21,16 @@ class Weapon():
         self.image_order = 0
         self.fist_magic_images = []
         self.fist_magic_size = 8
-        for i in range(0, 8):
-            self.fist_magic_images.append('images/magics/fist/' + str(i) + '.png')
+        for i in range(1, self.fist_magic_size + 1):
+            image = pygame.image.load('images/magics/fist/' + str(i) + '.png')
+            self.fist_magic_images.append(image)
         self.fist_magic_rect = self.fist_magic_image.get_rect()
         self.fist_magic_centerx = self.fist_magic_rect.centerx
-        self.sword_magic_image = pygame.image.load('images/magics/sword.png')
+        self.sword_magic_image = []
+        self.sword_magic_size = 8
+        for i in range(1, self.sword_magic_size + 1):
+            image = pygame.image.load('images/magics/sword/' + str(i) + '.png')
+            self.fist_magic_images.append(image)
         self.sword_magic_rect = self.sword_magic_image.get_rect()
         self.sword_magic_centerx = self.sword_magic_rect.centerx
         self.fist_magic_time = 0
