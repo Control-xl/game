@@ -101,6 +101,7 @@ class Hero():
         self.squat_attack_size = 9
         self.weapon_size = self.settings.hero_weapon_size
         #images[direction][weapon]代表一个图片或图片文件夹或空
+        self.enemy_bullet_image = pygame.image.load('images/laser/bullet.png')
         self.stay_images = {}
         self.move_images = {}
         self.attack_images = {}
@@ -334,8 +335,11 @@ class Hero():
             self.velocityx = 0
         self.x += self.velocityx
         # self.map.update(self.velocityx, self.rect)
-        if self.settings.map_lock : 
+        if self.settings.map_lock or \
+        (self.velocityx > 0 and self.rect.right < self.settings.screen_width/2)\
+        (self.velocityx < 0 and self.rect.left > self.settings.screen_width/10):
             self.rect.centerx += self.velocityx
+        
 
     def update_heroy(self):
         #跳起与坠落
@@ -431,7 +435,7 @@ class Hero():
                 if x >= monster_with_bullet.bullet_rect_list[i].left and x < monster_with_bullet.bullet_rect_list[i].right and \
                 y >= monster_with_bullet.bullet_rect_list[i].top and y < monster_with_bullet.bullet_rect_list[i].bottom :
                     bullet_pos == (x - monster_with_bullet.bullet_rect_list[i].left, y - monster_with_bullet.bullet_rect_list[i].top)
-                    if True:
+                    if self.enemy_bullet_image.get_at(bullet_pos):
                         is_bullet = True
                         image_to_del.append(monster_with_bullet.bullet_list[i])
                         rect_to_del.append(monster_with_bullet.bullet_rect_list[i])
@@ -466,6 +470,10 @@ class Hero():
                     self.weapon_attacks.fist_magic_rect.left = self.rect.right + 100
                 self.weapon_attacks.fist_magic_rect_x = self.settings.left_border + self.weapon_attacks.fist_magic_rect.centerx
                 self.weapon_attacks.fist_magic_rect.bottom = self.map.gety(self.weapon_attacks.fist_magic_rect_x)
+                # 初始化攻击范围
+                self.weapon_attacks.fist_magic.height = 0
+                self.weapon_attacks.fist_magic.width = 0
+                self.weapon_attacks.fist_magic.centerx = self.weapon_attacks.fist_magic_rect.centerx
             elif self.weapon == self.settings.hero_weapon["sword"] and \
             self.image_order == self_sword_magic_size[self.weapon] - 2:
                 self.magic -= 1
@@ -473,14 +481,15 @@ class Hero():
                 self.weapon_attacks.image_order = 0
                 # self.weapon_attacks.sword_magic_time = 100
                 self.weapon_attacks.sword_magic_firing = True
-                self.weapon_attacks.sword_magic_rect.centery = self.rect.top + 60
                 if self.direction == self.settings.hero_direction["left"] :
                     self.weapon_attacks.sword_magic_rect.right = self.rect.left
                 elif self.direction == self.settings.hero_direction["right"] :
                     self.weapon_attacks.sword_magic_rect.left = self.rect.right
                 self.weapon_attacks.sword_magic_rect_x = self.settings.left_border + self.weapon_attacks.sword_magic_rect.centerx
+                self.weapon_attacks.sword_magic_rect.centery = self.rect.top + 60
+                self.weapon_attacks.sword_magic.height = 80
+                self.weapon_attacks.sword_magic.height = 100
                 self.weapon_attacks.sword_magic.center = self.weapon_attacks.sword_magic_rect.center
-
         elif self.status == self.settings.hero_status["attack"]:
             self.weapon_attacks.fist.width = 80
             self.weapon_attacks.fist.height = 16
