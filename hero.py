@@ -91,8 +91,8 @@ class Hero():
         self.frame_order = 0                                                    #正播放的帧序号
         self.frame_size = 5                                                     #代表一个图片要放的帧数目
         self.basic_frame_size = 5                                               #基本帧数目
-        self.jump_frame_size = [2,2,2,2,5,5,2,2,8,8,8,8,8,5,5,5,5,]             #用于调节跳跃动作的帧数目
-        #                      [0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,]
+        self.jump_frame_size = [2,2,2,2,5,5,2,5, 5,10,10,20,2,2,2,2,2,]             #用于调节跳跃动作的帧数目
+        #                      [0,1,2,3,4,5,6,7, 8, 9, 0, 1, 2,3,4,5,6,]
         self.image_order = 0     #正播放的图片序号
         self.move_size = [6, 12, 6]       #移动图片的总数目 6,12,6
         self.attack_size = [11, 8, 0]    # 11, 11, 11
@@ -275,7 +275,7 @@ class Hero():
         elif self.image_order >= 8 and self.image_order <= 10:
             self.velocityy = -self.speedy
         elif self.image_order == 11:
-            self.velocityy = 0
+            self.velocityy = self.speedy
         else :
             self.velocityy = self.speedy
         self.change_image(self.jump_attack_images[self.direction][self.weapon][self.image_order])
@@ -299,7 +299,7 @@ class Hero():
         elif self.image_order >= 8 and self.image_order <= 10:
             self.velocityy = -self.speedy
         elif self.image_order == 11:
-            self.velocityy = 0
+            self.velocityy = self.speedy
         else :
             self.velocityy = self.speedy
         self.change_image(self.jump_images[self.direction][self.weapon][self.image_order])
@@ -491,8 +491,8 @@ class Hero():
                 self.weapon_attacks.fist_magic_centerx = self.settings.left_border + self.weapon_attacks.fist_magic_rect.centerx
                 self.weapon_attacks.fist_magic_rect.bottom = self.map.gety(self.weapon_attacks.fist_magic_centerx)
                 # 初始化攻击范围
-                self.weapon_attacks.fist_magic.height = 0
-                self.weapon_attacks.fist_magic.width = 0
+                self.weapon_attacks.fist_magic.height = 1
+                self.weapon_attacks.fist_magic.width = 1
                 self.weapon_attacks.fist_magic.centerx = self.weapon_attacks.fist_magic_rect.centerx
             elif self.weapon == self.settings.hero_weapon["sword"] and \
             self.image_order == self.fire_magic_size[self.weapon] - 2:
@@ -508,7 +508,7 @@ class Hero():
                 self.weapon_attacks.sword_magic_centerx = self.settings.left_border + self.weapon_attacks.sword_magic_rect.centerx
                 self.weapon_attacks.sword_magic_rect.centery = self.rect.top + 60
                 self.weapon_attacks.sword_magic.height = 80
-                self.weapon_attacks.sword_magic.height = 100
+                self.weapon_attacks.sword_magic.width = 100
                 self.weapon_attacks.sword_magic.center = self.weapon_attacks.sword_magic_rect.center
         elif self.status == self.settings.hero_status["attack"]:
             self.weapon_attacks.fist.width = 80
