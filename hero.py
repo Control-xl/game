@@ -374,6 +374,9 @@ class Hero():
         self.rect.bottom += self.velocityy
         if self.rect.bottom > self.map.gety(self.x):
             self.rect.bottom = self.map.gety(self.x)
+        if self.rect.bottom == self.settings.bottom_num:
+            self.blood -= 1
+            # 重新定位
         print(self.x, self.rect.bottom, self.map.gety(self.x))
 
 
@@ -668,8 +671,8 @@ class Hero():
         if self.status == self.settings.hero_status["jump"] or self.status == self.settings.hero_status["jump_attack"]:
             if self.image_order == 7:
                 self.rect.top = rect_top
-        if self.rect.bottom > self.settings.screen_height :
-            self.rect.bottom = self.settings.screen_height
+        # if self.rect.bottom > self.settings.screen_height + 300:
+        #     self.rect.bottom = self.settings.screen_height + 300
 
     def blitme(self):
         if self.hurt_en % 6 < 3 :
