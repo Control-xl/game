@@ -71,6 +71,9 @@ class Weapon():
             elif self.image_order == 6 :
                 self.fist_magic.height = 60
                 self.fist_magic.bottom = self.fist_magic_rect.bottom
+            else : 
+                self.fist_magic.height = 1
+                self.fist_magic.bottom = self.fist_magic_rect.bottom
             self.fist_magic.width = self.fist_magic_width
             self.fist_magic_rect.centerx = self.fist_magic_centerx - self.settings.left_border
             self.fist_magic.centerx = self.fist_magic_rect.centerx
