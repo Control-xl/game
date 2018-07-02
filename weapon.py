@@ -24,6 +24,8 @@ class Weapon():
         self.sword_magic.height = 80
         self.fist_magic_firing = False
         self.sword_magic_firing = False
+        self.fist_magic_playing = False
+        self.sword_magic_playing = False
         self.image_order = 0
         self.frame_order = 0
         self.frame_size = 5
@@ -46,14 +48,14 @@ class Weapon():
 
     def update(self):
         # 更新子弹, 技能位置, image_order
-        if self.fist_magic_firing == True :
+        if self.fist_magic_playing == True :
             self.frame_order += 1
             if self.frame_order >= self.frame_size :
                 self.frame_order = 0
                 self.image_order += 1
                 if self.image_order >= self.fist_magic_size :
                     self.image_order = 0
-                    self.fist_magic_firing = False
+                    self.fist_magic_playing = False
             # 根据image_order 改变 攻击范围
             if self.image_order < 1  or self.image_order >= self.fist_magic_size - 1:
                 self.fist_magic.height = 1
@@ -79,15 +81,16 @@ class Weapon():
             self.fist_magic.centerx = self.fist_magic_rect.centerx
             print(self.image_order, self.fist_magic, self.fist_magic_rect)
         else :
+            self.fist_magic_playing = False
             self.fist_magic_firing = False
-        if self.sword_magic_firing == True :
+        if self.sword_magic_playing == True :
             self.frame_order += 1
             if self.frame_order >= self.frame_size :
                 self.frame_order = 0
                 self.image_order += 1
                 if self.image_order >= self.sword_magic_size :
                     self.image_order = 0
-                    self.sword_magic_firing = False
+                    self.sword_magic_playing = False
                 # 根据image_order 改变 攻击范围
             if self.image_order < 0  or self.image_order >= self.fist_magic_size - 2:
                 self.sword_magic.height = 1
@@ -101,6 +104,7 @@ class Weapon():
             self.sword_magic_rect.centerx = self.sword_magic_centerx - self.settings.left_border
             self.sword_magic.center = self.sword_magic_rect.center
         else : 
+            self.sword_magic_playing = False
             self.sword_magic_firing = False
         i = len(self.bullets)
         while i > 0 :
@@ -111,9 +115,9 @@ class Weapon():
                 self.bullets[i].update()
 
     def blitme(self):
-        if self.fist_magic_firing == True :
+        if self.fist_magic_playing == True :
             self.screen.blit(self.fist_magic_images[self.image_order], self.fist_magic_rect)
-        if self.sword_magic_firing == True :
+        if self.sword_magic_playing == True :
             self.screen.blit(self.sword_magic_images[self.image_order], self.sword_magic_rect)
         for bullet in self.bullets : 
             bullet.blitme()

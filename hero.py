@@ -117,6 +117,8 @@ class Hero():
         # self.squat_move_images = {}
         self.image_to_frame = {}
         self.load_images()
+        for i in range(len(self.image_to_frame[self.attack_images[1][0][5]].frame)):
+            print(i, self.image_to_frame[self.attack_images[1][0][5]].frame[i])
         self.weapon = self.settings.hero_weapon["fist"]
         self.status = settings.hero_status["stay"]
         self.direction = settings.hero_direction["right"]
@@ -373,6 +375,7 @@ class Hero():
         self.rect.bottom += self.velocityy
         if self.rect.bottom > self.map.gety(self.x):
             self.rect.bottom = self.map.gety(self.x)
+        # print(self.x, self.rect.bottom, self.map.gety(self.x))
 
 
     def check_collision(self, monster_list, tool_list):
@@ -408,7 +411,7 @@ class Hero():
                             self.status == self.settings.hero_status["attack"] and \
                             self.image_order >= 5 and  self.image_order <= 6 and \
                             self.direction == self.settings.hero_direction[direction] and \
-                            y >= 41 and y <= 56:
+                            y >= 41 and y <= 58:
                                 #特殊情况 拳头部分
                                 pass
                             elif self.weapon == self.settings.hero_weapon["fist"] and \
@@ -475,15 +478,16 @@ class Hero():
     def update_weapon_attack(self):
         self.weapon_attacks.update()
         if self.status == self.settings.hero_status["fire_magic"]:
-            if self.weapon == self.settings.hero_weapon["fist"] and \
-            self.image_order == self.fire_magic_size[self.weapon] - 2 and \
-            self.magic_cd == 0:
+            if self.weapon == self.settings.hero_weapon["fist"] \
+            and self.image_order == self.fire_magic_size[self.weapon] - 2 \
+            and self.frame_order == 0 and self.magic_cd == 0:
                 #
                 self.magic -= 1
                 self.magic_cd = 300
                 self.weapon_attacks.image_order = 0
                 # self.weapon_attacks.fist_magic_time = self.weapon_attacks.fist_magic_size
                 self.weapon_attacks.fist_magic_firing = True
+                self.weapon_attacks.fist_magic_playing = True
                 if self.direction == self.settings.hero_direction["left"] :
                     self.weapon_attacks.fist_magic_rect.right = self.rect.left - 100
                 elif self.direction == self.settings.hero_direction["right"] :
@@ -494,13 +498,15 @@ class Hero():
                 self.weapon_attacks.fist_magic.height = 1
                 self.weapon_attacks.fist_magic.width = 1
                 self.weapon_attacks.fist_magic.centerx = self.weapon_attacks.fist_magic_rect.centerx
-            elif self.weapon == self.settings.hero_weapon["sword"] and \
-            self.image_order == self.fire_magic_size[self.weapon] - 2:
+            elif self.weapon == self.settings.hero_weapon["sword"] \
+            and self.image_order == self.fire_magic_size[self.weapon] - 2 \
+            and self.frame_order == 0 and self.magic_cd == 0:
                 self.magic -= 1
                 self.magic_cd = 300
                 self.weapon_attacks.image_order = 0
                 # self.weapon_attacks.sword_magic_time = 100
                 self.weapon_attacks.sword_magic_firing = True
+                self.weapon_attacks.sword_magic_playing = True
                 if self.direction == self.settings.hero_direction["left"] :
                     self.weapon_attacks.sword_magic_rect.right = self.rect.left
                 elif self.direction == self.settings.hero_direction["right"] :
@@ -523,11 +529,13 @@ class Hero():
             self.weapon_attacks.sword["radius"] = 85
             self.weapon_attacks.sword["direction"] = self.direction
             if self.weapon == self.settings.hero_weapon["fist"] and self.image_order >= 5 and self.image_order <= 6:
-                self.weapon_attacks.fist_attacking = True
-                self.weapon_attacks.sword_attacking = False
+                if self.frame_order == 0 and self.image_order == 5 :
+                    self.weapon_attacks.fist_attacking = True
+                    self.weapon_attacks.sword_attacking = False
             elif self.weapon == self.settings.hero_weapon["sword"] and self.image_order >= 1 and self.image_order <= 5:
-                self.weapon_attacks.fist_attacking = False
-                self.weapon_attacks.sword_attacking = True
+                if self.frame_order == 0 and self.image_order == 1:
+                    self.weapon_attacks.fist_attacking = False
+                    self.weapon_attacks.sword_attacking = True
             else :
                 self.weapon_attacks.fist_attacking = False
                 self.weapon_attacks.sword_attacking = False
@@ -544,11 +552,13 @@ class Hero():
             self.weapon_attacks.sword["radius"] = 85
             self.weapon_attacks.sword["direction"] = self.direction
             if self.weapon == self.settings.hero_weapon["fist"] and self.image_order >= 9 and self.image_order <= 11:
-                self.weapon_attacks.fist_attacking = True
-                self.weapon_attacks.sword_attacking = False
+                if self.frame_order == 0 and self.image_order == 9 :
+                    self.weapon_attacks.fist_attacking = True
+                    self.weapon_attacks.sword_attacking = False
             elif self.weapon == self.settings.hero_weapon["sword"] and self.image_order >= 8 and self.image_order <= 12:
-                self.weapon_attacks.fist_attacking = False
-                self.weapon_attacks.sword_attacking = True
+                if self.frame_order == 0 and self.image_order == 8 :
+                    self.weapon_attacks.fist_attacking = False
+                    self.weapon_attacks.sword_attacking = True
             else :
                 self.weapon_attacks.fist_attacking = False
                 self.weapon_attacks.sword_attacking = False
@@ -563,6 +573,25 @@ class Hero():
         self.update_pos()
         self.update_weapon_attack()
         
+
+    def update_herox_v2(self):
+        if (self.rect.centerx > 0 + self.speedx and self.rect.centerx < self.settings.screen_width - self.speedx) \
+        or (self.rect.centerx <= self.speedx and self.velocityx > 0) \
+        or (self.rect.centerx >= self.settings.screen_width - self.speedx and self.velocityx < 0):
+            self.x += self.velocityx
+
+    def update_centerx(self):
+        self.rect.centerx = self.x - self.settings.left_border
+
+    def update1_v2(self, monster_list, tool_list):
+        self.check_collision(monster_list, tool_list)
+        self.update_status()
+        self.update_herox_v2()
+
+    def update2_v2(self):
+        self.update_centerx()
+        self.update_heroy()
+        self.update_weapon_attack()
 
 
     def change_weapon(self):
@@ -688,4 +717,27 @@ class Hero():
                 self.load_image_file(direction, weapon, self.hurt_images, 'hurt_images', self.hurt_size)
                 # self.squat_images[self.direction].append(pygame.image.load('game/images/' + str(weapon) + '_squat_left.jpeg')) 
                 # self.load_image_file(weapon, self.squat_attack_images, 'squat_attack_images', self.squat_attack_size)
-                # self.load_image_file(weapon, self.squat_move_images, 'squat_move_images', self.squat_move_size)S
+                # self.load_image_file(weapon, self.squat_move_images, 'squat_move_images', self.squat_move_size)
+
+if __name__ == '__main__':
+    pygame.init()
+    settings = Settings()
+    screen = pygame.display.set_mode((settings.screen_width, settings.screen_height), 0, 0)
+    map_ = Map(screen, settings)
+    tool_list = []
+    hero = Hero(screen, map_, settings)
+    # tool = Tool(screen, settings, "food", (600, 700))
+    # tool_list.append(tool)
+    monster_list = []
+    clock = pygame.time.Clock()
+    while True:
+        clock.tick(200)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+        hero.update(monster_list, tool_list)
+        map_.update(hero, monster_list)
+        screen.fill(settings.bg_color)
+        hero.blitme()
+        map_.blitme()
+        pygame.display.update()
