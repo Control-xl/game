@@ -89,8 +89,11 @@ class Hero():
         self.map = map_
         self.tools = tools
         self.settings = settings
-        self.frame_order = 0     #正播放的帧序号
-        self.frame_size = 5      #代表一个图片要放的帧数目
+        self.frame_order = 0                                                    #正播放的帧序号
+        self.frame_size = 5                                                     #代表一个图片要放的帧数目
+        self.basic_frame_size = 5                                               #基本帧数目
+        self.jump_frame_size = [2,2,2,2,5,5,2,2,8,8,8,8,8,5,5,5,5,]             #用于调节跳跃动作的帧数目
+        #                      [0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,]
         self.image_order = 0     #正播放的图片序号
         self.move_size = [6, 12, 6]       #移动图片的总数目 6,12,6
         self.attack_size = [11, 8, 0]    # 11, 11, 11
@@ -139,6 +142,7 @@ class Hero():
             self.settings.hero_weapon["sword"] : True,
             self.settings.hero_weapon["gun"] : True,
         }
+        self.jump_en = 1                                #1代表可以
         self.shoot_en = 0                               #shoot_en = 0时才能射击
         self.magic_cd = 0                               #magic_cd = 0时才能进行魔法攻击
         self.hurt_en = 5                                #代表可以攻击，非0时代表无敌
@@ -150,7 +154,7 @@ class Hero():
     def update_status(self):
         #根据旧状态即status的值继续状态;或者根据按键(即or后面)更改状态.更新image
         #可以改变方向的只有 移动键和受伤
-        self.frame_size = 5
+        self.frame_size = self.basic_frame_size
         if self.status == self.settings.hero_status["hurt"]:
             #受伤的优先级最高, 要更新图形
             self.hurt_image()
@@ -165,11 +169,13 @@ class Hero():
         elif self.status == self.settings.hero_status["squat_attack"] :
             #下蹲攻击动画
             self.squat_attack_image()
-        elif self.fire_magicing == True and self.magic_cd == 0:
+        elif self.fire_magicing == True and self.magic_cd == 0 \
+        and self.weapon != self.settings.hero_weapon["gun"]:
+            self.image_order = 0
+            self.frame_order = 0
             self.status = self.settings.hero_status["fire_magic"]
         elif self.attacking and self.weapon != self.settings.hero_weapon["gun"]:
             #当按下攻击键时，进入攻击状态
-            self.attacking = False
             if self.status == self.settings.hero_status["jump"] :
                 self.status = self.settings.hero_status["jump_attack"]
             elif self.status == self.settings.hero_status["squat"]:
@@ -192,6 +198,7 @@ class Hero():
         #     self.squat_image()
         elif self.jumping :
             #跳跃键
+            self.image_order = 0
             self.status = self.settings.hero_status["jump"]
         elif self.status == self.settings.hero_status["move"] :
             # 最后是移动
@@ -223,6 +230,8 @@ class Hero():
         if self.magic_cd > 0:
             self.magic_cd -= 1
         self.jumping = False
+        self.attacking = False
+        self.fire_magicing = False
         
 
     def get_hurt(self, direction):
@@ -252,16 +261,16 @@ class Hero():
 
     def jump_attack_image(self):
         #跳起时进行攻击
+        # 调节帧数目
+        self.frame_size = self.jump_frame_size[self.image_order]
         if self.moving_left == True and self.moving_right == False:
             self.velocityx = -self.speedx
         elif self.moving_left == False and self.moving_right == True:
             self.velocityx = self.speedx
-        if self.image_order >= 4 and self.image_order <= 7:
+        if self.image_order >= 6 and self.image_order <= 7:
             self.velocityy = -self.speedy
-            self.frame_size = 8
         elif self.image_order >= 8 and self.image_order <= 10:
             self.velocityy = -self.speedy
-            self.frame_size = 10
         elif self.image_order == 11:
             self.velocityy = 0
         else :
@@ -272,16 +281,16 @@ class Hero():
     def jump_image(self):
         #跳跃动画
         #self.velocityx 随移动键改变
+        self.frame_size = self.jump_frame_size[self.image_order]
         if self.moving_left == True and self.moving_right == False:
             self.velocityx = -self.speedx
         elif self.moving_left == False and self.moving_right == True:
             self.velocityx = self.speedx
-        if self.image_order >= 4 and self.image_order <= 7:
+        # 调节帧数目
+        if self.image_order >= 6 and self.image_order <= 7:
             self.velocityy = -self.speedy
-            self.frame_size = 8
         elif self.image_order >= 8 and self.image_order <= 10:
             self.velocityy = -self.speedy
-            self.frame_size = 10
         elif self.image_order == 11:
             self.velocityy = 0
         else :
@@ -540,6 +549,7 @@ class Hero():
         self.update_status()
         self.update_pos()
         self.update_weapon_attack()
+        
 
 
     def change_weapon(self):
@@ -549,10 +559,11 @@ class Hero():
             self.weapon = (self.weapon + 1) % self.weapon_size
         if self.status == self.settings.hero_status["move"] and self.image_order >= 6: 
             self.image_order -= 6
+        if self.status == self.settings.hero_status["fire_magic"] :
+            self.status = self.settings.hero_status["stay"]
         if self.weapon == self.settings.hero_weapon["gun"]:
             #持枪时无攻击状态
-            if self.status == self.settings.hero_status["attack"] or \
-            self.status == self.settings.hero_status["fire_magic"] :
+            if self.status == self.settings.hero_status["attack"] :
                 self.status = self.settings.hero_status["stay"]
             elif self.status == self.settings.hero_status["jump_attack"]:
                 self.status = self.settings.hero_status["jump"]
@@ -565,11 +576,11 @@ class Hero():
             #无法发射子弹
             return
         if self.direction == self.settings.hero_direction["right"]:
-            bullet_velocity = 0.1
+            bullet_velocity = 0.1 # self.speedx
             bullet_pos = []
             bullet_pos.append(self.rect.right)
         elif self.direction == self.settings.hero_direction["left"]:
-            bullet_velocity = -0.1
+            bullet_velocity = -0.1 # -self.speedx
             bullet_pos = []
             bullet_pos.append(self.rect.left)
         else :
@@ -591,10 +602,11 @@ class Hero():
     def display_frame(self, image_size):
         #播放帧
         self.frame_order += 1
-        if self.frame_order == self.frame_size:      #切换图片
+        if self.frame_order >= self.frame_size:      #切换图片
             self.frame_order = 0
             self.image_order += 1
-            if self.image_order == image_size:
+            #print(self.status, self.image_order, self.frame_order)
+            if self.image_order >= image_size:
                 self.image_order = 0
                 if self.squating:
                     self.status = self.settings.hero_status["squat"]

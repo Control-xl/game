@@ -5,15 +5,16 @@ from map import Map
 from game_functions import transparent
 
 class Tool():
-    def __init__(self, name, pos, screen, settings):
+    def __init__(self, screen, settings, name, pos):
         self.screen = screen
         self.settings = settings
         self.name = name
-        self.image = pygame.image.load("images/tools/" + name + '.jpg')
+        self.image = pygame.image.load("images/tools/" + name + '.png')
+        self.bg_image = pygame.image.load("images/tools/bg_" + name + '.png')
         self.rect = self.image.get_rect()
         self.centerx = pos[0]
         self.rect.bottom = pos[1]
-        self.life_time = 1000
+        self.life_time = 2000
 
     def blitme(self):
         self.rect.centerx = self.centerx - self.settings.left_border
