@@ -375,7 +375,7 @@ class Hero():
         self.rect.bottom += self.velocityy
         if self.rect.bottom > self.map.gety(self.x):
             self.rect.bottom = self.map.gety(self.x)
-        # print(self.x, self.rect.bottom, self.map.gety(self.x))
+        print(self.x, self.rect.bottom, self.map.gety(self.x))
 
 
     def check_collision(self, monster_list, tool_list):
