@@ -575,6 +575,8 @@ class Hero():
         
 
     def update_herox_v2(self):
+        if self.map.gety(self.x + self.velocityx * 2) < self.rect.bottom :
+            self.velocityx = 0
         if (self.rect.centerx > 0 + self.speedx and self.rect.centerx < self.settings.screen_width - self.speedx) \
         or (self.rect.centerx <= self.speedx and self.velocityx > 0) \
         or (self.rect.centerx >= self.settings.screen_width - self.speedx and self.velocityx < 0):
