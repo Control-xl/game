@@ -16,7 +16,7 @@ class Map():
         self.shape = [700 for i in range(1000)]
 
         self.cnt = 0
-        self.monster_point = [1200, 3000, 5000, 7000]
+        self.monster_point = [1500, 3000, 5000, 7000]
         self.monster_list = []
         # 1飞机，依次为血量，攻击准备时间，蓄力时间
         self.monster_list.append(monster.MonsterPlane(settings, screen, 1, 10000, 500))
