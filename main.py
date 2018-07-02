@@ -23,7 +23,7 @@ if __name__ == '__main__':
     tool = Tool(screen, settings, "food", (600, 700))
     tool_list.append(tool)
     monster_list = []
-    monster_list.append(MonsterPlane(settings, screen))
+    # monster_list.append(MonsterPlane(settings, screen))
     # monsterball = MonsterBall(settings, screen)
     clock = pygame.time.Clock()
     while True:
@@ -58,7 +58,7 @@ if __name__ == '__main__':
         # hero.update(monster_list, tool_list)
         hero.update1_v2(monster_list, tool_list)
         map_.update(hero, monster_list)
-        hero_update2_v2()
+        hero.update2_v2()
         monster_to_del = []
         for monster in monster_list:
             monster.update(hero)
