@@ -266,6 +266,8 @@ class Hero():
             self.velocityx = -self.speedx
         elif self.moving_left == False and self.moving_right == True:
             self.velocityx = self.speedx
+        else :
+            self.velocityx = 0
         if self.image_order >= 6 and self.image_order <= 7:
             self.velocityy = -self.speedy
         elif self.image_order >= 8 and self.image_order <= 10:
@@ -287,6 +289,8 @@ class Hero():
         elif self.moving_left == False and self.moving_right == True:
             self.direction = self.settings.hero_direction["right"]
             self.velocityx = self.speedx
+        else :
+            self.velocityx = 0
         # 调节帧数目
         if self.image_order >= 6 and self.image_order <= 7:
             self.velocityy = -self.speedy
