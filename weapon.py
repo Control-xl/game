@@ -102,7 +102,7 @@ class Weapon():
         i = len(self.bullets)
         while i > 0 :
             i -= 1
-            if self.bullets[i].rect.right < 0 or self.rect.left > self.settings.screen_width :
+            if self.bullets[i].rect.right < -50 or self.bullets[i].rect.left > self.settings.screen_width + 50:
                 self.bullets.pop(i)
             else :
                 self.bullets[i].update()
@@ -120,7 +120,9 @@ class Bullet():
     def __init__(self, screen, settings, pos, velocity):
         self.screen = screen
         self.settings = settings
-        self.rect = pygame.Rect(1,1,10,10)
+        self.bullet_width = 10
+        self.bullet_height = 4
+        self.rect = pygame.Rect(1,1,self.bullet_width, self.bullet_height)
         self.rect.left = pos[0]
         self.rect.centery = pos[1]
         self.velocity = velocity

@@ -84,10 +84,9 @@ class Frame():
 
 
 class Hero():
-    def __init__(self, screen, map_, tools, settings):
+    def __init__(self, screen, map_, settings):
         self.screen = screen
         self.map = map_
-        self.tools = tools
         self.settings = settings
         self.frame_order = 0                                                    #正播放的帧序号
         self.frame_size = 5                                                     #代表一个图片要放的帧数目
@@ -146,7 +145,7 @@ class Hero():
         self.shoot_en = 0                               #shoot_en = 0时才能射击
         self.magic_cd = 0                               #magic_cd = 0时才能进行魔法攻击
         self.hurt_en = 5                                #代表可以攻击，非0时代表无敌
-        self.speedy = 5
+        self.speedy = 8
         self.velocityx = 0
         self.velocityy = -self.speedy
         self.speedx = 4
@@ -283,8 +282,10 @@ class Hero():
         #self.velocityx 随移动键改变
         self.frame_size = self.jump_frame_size[self.image_order]
         if self.moving_left == True and self.moving_right == False:
+            self.direction = self.settings.hero_direction["left"]
             self.velocityx = -self.speedx
         elif self.moving_left == False and self.moving_right == True:
+            self.direction = self.settings.hero_direction["right"]
             self.velocityx = self.speedx
         # 调节帧数目
         if self.image_order >= 6 and self.image_order <= 7:
@@ -368,7 +369,7 @@ class Hero():
             self.rect.bottom = self.map.gety(self.x)
 
 
-    def check_collision(self, monster_list):
+    def check_collision(self, monster_list, tool_list):
         #碰撞检测, 碰撞到地图, 道具, 拳头攻击到敌人, 敌人攻击
         #遇到不同颜色，先检查道具，看对应的位置的颜色是否一样，一样则是接触到了道具
         #再检测是不是正在进行拳头攻击，是的话，某些位置不会成为攻击矩形
@@ -384,7 +385,7 @@ class Hero():
                     color = self.screen.get_at(pos)
                     if color != self.settings.hero_boot_color:
                         #先检测碰撞到什么
-                        touch_object = self.touch_object(pos, color, monster_list)
+                        touch_object = self.touch_object(pos, color, monster_list, tool_list)
                         i = 0
                         if touch_object == "tool" : #道具名称
                             pass
@@ -408,15 +409,15 @@ class Hero():
                             else :
                                 self.get_hurt(self.settings.hero_direction[direction])
 
-    def touch_object(self, pos, color, monster_list):
+    def touch_object(self, pos, color, monster_list, tool_list):
         # 判断接触到了什么 ？ 道具, 地图, 技能, 子弹, 敌人
         (x, y) = pos
-        for i in range(len(self.tools)) :
-            if x >= self.tools[i].rect.left and x < self.tools[i].rect.right and \
-            y >= self.tools[i].rect.top and y < self.tools[i].rect.bottom :
-                if color == self.tools[i].image.get_at((x - self.tools[i].rect.left, y - self.tools[i].rect.top)):
-                    name = self.tools[i].name
-                    self.tools.pop(i)
+        for i in range(len(tool_list)) :
+            if x >= tool_list[i].rect.left and x < tool_list[i].rect.right and \
+            y >= tool_list[i].rect.top and y < tool_list[i].rect.bottom :
+                if color == tool_list[i].image.get_at((x - tool_list[i].rect.left, y - tool_list[i].rect.top)):
+                    name = tool_list[i].name
+                    tool_list.pop(i)
                     return name
         if color == self.settings.map_color:
             # 当这个坐标在地图以下时，就是接触到地图了,有可能是一条垂直线
@@ -544,8 +545,8 @@ class Hero():
             self.weapon_attacks.sword_attacking = False
 
 
-    def update(self, monster_list):
-        self.check_collision(monster_list)
+    def update(self, monster_list, tool_list):
+        self.check_collision(monster_list, tool_list)
         self.update_status()
         self.update_pos()
         self.update_weapon_attack()
@@ -576,27 +577,27 @@ class Hero():
             #无法发射子弹
             return
         if self.direction == self.settings.hero_direction["right"]:
-            bullet_velocity = 0.1 # self.speedx
+            bullet_velocity = self.speedx
             bullet_pos = []
-            bullet_pos.append(self.rect.right)
+            bullet_pos.append(self.rect.right + bullet_velocity)
         elif self.direction == self.settings.hero_direction["left"]:
-            bullet_velocity = -0.1 # -self.speedx
+            bullet_velocity = -self.speedx
             bullet_pos = []
-            bullet_pos.append(self.rect.left)
+            bullet_pos.append(self.rect.left + bullet_velocity)
         else :
             return 
         if self.status == self.settings.hero_status["stay"]:
             #不同状态中，枪的纵坐标不同
-            bullet_pos.append(self.rect.bottom + 167)
+            bullet_pos.append(self.rect.bottom - 167)
         elif self.status == self.settings.hero_status["move"]:
-            bullet_pos.append(self.rect.bottom + 175)
+            bullet_pos.append(self.rect.bottom - 175)
         elif self.status == self.settings.hero_status["jump"]:
-            bullet_pos.append(self.rect.top - 40)
+            bullet_pos.append(self.rect.top + 40)
         else :
             return
         new_bullet = Bullet(self.screen, self.settings, bullet_pos, bullet_velocity)
         self.weapon_attacks.bullets.append(new_bullet)
-        self.shoot_en = 200
+        self.shoot_en = 50
 
 
     def display_frame(self, image_size):
