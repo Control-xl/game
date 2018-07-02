@@ -55,8 +55,10 @@ if __name__ == '__main__':
                     hero.moving_right = False
                 if event.key == pygame.K_s:
                     hero.squating = False
-        hero.update(monster_list, tool_list)
+        # hero.update(monster_list, tool_list)
+        hero.update1_v2(monster_list, tool_list)
         map_.update(hero, monster_list)
+        hero_update2_v2()
         monster_to_del = []
         for monster in monster_list:
             monster.update(hero)

@@ -117,8 +117,8 @@ class Hero():
         # self.squat_move_images = {}
         self.image_to_frame = {}
         self.load_images()
-        for i in range(len(self.image_to_frame[self.attack_images[1][0][5]].frame)):
-            print(i, self.image_to_frame[self.attack_images[1][0][5]].frame[i])
+        # for i in range(len(self.image_to_frame[self.attack_images[1][0][5]].frame)):
+        #     print(i, self.image_to_frame[self.attack_images[1][0][5]].frame[i])
         self.weapon = self.settings.hero_weapon["fist"]
         self.status = settings.hero_status["stay"]
         self.direction = settings.hero_direction["right"]
