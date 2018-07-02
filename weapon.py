@@ -56,7 +56,7 @@ class Weapon():
                     self.fist_magic_firing = False
             # 根据image_order 改变 攻击范围
             if self.image_order < 1  or self.image_order >= self.fist_magic_size - 1:
-                self.fist_magic.height = 0
+                self.fist_magic.height = 1
             elif self.image_order == 1 :
                 self.fist_magic.height = 200
                 self.fist_magic.top = self.fist_magic_rect.top
@@ -87,8 +87,8 @@ class Weapon():
                     self.sword_magic_firing = False
                 # 根据image_order 改变 攻击范围
             if self.image_order < 0  or self.image_order >= self.fist_magic_size - 2:
-                self.sword_magic.height = 0
-                self.sword_magic.width = 0
+                self.sword_magic.height = 1
+                self.sword_magic.width = 1
             elif self.image_order >= 0 and self.image_order <= 3 :
                 self.sword_magic.height = 80
                 self.sword_magic.width = 100
