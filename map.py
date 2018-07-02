@@ -2,6 +2,8 @@ import pygame
 import monster
 import game_functions as gf
 
+BOTTOM_NUM = 1100
+
 class Map():
 
     def __init__(self, screen, settings):
@@ -55,13 +57,13 @@ class Map():
             self.shape.append(500)
         # 400-500
         for i in range(100):
-            self.shape.append(700)
+            self.shape.append(BOTTOM_NUM)
         # 500-600
         for i in range(100):
             self.shape.append(400)
         # 600-700
         for i in range(100):
-            self.shape.append(700)
+            self.shape.append(BOTTOM_NUM)
         for i in range(100):
             self.shape.append(300)
         for i in range(550):
@@ -122,10 +124,16 @@ class Map():
 
     def blitme(self):
         point_list = []
+
         for i in range(self.settings.screen_width):
+            # if self.shape[i+self.settings.left_border] >= 0:
             point_list.append((i, self.shape[i+self.settings.left_border]))
-        # pygame.draw.lines(self.screen, (0, 0, 0), False, point_list, 3)
-        pygame.draw.aalines(self.screen, (0, 0, 0), False, point_list, False)
+            # else:
+            #     if point_list:
+            #         pygame.draw.aalines(self.screen, (0, 0, 0), False, point_list, False)
+            #     point_list.clear()
+
+        pygame.draw.aalines(self.screen, (0, 0, 0), False, point_list , False)
 
     def gety(self, x):
         if x < 0 or x >= self.settings.map_max : 
