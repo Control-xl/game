@@ -2,10 +2,9 @@ import pygame
 import sys
 from settings import Settings
 from map import Map
-from game_functions import transparent
 
 class Tool():
-    def __init__(self, screen, settings, name, pos):
+    def __init__(self, screen, settings, name, pos, life_time = 5000):
         self.screen = screen
         self.settings = settings
         self.name = name
@@ -14,7 +13,8 @@ class Tool():
         self.rect = self.image.get_rect()
         self.centerx = pos[0]
         self.rect.bottom = pos[1]
-        self.life_time = 2000
+        self.rect.centerx = pos[0]
+        self.life_time = life_time
 
     def blitme(self):
         self.rect.centerx = self.centerx - self.settings.left_border
@@ -27,9 +27,10 @@ if __name__ == '__main__':
     pygame.init()
     settings = Settings()
     screen = pygame.display.set_mode((settings.screen_width, settings.screen_height), 0, 0)
+    screen.fill(settings.bg_color)
     map_ = Map(screen, settings)
     tools = []
-    tool = Tool("food", (600, 700), screen, settings)
+    tool = Tool(screen, settings, "food", (600, 700), )
     tools.append(tool)
     clock = pygame.time.Clock()
     while True:

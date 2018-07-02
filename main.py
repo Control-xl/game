@@ -11,6 +11,7 @@ from monster import MonsterPlane
 from state_display import StateDisplay
 from weapon import Weapon
 from weapon import Bullet
+from tool import Tool
 
 if __name__ == '__main__':
     pygame.init()
@@ -19,6 +20,8 @@ if __name__ == '__main__':
     map_ = Map(screen, settings)
     tool_list = []
     hero = Hero(screen, map_, settings)
+    tool = Tool(screen, settings, "food", (600, 700))
+    tool_list.append(tool)
     monster_list = []
     monster_list.append(MonsterPlane(settings, screen))
     # monsterball = MonsterBall(settings, screen)
@@ -31,8 +34,6 @@ if __name__ == '__main__':
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_k:
                     hero.fire_magicing = True
-                # if event.key == pygame.K_l:
-                #     hero.get_hurt(settings.hero_direction["right"])
                 if event.key == pygame.K_j:
                     hero.attacking = True
                 if event.key == pygame.K_w:
@@ -43,7 +44,7 @@ if __name__ == '__main__':
                     hero.moving_right = True
                 if event.key == pygame.K_s:
                     hero.squating = False
-                if event.key == pygame.K_0:
+                if event.key == pygame.K_l:
                     hero.change_weapon()
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_k:
@@ -61,7 +62,6 @@ if __name__ == '__main__':
             monster.update(hero)
             if monster.blood <= 0:
                 monster_to_del.append(monster)
-
         for monster in monster_to_del:
             monster_list.remove(monster)
         # monsterball.update(hero)
@@ -70,5 +70,7 @@ if __name__ == '__main__':
         hero.blitme()
         for monster in monster_list:
             monster.blitme()
+        for tool in tool_list:
+            tool.blitme()
         map_.blitme()
         pygame.display.update()

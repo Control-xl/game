@@ -122,7 +122,7 @@ class Hero():
         self.direction = settings.hero_direction["right"]
         self.image = self.stay_images[self.direction][self.weapon]
         self.rect = self.image.get_rect()
-        self.rect.centerx = self.screen.get_rect().centerx
+        self.rect.centerx = self.settings.hero_init_centerx
         self.x = self.settings.left_border + self.rect.centerx          #在整个地图中的位置
         self.rect.bottom = self.map.gety(self.rect.centerx)
         self.moving_left = False
@@ -145,10 +145,12 @@ class Hero():
         self.shoot_en = 0                               #shoot_en = 0时才能射击
         self.magic_cd = 0                               #magic_cd = 0时才能进行魔法攻击
         self.hurt_en = 5                                #代表可以攻击，非0时代表无敌
+        self.blood_cd = 0
         self.speedy = 8
+        self.speedx = 4
         self.velocityx = 0
         self.velocityy = -self.speedy
-        self.speedx = 4
+        self.del_tool_list = []
 
     def update_status(self):
         #根据旧状态即status的值继续状态;或者根据按键(即or后面)更改状态.更新image
@@ -379,6 +381,7 @@ class Hero():
         #再检测是不是正在进行拳头攻击，是的话，某些位置不会成为攻击矩形
         #否则受到攻击
         frame = self.image_to_frame[self.image]
+        self.del_tool_list = []
         for y in range(frame.top, frame.bottom):
             for direction, xs in frame.frame[y].items() :
                 for x in xs :
@@ -390,9 +393,13 @@ class Hero():
                     if color != self.settings.hero_boot_color:
                         #先检测碰撞到什么
                         touch_object = self.touch_object(pos, color, monster_list, tool_list)
-                        i = 0
-                        if touch_object == "tool" : #道具名称
-                            pass
+                        if touch_object == "food" : #道具名称
+                            self.blood += 1
+                            self.blood_en = 50
+                        elif touch_object == "sword" :
+                            self.weapon_en["sword"] = True
+                        elif touch_object == "gun" :
+                            self.weapon_en["gun"] = True
                         elif touch_object == "bullet" :
                             self.get_hurt(self.settings.hero_direction[direction])
                         elif touch_object == "enemy" :
@@ -412,16 +419,21 @@ class Hero():
                                 pass
                             else :
                                 self.get_hurt(self.settings.hero_direction[direction])
+        for i in self.del_tool_list:
+            tool_list.pop(i)
 
     def touch_object(self, pos, color, monster_list, tool_list):
         # 判断接触到了什么 ？ 道具, 地图, 技能, 子弹, 敌人
         (x, y) = pos
         for i in range(len(tool_list)) :
-            if x >= tool_list[i].rect.left and x < tool_list[i].rect.right and \
-            y >= tool_list[i].rect.top and y < tool_list[i].rect.bottom :
-                if color == tool_list[i].image.get_at((x - tool_list[i].rect.left, y - tool_list[i].rect.top)):
+            if x >= tool_list[i].rect.left and x < tool_list[i].rect.right \
+            and y >= tool_list[i].rect.top and y < tool_list[i].rect.bottom :
+                if i in self.del_tool_list :
+                    return "nothing"
+                elif i not in self.del_tool_list \
+                and color == tool_list[i].bg_image.get_at((x - tool_list[i].rect.left, y - tool_list[i].rect.top)):
                     name = tool_list[i].name
-                    tool_list.pop(i)
+                    self.del_tool_list.append(i)
                     return name
         if color == self.settings.map_color:
             # 当这个坐标在地图以下时，就是接触到地图了,有可能是一条垂直线
@@ -577,11 +589,11 @@ class Hero():
             #无法发射子弹
             return
         if self.direction == self.settings.hero_direction["right"]:
-            bullet_velocity = self.speedx
+            bullet_velocity = self.speedx * 1.5
             bullet_pos = []
             bullet_pos.append(self.rect.right + bullet_velocity)
         elif self.direction == self.settings.hero_direction["left"]:
-            bullet_velocity = -self.speedx
+            bullet_velocity = -self.speedx * 1.5
             bullet_pos = []
             bullet_pos.append(self.rect.left + bullet_velocity)
         else :
