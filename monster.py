@@ -281,11 +281,15 @@ def get_distance2(x1, y1, x2, y2):
 
 
 class MonsterPlane():
-    def __init__(self, settings, screen, blood=1, save_time = 5000, fire_time = 250):
+    def __init__(self, settings, screen, blood=1, save_time = 5000, fire_time = 250, x = 1000, y = 500):
         self.settings = settings
         self.screen = screen
         # 加载飞船
         self.image = pygame.image.load("images/plane.png")
+        # 飞船位置
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
         # 加载飞船蓄力图像
         self.save_energy_image = []
         self.save_energy_image.append(pygame.image.load("images/laser/save1.png"))
@@ -297,7 +301,7 @@ class MonsterPlane():
         self.save_energy_image_cnt = 0
         # 蓄力图像位置(在飞碟下多少位置
         self.save_energy_image_down = 28
-        self.rect = self.image.get_rect()
+
         self.save_rect = []
         # 蓄力后的子弹列表
         self.bullet_list = []
@@ -324,8 +328,7 @@ class MonsterPlane():
         self.clock = pygame.time.Clock()
         self.time_passed = 0
         self.blood = blood
-        self.rect.x = 400
-        self.rect.y = 400
+
         # 子弹一共存在3发后的停火标志（停止计时）
         self.full_energy = False
 
@@ -437,6 +440,7 @@ class MonsterPlane():
             return
 
     def check_collisions(self, weapon):
+        """检测和角色各种东西的碰撞"""
         self.check_bullet_coll(weapon.bullets)
         if weapon.sword_attacking:
             if self.check_sword_coll(weapon.sword):
@@ -445,7 +449,7 @@ class MonsterPlane():
             if self.check_rect_coll(weapon.fist, self.settings.fist_damage):
                 weapon.fist_attacking = False
         if weapon.fist_magic_firing:
-            print("magic:", weapon.fist_magic)
+            print("magic:", weapon.fist_magic, "self at", self.rect)
             if self.check_rect_coll(weapon.fist_magic, weapon.fist_magic_damage):
                 print("fist magic success!")
                 weapon.fist_magic_firing = False
@@ -486,24 +490,23 @@ class MonsterPlane():
         return False
 
     def check_rect_coll(self, rect, damage):
-        if self.point_coll(rect.right, rect.top) or self.point_coll(rect.right, rect.bottom):
+        if self.point_coll(rect.right, rect.top) or self.point_coll(rect.right, rect.bottom) or \
+            self.point_coll(rect.left, rect.bottom) or self.point_coll(rect.left, rect.top):
+            self.blood -= damage
+            return True
+        if self.point_coll(self.rect.right, self.rect.top, rect) or self.point_coll(self.rect.right, self.rect.bottom, rect) or \
+            self.point_coll(self.rect.left, self.rect.bottom, rect) or self.point_coll(self.rect.left, self.rect.top, rect):
             self.blood -= damage
             return True
         return False
 
-    # def check_fist_coll(self, fist):
-    #     if self.point_coll(fist.right, fist.top) or self.point_coll(fist.right, fist.bottom):
-    #         self.blood -= self.settings.fist_damage
-    #         return True
-    #     return False
-
-    def point_coll(self, x, y):
+    def point_coll(self, x, y, rect = None):
         # 判断点是否在飞船的rect中，有则发生碰撞，返回true
-        if self.rect.left <= x <= self.rect.right and self.rect.top <= y <= self.rect.bottom:
+        if rect == None:
+            rect = self.rect
+        if rect.left <= x <= rect.right and rect.top <= y <= rect.bottom:
             return True
         return False
-
-
 
     def blitme(self):
         if self.blood > 0:
