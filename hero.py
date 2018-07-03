@@ -88,6 +88,13 @@ class Hero():
         self.screen = screen
         self.map = map_
         self.settings = settings
+        self.enemy_bullet_image = pygame.image.load('images/laser/bg_bullet.png')
+        self.blood_image = pygame.image.load('images/heart.ico')
+        self.magic_image = pygame.image.load('images/blue_heart.png')
+        self.blood_rect = self.blood_image.get_rect()
+        self.magic_rect = self.magic_image.get_rect()
+        self.magic_rect.top += 50
+        #加载动画
         self.frame_order = 0                                                    #正播放的帧序号
         self.frame_size = 5                                                     #代表一个图片要放的帧数目
         self.basic_frame_size = 5                                               #基本帧数目
@@ -104,7 +111,6 @@ class Hero():
         self.squat_attack_size = 9
         self.weapon_size = self.settings.hero_weapon_size
         #images[direction][weapon]代表一个图片或图片文件夹或空
-        self.enemy_bullet_image = pygame.image.load('images/laser/bg_bullet.png')
         self.stay_images = {}
         self.move_images = {}
         self.attack_images = {}
@@ -119,6 +125,7 @@ class Hero():
         self.load_images()
         # for i in range(len(self.image_to_frame[self.attack_images[1][0][5]].frame)):
         #     print(i, self.image_to_frame[self.attack_images[1][0][5]].frame[i])
+        # 初始化人物
         self.weapon = self.settings.hero_weapon["fist"]
         self.status = settings.hero_status["stay"]
         self.direction = settings.hero_direction["right"]
@@ -135,24 +142,22 @@ class Hero():
         self.jumping = False
         self.squating = False
         self.falling = False
-        self.blood = self.settings.hero_init_blood
-        self.magic = self.settings.hero_init_magic
         self.weapon_attacks = Weapon(self.screen, self.settings)
         self.weapon_en = {
             self.settings.hero_weapon["fist"] : True,
             self.settings.hero_weapon["sword"] : True,
             self.settings.hero_weapon["gun"] : True,
         }
-        self.jump_en = 1                                #1代表可以
-        self.shoot_en = 0                               #shoot_en = 0时才能射击
-        self.magic_cd = 0                               #magic_cd = 0时才能进行魔法攻击
-        self.hurt_en = 5                                #代表可以攻击，非0时代表无敌
-        self.blood_cd = 0
+        self.blood = self.settings.hero_init_blood
+        self.magic = self.settings.hero_init_magic
+        self.jump_en = 1                                # 1代表可以跳跃
+        self.shoot_cd = 0                               # 射击冷却时间，0时才能进行射击
+        self.magic_cd = 0                               # 
+        self.blood_cd = 200                             # 暴血状态，非0时代表无敌
         self.speedy = 8
         self.speedx = 4
         self.velocityx = 0
         self.velocityy = -self.speedy
-        self.del_tool_list = []
 
     def update_status(self):
         #根据旧状态即status的值继续状态;或者根据按键(即or后面)更改状态.更新image
@@ -226,10 +231,10 @@ class Hero():
             if self.weapon == self.settings.hero_weapon["gun"] and self.attacking: #gun无攻击状态
                 self.attacking = False
                 self.shoot_bullet()
-        if self.shoot_en > 0:
-            self.shoot_en -= 1
-        if self.hurt_en > 0:
-            self.hurt_en -= 1
+        if self.shoot_cd > 0:
+            self.shoot_cd -= 1
+        if self.blood_cd > 0:
+            self.blood_cd -= 1
         if self.magic_cd > 0:
             self.magic_cd -= 1
         self.jumping = False
@@ -239,17 +244,17 @@ class Hero():
 
     def get_hurt(self, direction):
         # 发生碰撞时，调用的接口函数，
-        # 更新人物方向，设置人物状态,direction表示来自左边的攻击
+        # 更新人物方向，设置人物状态,direction表示攻击的来源方向
         # 若人物已经受伤，不再受伤
-        if self.status != self.settings.hero_status["hurt"] and self.hurt_en == 0:
+        if self.status != self.settings.hero_status["hurt"] and self.blood_cd == 0:
             self.direction = direction
             self.status = self.settings.hero_status["hurt"]
             self.image_order = 0
             self.frame_order = 0
-            self.hurt_en = 200
+            self.blood_cd = 200
 
     def restart(self):
-        self.hurt_en = 500
+        self.blood_cd = 500
         self.magic_cd = 0
 
 #播放动画
@@ -397,7 +402,7 @@ class Hero():
         #再检测是不是正在进行拳头攻击，是的话，某些位置不会成为攻击矩形
         #否则受到攻击
         frame = self.image_to_frame[self.image]
-        self.del_tool_list = []
+        del_tool_list = []                                          #接触到的道具, 要在最后删除
         for y in range(frame.top, frame.bottom):
             for direction, xs in frame.frame[y].items() :
                 for x in xs :
@@ -407,8 +412,8 @@ class Hero():
                         continue
                     color = self.screen.get_at(pos)
                     if color != self.settings.hero_boot_color:
-                        #先检测碰撞到什么
-                        touch_object = self.touch_object(pos, color, monster_list, tool_list)
+                        #先检测碰撞对象
+                        touch_object = self.touch_object(pos, color, monster_list, tool_list, del_tool_list)        #检测碰撞对象
                         if touch_object == "food" : #道具名称
                             self.blood += 1
                             self.blood_en = 50
@@ -437,25 +442,23 @@ class Hero():
                                 # print(pos, pos[0]+self.settings.left_border, self.map.gety(pos[0]+self.settings.left_border)) 
                                 # print(self.x, self.rect.bottom, self.map.gety(self.x))
                                 self.get_hurt(self.settings.hero_direction[direction])
-        for i in self.del_tool_list:
+        for i in del_tool_list:
             tool_list.pop(i)
 
-    def touch_object(self, pos, color, monster_list, tool_list):
+    def touch_object(self, pos, color, monster_list, tool_list, del_tool_list):
         # 判断接触到了什么 ？ 道具, 地图, 技能, 子弹, 敌人
         (x, y) = pos
         #检测道具
         for i in range(len(tool_list)) :
             if x >= tool_list[i].rect.left and x < tool_list[i].rect.right \
             and y >= tool_list[i].rect.top and y < tool_list[i].rect.bottom :
-                if i in self.del_tool_list :
+                if i in del_tool_list :
                     return "nothing"
-                elif i not in self.del_tool_list \
+                elif i not in del_tool_list \
                 and color == tool_list[i].bg_image.get_at((x - tool_list[i].rect.left, y - tool_list[i].rect.top)):
                     name = tool_list[i].name
-                    self.del_tool_list.append(i)
+                    del_tool_list.append(i)
                     return name
-        if self.hurt_en > 0:
-            return "nothing"
         # 检测地图
         if color == self.settings.map_color:
             # 当这个坐标在地图以下时，就是接触到地图了,有可能是一条垂直线
@@ -638,7 +641,7 @@ class Hero():
 
     def shoot_bullet(self):
         #发射子弹
-        if self.shoot_en > 0:
+        if self.shoot_cd > 0:
             #无法发射子弹
             return
         if self.direction == self.settings.hero_direction["right"]:
@@ -662,7 +665,7 @@ class Hero():
             return
         new_bullet = Bullet(self.screen, self.settings, bullet_pos, bullet_velocity)
         self.weapon_attacks.bullets.append(new_bullet)
-        self.shoot_en = 50
+        self.shoot_cd = 50
 
 
     def display_frame(self, image_size):
@@ -694,9 +697,22 @@ class Hero():
         #     self.rect.bottom = self.settings.screen_height + 300
 
     def blitme(self):
-        if self.hurt_en % 6 < 3 :
+        if self.blood_cd % 6 < 3 :
             self.screen.blit(self.image, self.rect)
         self.weapon_attacks.blitme()
+        # 绘制血条，蓝，冷却时间
+        for i in range(self.blood):
+            self.blood_rect.left = i * 50
+            self.screen.blit(self.blood_image, self.blood_rect)
+        for i in range(self.magic):
+            self.magic_rect.left = i * 50 + 50
+            self.screen.blit(self.magic_image, self.magic_rect)
+        if self.magic_cd == 0:
+            # pygame.draw.circle(Surface, color, pos , raduis, width)
+            pygame.draw.circle(self.screen, (30,30,205, 105), (25, 75), 25)
+        else :
+            # pygame.draw.arc(Surface, color, Rect, start_angle, stop_angle, width=1) -> Rect
+            pygame.draw.arc(self.screen, (0,0,255), (0,50,50,50), 0, ((self.magic_cd)/180)*math.pi, 20)
 
     def load_image_file(self, direction, weapon, images, images_path, images_size):
         #加载图片文件夹
