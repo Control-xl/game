@@ -434,8 +434,8 @@ class Hero():
                             y >= 95 and y <= 110:
                                 pass
                             else :
-                                print(pos, pos[0]+self.settings.left_border, self.map.gety(pos[0]+self.settings.left_border)) 
-                                print(self.x, self.rect.bottom, self.map.gety(self.x))
+                                # print(pos, pos[0]+self.settings.left_border, self.map.gety(pos[0]+self.settings.left_border)) 
+                                # print(self.x, self.rect.bottom, self.map.gety(self.x))
                                 self.get_hurt(self.settings.hero_direction[direction])
         for i in self.del_tool_list:
             tool_list.pop(i)
@@ -499,26 +499,26 @@ class Hero():
 
     def update_weapon_attack(self):
         self.weapon_attacks.update()
-        # 初始化各种攻击范围
+        # 初始化各种攻击范围. 技能,普通攻击,跳跃攻击. (均可分为拳头和剑两种武器)
         if self.status == self.settings.hero_status["fire_magic"]:
             if self.weapon == self.settings.hero_weapon["fist"] \
             and self.image_order == self.fire_magic_size[self.weapon] - 2 \
-            and self.frame_order == 0 and self.magic_cd == 0:
-                #
-                self.magic -= 1
-                self.magic_cd = 300
-                self.weapon_attacks.image_order = 0
-                # self.weapon_attacks.fist_magic_time = self.weapon_attacks.fist_magic_size
-                self.weapon_attacks.fist_magic_firing = True
-                self.weapon_attacks.fist_magic_playing = True
-                if self.direction == self.settings.hero_direction["left"] :
+            and self.frame_order == 0 and self.magic_cd == 0 :
+                self.magic -= 1                                                 # 扣一点蓝
+                self.magic_cd = 300                                             # 冷却时间为300帧
+                self.weapon_attacks.image_order = 0                             # 技能开始播放的帧序号
+                self.weapon_attacks.fist_magic_playing = True                   # 设置技能动画播放为True
+                self.weapon_attacks.fist_magic_firing = True                    # 设置技能伤害为True，命中或过时后为失效
+                if self.direction == self.settings.hero_direction["left"] :     # 设置技能动画位置
                     self.weapon_attacks.fist_magic_rect.right = self.rect.left - 100
                 elif self.direction == self.settings.hero_direction["right"] :
                     self.weapon_attacks.fist_magic_rect.left = self.rect.right + 100
                 self.weapon_attacks.fist_magic_centerx = self.settings.left_border + self.weapon_attacks.fist_magic_rect.centerx
                 self.weapon_attacks.fist_magic_rect.bottom = self.map.gety(self.weapon_attacks.fist_magic_centerx)
+                if self.weapon_attacks.fist_magic_rect.bottom > self.settings.screen_height:
+                    self.weapon_attacks.fist_magic_rect.bottom = self.settings.screen_height
                 # 初始化攻击范围
-                self.weapon_attacks.fist_magic.height = 1
+                self.weapon_attacks.fist_magic.height = 1                       # 初始化技能伤害范围, 随动画图片变化
                 self.weapon_attacks.fist_magic.width = 1
                 self.weapon_attacks.fist_magic.centerx = self.weapon_attacks.fist_magic_rect.centerx
             elif self.weapon == self.settings.hero_weapon["sword"] \
@@ -527,9 +527,8 @@ class Hero():
                 self.magic -= 1
                 self.magic_cd = 300
                 self.weapon_attacks.image_order = 0
-                # self.weapon_attacks.sword_magic_time = 100
-                self.weapon_attacks.sword_magic_firing = True
                 self.weapon_attacks.sword_magic_playing = True
+                self.weapon_attacks.sword_magic_firing = True
                 if self.direction == self.settings.hero_direction["left"] :
                     self.weapon_attacks.sword_magic_rect.right = self.rect.left
                 elif self.direction == self.settings.hero_direction["right"] :
@@ -552,7 +551,7 @@ class Hero():
             self.weapon_attacks.sword["radius"] = 85
             self.weapon_attacks.sword["direction"] = self.direction
             if self.weapon == self.settings.hero_weapon["fist"] and self.image_order >= 5 and self.image_order <= 6:
-                if self.frame_order == 0 and self.image_order == 5 :
+                if self.frame_order == 0 and self.image_order == 5 :                     # 初始化攻击, 命中后失效
                     self.weapon_attacks.fist_attacking = True
                     self.weapon_attacks.sword_attacking = False
             elif self.weapon == self.settings.hero_weapon["sword"] and self.image_order >= 1 and self.image_order <= 5:
@@ -595,7 +594,7 @@ class Hero():
         self.update_status()
         self.update_pos()
         self.update_weapon_attack()
-        
+
 
     def update_herox_v2(self):
         if self.map.gety(self.x + self.velocityx * 2) < self.rect.bottom :
@@ -620,7 +619,7 @@ class Hero():
 
 
     def change_weapon(self):
-        #更换武器，什么时候适合更换武器
+        #更换武器，保证更换武器后不会有动作冲突
         self.weapon = (self.weapon + 1) % self.weapon_size
         while self.weapon_en[self.weapon] == False :
             self.weapon = (self.weapon + 1) % self.weapon_size
@@ -672,7 +671,6 @@ class Hero():
         if self.frame_order >= self.frame_size:      #切换图片
             self.frame_order = 0
             self.image_order += 1
-            #print(self.status, self.image_order, self.frame_order)
             if self.image_order >= image_size:
                 self.image_order = 0
                 if self.squating:

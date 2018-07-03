@@ -47,7 +47,7 @@ class Weapon():
         self.sword_magic_time = 0
 
     def update(self):
-        # 更新子弹, 技能位置, image_order
+        # 更新子弹, 技能位置, 播放技能动画
         if self.fist_magic_playing == True :
             self.frame_order += 1
             if self.frame_order >= self.frame_size :
@@ -79,7 +79,7 @@ class Weapon():
             self.fist_magic.width = self.fist_magic_width
             self.fist_magic_rect.centerx = self.fist_magic_centerx - self.settings.left_border
             self.fist_magic.centerx = self.fist_magic_rect.centerx
-            print(self.image_order, self.fist_magic, self.fist_magic_rect)
+            # print(self.image_order, self.fist_magic, self.fist_magic_rect)
         else :
             self.fist_magic_playing = False
             self.fist_magic_firing = False
