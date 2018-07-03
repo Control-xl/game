@@ -247,6 +247,11 @@ class Hero():
             self.image_order = 0
             self.frame_order = 0
             self.hurt_en = 200
+
+    def restart(self):
+        self.hurt_en = 500
+        self.magic_cd = 0
+
 #播放动画
     def hurt_image(self):
         #受伤动画，播完动画则结束受伤状态
@@ -377,6 +382,11 @@ class Hero():
         if self.rect.bottom == self.settings.BOTTOM_NUM:
             self.blood -= 1
             # 重新定位
+            if self.blood > 0:
+                self.restart()
+            else :
+                pass
+                #游戏结束
             self.x = 50
         #print(self.x, self.rect.bottom, self.map.gety(self.x))
 
@@ -433,6 +443,7 @@ class Hero():
     def touch_object(self, pos, color, monster_list, tool_list):
         # 判断接触到了什么 ？ 道具, 地图, 技能, 子弹, 敌人
         (x, y) = pos
+        #检测道具
         for i in range(len(tool_list)) :
             if x >= tool_list[i].rect.left and x < tool_list[i].rect.right \
             and y >= tool_list[i].rect.top and y < tool_list[i].rect.bottom :
@@ -443,13 +454,19 @@ class Hero():
                     name = tool_list[i].name
                     self.del_tool_list.append(i)
                     return name
+        if self.hurt_en > 0:
+            return "nothing"
+        # 检测地图
         if color == self.settings.map_color:
             # 当这个坐标在地图以下时，就是接触到地图了,有可能是一条垂直线
-            if self.map.gety(self.settings.left_border + x) <= y or \
-            self.map.gety(self.settings.left_border + x - 1) <= y or \
-            self.map.gety(self.settings.left_border + x + 1) <= y : 
-                # print("map")
+            # for distance in range(-2, 3):
+            #     if self.map.gety(self.settings.left_border + x + distance) <= y :
+            #         return "map"
+            if self.map.gety(self.settings.left_border + x - 1) <= y \
+            or self.map.gety(self.settings.left_border + x) <= y \
+            or self.map.gety(self.settings.left_border + x + 1) <= y : 
                 return "map"
+        # 检测自己的魔法
         if self.weapon_attacks.fist_magic_firing == True :
             if x >= self.weapon_attacks.fist_magic_rect.left and x < self.weapon_attacks.fist_magic_rect.right and \
             y >= self.weapon_attacks.fist_magic_rect.top and y < self.weapon_attacks.fist_magic_rect.bottom :
@@ -462,7 +479,7 @@ class Hero():
                 magic_pos = (x - self.weapon_attacks.sword_magic_rect.left, y - self.weapon_attacks.fist_magic_rect.top)
                 if color == self.weapon_attacks.sword_magic_images[self.weapon_attacks.image_order].get_at(magic_pos):
                     return "magic"
-        # 敌人子弹
+        # 检测敌人子弹
         for monster in monster_list :
             if type(monster) == MonsterPlane and monster.bullet_list:
                 is_bullet = False
@@ -477,11 +494,12 @@ class Hero():
                                 monster.bullet_alive_list[i] = False
                 if is_bullet:
                     return "bullet"
-        # print("enemy")
+        # 碰撞到敌人身体
         return "enemy"
 
     def update_weapon_attack(self):
         self.weapon_attacks.update()
+        # 初始化各种攻击范围
         if self.status == self.settings.hero_status["fire_magic"]:
             if self.weapon == self.settings.hero_weapon["fist"] \
             and self.image_order == self.fire_magic_size[self.weapon] - 2 \
@@ -602,7 +620,7 @@ class Hero():
 
 
     def change_weapon(self):
-        #更换武器，什么时候适合更换武器，当该使用武器对应的动画
+        #更换武器，什么时候适合更换武器
         self.weapon = (self.weapon + 1) % self.weapon_size
         while self.weapon_en[self.weapon] == False :
             self.weapon = (self.weapon + 1) % self.weapon_size
@@ -699,7 +717,7 @@ class Hero():
 
 
     def load_images(self):
-        #加载图片，图片框架
+        #加载图片，图片人物框架
         for direction in self.settings.hero_direction.keys() :
             self.stay_images[self.settings.hero_direction[direction]] = []
             self.move_images[self.settings.hero_direction[direction]] = []
