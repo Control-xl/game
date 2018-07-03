@@ -374,7 +374,7 @@ class Hero():
         self.rect.bottom += self.velocityy
         if self.rect.bottom > self.map.gety(self.x):
             self.rect.bottom = self.map.gety(self.x)
-        if self.rect.bottom == self.settings.bottom_num:
+        if self.rect.bottom == self.settings.BOTTOM_NUM:
             self.blood -= 1
             # 重新定位
         print(self.x, self.rect.bottom, self.map.gety(self.x))
