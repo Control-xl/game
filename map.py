@@ -84,6 +84,7 @@ class Map():
         self.max_index = len(self.monster_list)
 
         # to del
+
         for i in range(1200):
             self.shape.append(400)
 
@@ -94,10 +95,13 @@ class Map():
 
         velocityx = hero.velocityx
         rect = hero.rect
-        # print(monster_list)
+
         if hero.x >= self.monster_point[self.cnt]:
             monster_list.append(self.monster_list[self.cnt])
             self.cnt += 1
+        # 如果死了或者什么情况英雄瞬移，则移到英雄的位置
+        if hero.x < self.settings.left_border or hero.x + hero.rect.width > self.settings.right_border:
+            self.settings.left_border = max(hero.x - 100, 0)
         # 如果有怪物，则锁屏
         if len(monster_list) > 0:
             self.settings.map_lock = True
@@ -112,28 +116,32 @@ class Map():
                 # 且地图的右边界没有到达地图的最大位置
                 if self.settings.right_border + self.settings.screen_width < self.settings.map_max:
                     self.settings.left_border += min(velocityx, self.settings.map_max - self.settings.right_border)
-                    self.settings.right_border = self.settings.left_border + self.settings.screen_width
 
             # 如果英雄向左移而且到了屏幕左方1/10位置
             if velocityx < 0 and rect.left <= self.settings.screen_width/10:
                 # 如果地图左边界没有到最左边的位置
                 if self.settings.left_border > 0:
                     self.settings.left_border -= min(-velocityx, self.settings.left_border)
-                    self.settings.right_border = self.settings.left_border + self.settings.screen_width
+
+        # 右边界总是等于左边界加上屏幕宽度
+        self.settings.right_border = self.settings.left_border + self.settings.screen_width
+
 
 
     def blitme(self):
         point_list = []
-
+        # pygame.draw.aalines(self.screen, (0, 0, 0), False, point_list, False)
         for i in range(self.settings.screen_width):
-            # if self.shape[i+self.settings.left_border] >= 0:
-            point_list.append((i, self.shape[i+self.settings.left_border]))
-            # else:
-            #     if point_list:
-            #         pygame.draw.aalines(self.screen, (0, 0, 0), False, point_list, False)
-            #     point_list.clear()
+            tmp = self.shape[i+self.settings.left_border]
+            if i >= 1:
+                if self.shape[i+self.settings.left_border-1] != tmp:
+
+                    point_list.append((i, max(self.shape[i+self.settings.left_border-1], tmp)))
+                    # point_list.append((i, self.shape[i+self.settings.left_border-1]))
+            point_list.append((i, tmp))
 
         pygame.draw.aalines(self.screen, (0, 0, 0), False, point_list , False)
+
 
     def gety(self, x):
         if x < 0 or x >= self.settings.map_max : 
