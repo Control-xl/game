@@ -97,6 +97,7 @@ class MonsterBall():
             bullets.remove(bullet)
 
 
+
     def protection_rect_collisions(self, rect, damage):
         """判断矩形和保护圈有没有碰撞"""
         for i in range(self.protection_number):
@@ -119,10 +120,11 @@ class MonsterBall():
                 # 矩形右下角
                 elif get_distance2(pst_x, pst_y, rect.right, rect.bottom) < self.protection_radius**2:
                     flag = True
+                # 判断圆的最右端到最左端的点是否在矩形中
                 else:
                     init_x = pst_x - self.protection_radius
                     while init_x < pst_x + self.protection_radius:
-                        if rect.left <= init_x <= rect.right:
+                        if point_in_rect(init_x, pst_y, rect):
                             flag = True
                             break
                         init_x += rect.width
@@ -149,13 +151,14 @@ class MonsterBall():
         elif get_distance2(self.center_x, self.center_y, rect.left, rect.top) < self.center_radius**2:
             flag = True
         # 再判断圆两端是否在矩形中
-        init_x = self.center_x - self.center_radius
-        while init_x <= self.center_x + self.center_radius:
-            if rect.left <= init_x <= rect.right:
-                flag = True
-                break
-            # print(rect, init_x, rect.width, self.center_x + self.center_radius)
-            init_x += rect.width
+            # 判断圆的最右端到最左端的点是否在矩形中
+        else:
+            init_x = self.center_x - self.protection_radius
+            while init_x < self.center_x + self.protection_radius:
+                if point_in_rect(init_x, self.center_y, rect):
+                    flag = True
+                    break
+                init_x += rect.width
         if flag:
             self.blood -= damage
 
@@ -455,3 +458,7 @@ class MonsterPlane():
                     self.screen.blit(self.bullet_list[i], self.bullet_rect_list[i])
 
 
+def point_in_rect(x, y, rect):
+    if rect.left < x < rect.right and rect.top < y < rect.bottom:
+        return True
+    return False

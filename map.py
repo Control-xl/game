@@ -2,7 +2,7 @@ import pygame
 import monster
 import game_functions as gf
 
-BOTTOM_NUM = 1100
+
 
 class Map():
 
@@ -57,13 +57,13 @@ class Map():
             self.shape.append(500)
         # 400-500
         for i in range(100):
-            self.shape.append(BOTTOM_NUM)
+            self.shape.append(self.settings.BOTTOM_NUM)
         # 500-600
         for i in range(100):
             self.shape.append(400)
         # 600-700
         for i in range(100):
-            self.shape.append(BOTTOM_NUM)
+            self.shape.append(self.settings.BOTTOM_NUM)
         for i in range(100):
             self.shape.append(300)
         for i in range(550):

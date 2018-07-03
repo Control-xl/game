@@ -27,6 +27,7 @@ class Settings():
         # 整个地图的最大长度
         self.map_max = 12000
         self.map_color = (0, 0, 0)
+        self.BOTTOM_NUM = 1100
 
         # 暂停选项
         self.pause = False
