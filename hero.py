@@ -377,7 +377,8 @@ class Hero():
         if self.rect.bottom == self.settings.BOTTOM_NUM:
             self.blood -= 1
             # 重新定位
-        print(self.x, self.rect.bottom, self.map.gety(self.x))
+            self.x = 50
+        #print(self.x, self.rect.bottom, self.map.gety(self.x))
 
 
     def check_collision(self, monster_list, tool_list):
@@ -423,6 +424,8 @@ class Hero():
                             y >= 95 and y <= 110:
                                 pass
                             else :
+                                print(pos, pos[0]+self.settings.left_border, self.map.gety(pos[0]+self.settings.left_border)) 
+                                print(self.x, self.rect.bottom, self.map.gety(self.x))
                                 self.get_hurt(self.settings.hero_direction[direction])
         for i in self.del_tool_list:
             tool_list.pop(i)
