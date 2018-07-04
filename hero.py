@@ -105,7 +105,7 @@ class Hero():
         self.attack_size = [11, 8, 0]    # 11, 11, 11
         self.jump_size = 17      # 17, 17, 17
         self.jump_attack_size = [17, 17, 0]   #17, 17, 17
-        self.fire_magic_size = [4, 4, 0]
+        self.fire_magic_size = [8, 8, 0]
         self.hurt_size = 4       # 4, 4, 4
         self.squat_move_size = 10
         self.squat_attack_size = 9
@@ -123,8 +123,8 @@ class Hero():
         # self.squat_move_images = {}
         self.image_to_frame = {}
         self.load_images()
-        for i in range(len(self.image_to_frame[self.attack_images[1][0][5]].frame)):
-            print(i, self.image_to_frame[self.attack_images[1][0][5]].frame[i])
+        # for i in range(len(self.image_to_frame[self.jump_attack_images[1][0][9]].frame)):
+        #     print(i, self.image_to_frame[self.jump_attack_images[1][0][9]].frame[i])
         # 初始化人物
         self.weapon = self.settings.hero_weapon["fist"]
         self.status = settings.hero_status["stay"]
@@ -436,7 +436,7 @@ class Hero():
                             self.status == self.settings.hero_status["jump_attack"] and \
                             self.image_order >= 9 and  self.image_order <= 12 and \
                             self.direction == self.settings.hero_direction[direction] and \
-                            y >= 95 and y <= 110:
+                            y >= 97 and y <= 112:
                                 pass
                             else :
                                 # print(x, y, self.image_order, self.status)
@@ -543,9 +543,9 @@ class Hero():
                 self.weapon_attacks.sword_magic.width = 100
                 self.weapon_attacks.sword_magic.center = self.weapon_attacks.sword_magic_rect.center
         elif self.status == self.settings.hero_status["attack"]:
-            self.weapon_attacks.fist.width = 80
+            self.weapon_attacks.fist.width = 130
             self.weapon_attacks.fist.height = 16
-            self.weapon_attacks.fist.top = self.rect.top + 41
+            self.weapon_attacks.fist.top = self.rect.top + 44
             if self.direction == self.settings.hero_direction["left"] :
                 self.weapon_attacks.fist.right = self.rect.centerx
             elif self.direction == self.settings.hero_direction["right"] :
@@ -566,9 +566,9 @@ class Hero():
                 self.weapon_attacks.fist_attacking = False
                 self.weapon_attacks.sword_attacking = False
         elif self.status == self.settings.hero_status["jump_attack"]:
-            self.weapon_attacks.fist.width = 80
+            self.weapon_attacks.fist.width = 110
             self.weapon_attacks.fist.height = 16
-            self.weapon_attacks.fist.top = self.rect.top + 95
+            self.weapon_attacks.fist.top = self.rect.top + 97
             if self.direction == self.settings.hero_direction["left"]:
                 self.weapon_attacks.fist.right = self.rect.centerx
             elif self.direction == self.settings.hero_direction["right"]:

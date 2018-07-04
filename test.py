@@ -6,14 +6,14 @@ from game_functions import transparent
 def image_calcul1():
     pygame.init()
     settings = Settings()
-    jpg_image_path = 'images/1.jpg'
+    jpg_image_path = 'images/1.png'
     png_image_path = 'images/1.png'
     bg_image_path = 'images/tools/bg_sword.png'
     jpg_image = pygame.image.load(jpg_image_path)
     screen = pygame.display.set_mode((50, 50), 0, 0)
     png_image = jpg_image.convert_alpha()
     transparent(png_image)
-    pygame.image.save(jpg_image, png_image_path)
+    pygame.image.save(png_image, png_image_path)
     # png_image = pygame.image.load(png_image_path)
     # screen.fill(settings.bg_color)
     # screen.blit(png_image, rect)
