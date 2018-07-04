@@ -151,14 +151,17 @@ class MonsterBall():
         elif get_distance2(self.center_x, self.center_y, rect.left, rect.top) < self.center_radius**2:
             flag = True
         # 再判断圆两端是否在矩形中
-            # 判断圆的最右端到最左端的点是否在矩形中
+            # 判断圆的最右端到最左端和最上面到最下面的点是否在矩形中
         else:
-            init_x = self.center_x - self.protection_radius
-            while init_x < self.center_x + self.protection_radius:
-                if point_in_rect(init_x, self.center_y, rect):
+            init_x = self.center_x - self.center_radius
+            init_y = self.center_y - self.center_radius
+            while init_x < self.center_x + self.center_radius:
+                if point_in_rect(init_x, self.center_y, rect) or point_in_rect(init_x, self.center_x, rect):
                     flag = True
                     break
                 init_x += rect.width
+                init_y += rect.width
+
         if flag:
             self.blood -= damage
 
