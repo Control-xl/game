@@ -123,8 +123,8 @@ class Hero():
         # self.squat_move_images = {}
         self.image_to_frame = {}
         self.load_images()
-        # for i in range(len(self.image_to_frame[self.attack_images[1][0][5]].frame)):
-        #     print(i, self.image_to_frame[self.attack_images[1][0][5]].frame[i])
+        for i in range(len(self.image_to_frame[self.attack_images[1][0][5]].frame)):
+            print(i, self.image_to_frame[self.attack_images[1][0][5]].frame[i])
         # 初始化人物
         self.weapon = self.settings.hero_weapon["fist"]
         self.status = settings.hero_status["stay"]
@@ -425,23 +425,23 @@ class Hero():
                             self.get_hurt(self.settings.hero_direction[direction])
                         elif touch_object == "enemy" :
                             # 碰撞到敌人
-                            if self.weapon == self.settings.hero_weapon["fist"] and \
-                            self.status == self.settings.hero_status["attack"] and \
-                            self.image_order >= 5 and  self.image_order <= 6 and \
-                            self.direction == self.settings.hero_direction[direction] and \
-                            y >= 41 and y <= 58:
+                            if self.weapon == self.settings.hero_weapon["fist"] \
+                            and self.status == self.settings.hero_status["attack"] \
+                            and self.image_order >= 5 and  self.image_order <= 7 \
+                            and self.direction == self.settings.hero_direction[direction] and \
+                            y >= 44 and y <= 59:
                                 #特殊情况 拳头部分
                                 pass
                             elif self.weapon == self.settings.hero_weapon["fist"] and \
                             self.status == self.settings.hero_status["jump_attack"] and \
-                            self.image_order >= 9 and  self.image_order <= 11 and \
+                            self.image_order >= 9 and  self.image_order <= 12 and \
                             self.direction == self.settings.hero_direction[direction] and \
                             y >= 95 and y <= 110:
                                 pass
                             else :
-                                print(x, y)
-                                print(pos, pos[0]+self.settings.left_border, self.map.gety(pos[0]+self.settings.left_border)) 
-                                print(self.x, self.rect.bottom, self.map.gety(self.x))
+                                # print(x, y, self.image_order, self.status)
+                                # print(pos, pos[0]+self.settings.left_border, self.map.gety(pos[0]+self.settings.left_border)) 
+                                # print(self.x, self.rect.bottom, self.map.gety(self.x))
                                 self.get_hurt(self.settings.hero_direction[direction])
         for i in del_tool_list:
             tool_list.pop(i)
