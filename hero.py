@@ -646,13 +646,13 @@ class Hero():
             #无法发射子弹
             return
         if self.direction == self.settings.hero_direction["right"]:
-            bullet_velocity = self.speedx * 1.5
+            bullet_velocity = self.speedx * 2
             bullet_pos = []
-            bullet_pos.append(self.rect.right + bullet_velocity)
+            bullet_pos.append(self.rect.right + 3*self.speedx)
         elif self.direction == self.settings.hero_direction["left"]:
-            bullet_velocity = -self.speedx * 1.5
+            bullet_velocity = -self.speedx * 2
             bullet_pos = []
-            bullet_pos.append(self.rect.left + bullet_velocity)
+            bullet_pos.append(self.rect.left - 5*self.speedx)
         else :
             return 
         if self.status == self.settings.hero_status["stay"]:
