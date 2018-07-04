@@ -105,7 +105,7 @@ class Hero():
         self.attack_size = [11, 8, 0]    # 11, 11, 11
         self.jump_size = 17      # 17, 17, 17
         self.jump_attack_size = [17, 17, 0]   #17, 17, 17
-        self.fire_magic_size = [8, 8, 0]
+        self.fire_magic_size = [4, 4, 0]
         self.hurt_size = 4       # 4, 4, 4
         self.squat_move_size = 10
         self.squat_attack_size = 9
@@ -439,8 +439,9 @@ class Hero():
                             y >= 95 and y <= 110:
                                 pass
                             else :
-                                # print(pos, pos[0]+self.settings.left_border, self.map.gety(pos[0]+self.settings.left_border)) 
-                                # print(self.x, self.rect.bottom, self.map.gety(self.x))
+                                print(x, y)
+                                print(pos, pos[0]+self.settings.left_border, self.map.gety(pos[0]+self.settings.left_border)) 
+                                print(self.x, self.rect.bottom, self.map.gety(self.x))
                                 self.get_hurt(self.settings.hero_direction[direction])
         for i in del_tool_list:
             tool_list.pop(i)
