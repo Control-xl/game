@@ -2,7 +2,7 @@ import math
 import pygame
 
 class MonsterBall():
-    def __init__(self, settings, screen, protection_blood = 1, center_blood = 1, protection_num = 1, x = 1000, y = 500,
+    def __init__(self, settings, screen, protection_blood = 1, center_blood = 1, protection_num = 0, x = 1000, y = 500,
                  protection_speed = 0.1, center_speed = 0.03):
         self.settings = settings
         self.screen = screen
@@ -220,7 +220,7 @@ def get_distance2(x1, y1, x2, y2):
 
 
 class MonsterPlane():
-    def __init__(self, settings, screen, blood=1, save_time=5000, fire_time=250, x=1000, y=500):
+    def __init__(self, settings, screen, blood=1, save_time=5000, fire_time=250, max_bullet=3, x=1000, y=500):
         self.settings = settings
         self.screen = screen
         # 加载飞船
@@ -258,7 +258,7 @@ class MonsterPlane():
         # 开火状态
         self.fire_state = False
         # 子弹上限
-        self.max_bullet_num = 3
+        self.max_bullet_num = max_bullet
         # 子弹速度
         self.bullet_speed = 0.5
         # 子弹位置

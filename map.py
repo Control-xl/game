@@ -20,16 +20,23 @@ class Map():
         self.cnt = 0
         self.monster_point = [100, 3000, 5000, 7000]
         self.monster_list = []
-        # # 1飞机，依次为血量，攻击准备时间，蓄力时间
-        # self.monster_list.append(monster.MonsterPlane(settings, screen, 1, 10000, 500))
-        # # 2飞机
-        # self.monster_list.append(monster.MonsterPlane(settings, screen, 2, 5000, 500))
-        # # 3球，以此为保护圈血量，中心血量，保护圈数目，初始位置x，y， 保护转速，中心平移速度
-        # self.monster_list.append(monster.MonsterBall(settings, screen, 0, 1, 0, 1000, 500, 0, 0.5))
-        # # 4球
-        # self.monster_list.append(monster.MonsterBall(settings, screen, 0))
-        # # 5飞机
-        # self.monster_list.append(monster.MonsterPlane(settings, screen, 5, 5000, 300))
+
+        self.monster_list.append(monster.MonsterBall(settings, screen, 1, 1000, 0, 1000,500, 0, 0))
+        for i in range(1200):
+            self.shape.append(700)
+
+        # 3球
+        self.monster_list.append(monster.MonsterBall(settings, screen, 0, 1, 0, 1000, 500, 0, 0.5))
+        for j in range(6):
+            for i in range(100):
+                self.shape.append(600)
+            for i in range(100):
+                self.shape.append(700)
+
+        # # 4飞机
+        # self.monster_list.append(monster.MonsterBall(settings, screen, 5, 5, 5, 1000, 500, 0.5, 0.5))
+        #
+
 
 
         # for i in range(2480):
@@ -41,33 +48,7 @@ class Map():
         # for i in range(2480):
         #     self.shape.append(700)
 
-        # map5
-        self.monster_list.append(monster.MonsterBall(settings, screen, 5, 5, 5, 1000, 500, 0.5, 0.5))
-        # 0-100
-        for i in range(100):
-            self.shape.append(700)
-        # 100-200
-        for i in range(100):
-            self.shape.append(600)
-        # 200-300
-        for i in range(100):
-            self.shape.append(700)
-        # 300-400
-        for i in range(100):
-            self.shape.append(500)
-        # 400-500
-        for i in range(100):
-            self.shape.append(self.settings.BOTTOM_NUM)
-        # 500-600
-        for i in range(100):
-            self.shape.append(400)
-        # 600-700
-        for i in range(100):
-            self.shape.append(self.settings.BOTTOM_NUM)
-        for i in range(100):
-            self.shape.append(300)
-        for i in range(550):
-            self.shape.append(700)
+
         # map 6
         self.monster_list.append(monster.MonsterBall(settings, screen, 1, 10, 5, 1100, 500, 0.1, 0.1))
         for i in range(1200):
