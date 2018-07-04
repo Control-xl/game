@@ -6,81 +6,7 @@ from weapon import Weapon, Bullet
 from map import Map
 from monster import MonsterBall, MonsterPlane
 from game_functions import transparent
-
-class Frame():
-    # 代表一个火柴人的外部框架，用以碰撞检测
-    # 在火柴人的外表加一层白色的颜色层，当这一层东西颜色变了，发生了碰撞
-    # get_at(pos)， set_at(pos, color)表示读取与设置surface中一个像素点的颜色
-    def __init__(self, image, settings):
-        self.image = image
-        self.rect = self.image.get_rect()
-        self.rect.top = 0
-        self.rect.left = 0
-        self.frame = [] #表示第几行的人物外框
-        self.top = self.rect.bottom
-        self.bottom = self.rect.top
-        self.left = self.rect.right
-        self.right = self.rect.left
-        for y in range(self.rect.top, self.rect.bottom):
-            left = 0
-            right = 0
-            x = self.rect.left
-            while x < self.rect.right :
-                (r, g, b, alpha) = image.get_at((x, y))
-                if r < 20 and r == g and r == b:
-                    left = x
-                    break 
-                x += 1
-            x = self.rect.right
-            while x > self.rect.left:
-                x -= 1
-                (r, g, b, alpha) = image.get_at((x, y))
-                if r < 20 and r == g and r == b:
-                    right = x
-                    break
-            if left > right:
-                left = 0
-                right = 0
-            if left > 0 :
-                left -= 1
-            if right != 0 and right + 1 < self.rect.right :
-                right += 1
-            self.frame.append({"left" : [], "right" : []})             #
-            if left != right:
-                self.top = min (y, self.top)
-                self.bottom = max(y, self.bottom)
-                self.left = min(self.left+1, left)
-                self.right = max(self.right-1, right)
-                image.set_at((left, y), settings.hero_boot_color)
-                image.set_at((right, y), settings.hero_boot_color)
-                self.frame[-1]["left"].append(left)
-                self.frame[-1]["right"].append(right)
-                if len(self.frame) > 1 and len(self.frame[-2]["left"]) > 0 :
-                    last = self.frame[-2]["left"][0]
-                    this = self.frame[-1]["left"][0]
-                    while this != last :
-                        #当上下行的外框点不连通时, 连一条线
-                        if last > this :
-                            last -= 1
-                            self.frame[-2]["left"].append(last)
-                            image.set_at((last, y-1), settings.hero_boot_color)
-                        else :
-                            this -= 1
-                            self.frame[-1]["left"].append(this)
-                            image.set_at((this, y), settings.hero_boot_color)
-                if len(self.frame) > 1 and len(self.frame[-2]["right"]) > 0 :
-                    last = self.frame[-2]["right"][0]
-                    this = self.frame[-1]["right"][0]
-                    while this != last :
-                        #当上下行的外框点不连通时, 连一条线
-                        if last < this :
-                            last += 1
-                            self.frame[-2]["right"].append(last)
-                            image.set_at((last, y-1), settings.hero_boot_color)
-                        else :
-                            this += 1
-                            self.frame[-1]["right"].append(this)
-                            image.set_at((this, y), settings.hero_boot_color)
+from frame import Frame
 
 
 class Hero():
@@ -122,6 +48,8 @@ class Hero():
         # self.squat_attack_images = {}
         # self.squat_move_images = {}
         self.image_to_frame = {}
+        self.image_to_num = {}
+        self.num_to_frame = {}
         self.load_images()
         # for i in range(len(self.image_to_frame[self.jump_attack_images[1][0][9]].frame)):
         #     print(i, self.image_to_frame[self.jump_attack_images[1][0][9]].frame[i])
@@ -229,7 +157,7 @@ class Hero():
         #重置
         if self.status != self.settings.hero_status["hurt"]:
             if self.weapon == self.settings.hero_weapon["gun"] and self.attacking: #gun无攻击状态
-                self.attacking = False
+                #self.attacking = False
                 self.shoot_bullet()
         if self.shoot_cd > 0:
             self.shoot_cd -= 1
@@ -237,8 +165,9 @@ class Hero():
             self.blood_cd -= 1
         if self.magic_cd > 0:
             self.magic_cd -= 1
+        if self.weapon != self.settings.hero_weapon["gun"]:
+            self.attacking = False
         self.jumping = False
-        self.attacking = False
         self.fire_magicing = False
         
 
