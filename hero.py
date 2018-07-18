@@ -25,7 +25,7 @@ class Hero():
         self.frame_order = 0                                                    #正播放的帧序号
         self.frame_size = 5                                                     #代表一个图片要放的帧数目
         self.basic_frame_size = 5                                               #基本帧数目
-        self.jump_frame_size = [2,2,2,2,5,5,2,5, 5,10,10,20,2,2,2,2,2,]             #用于调节跳跃动作的帧数目
+        self.jump_frame_size = [2,2,2,2,5,5,2,5, 5,10,10,20,2,2,2,2,2,]         #用于调节跳跃动作的帧数目
         #                      [0,1,2,3,4,5,6,7, 8, 9, 0, 1, 2,3,4,5,6,]
         self.image_order = 0     #正播放的图片序号
         self.move_size = [6, 12, 6]       #移动图片的总数目 6,12,6
@@ -45,14 +45,7 @@ class Hero():
         self.jump_attack_images = {}
         self.fire_magic_images = {}
         self.hurt_images = {}
-        self.frame_size = 0
-        # self.stay_images = self.settings.hero_stay_images
-        # self.move_images = self.settings.hero_move_images
-        # self.attack_images = self.settings.hero_attack_images
-        # self.jump_images = self.settings.hero_jump_images
-        # self.jump_attack_images = self.settings.hero_jump_attack_images
-        # self.fire_magic_images = self.settings.hero_fire_magic_images
-        # self.hurt_images = self.settings.hero_hurt_images
+        self.frame_num = 0                      #代表人物图片的外框的数量，等同于图片数量
         # self.squat_images = {}
         # self.squat_attack_images = {}
         # self.squat_move_images = {}
@@ -87,7 +80,7 @@ class Hero():
         self.magic = self.settings.hero_init_magic
         self.jump_en = 1                                # 1代表可以跳跃
         self.shoot_cd = 0                               # 射击冷却时间，0时才能进行射击
-        self.magic_cd = 0                               # 
+        self.magic_cd = 0                               # 技能冷却时间
         self.blood_cd = 200                             # 暴血状态，非0时代表无敌
         self.speedy = 8
         self.speedx = 4
@@ -188,6 +181,9 @@ class Hero():
             self.image_order = 0
             self.frame_order = 0
             self.blood_cd = 200
+            self.blood -= 1
+        if self.blood < 0 :
+            pass
 
     def restart(self):
         self.blood_cd = 500
@@ -557,6 +553,7 @@ class Hero():
         self.update_herox_v2()
 
     def update2_v2(self):
+        # 用于保证人物坐标和地图坐标同步
         self.update_centerx()
         self.update_heroy()
         self.update_weapon_attack()
@@ -638,16 +635,14 @@ class Hero():
         #     self.rect.bottom = self.settings.screen_height + 300
 
     def blitme(self):
+        # 绘制图片到屏幕
         if self.blood_cd % 6 < 3 :
             self.screen.blit(self.image, self.rect)
         self.weapon_attacks.blitme()
-        # 绘制血条，蓝，冷却时间
+        # 绘制血条，技能冷却时间
         for i in range(self.blood):
             self.blood_rect.left = i * 50
             self.screen.blit(self.blood_image, self.blood_rect)
-        for i in range(self.magic):
-            self.magic_rect.left = i * 50 + 50
-            self.screen.blit(self.magic_image, self.magic_rect)
         if self.magic_cd == 0:
             # pygame.draw.circle(Surface, color, pos , raduis, width)
             pygame.draw.circle(self.screen, (30,30,205, 105), (25, 75), 25)
@@ -664,19 +659,19 @@ class Hero():
                 num = '0' + str(i)
             png_image_path = 'images/' + str(weapon) + '_' + direction + '_' + images_path + '/' + images_path + num + '.png'
             image = pygame.image.load(png_image_path)
-            # image = image.convert_alpha()
-            # transparent(image)
-            # pygame.image.save(image, png_image_path)
-            # self.image_to_frame[image] = Frame(image, self.settings)
-            # pygame.image.save(image, png_image_path)
-            # frame = Frame(image, self.settings)
-            frame_path = "frames/frame/"+str(self.frame_size) + ".txt"
-            frame_rect_path = "frames/frame_rect/" + str(self.frame_size) + ".txt"
-            self.frame_size += 1
-            # with open(frame_path,'w') as file_obj:
-            #     file_obj.write(json.dumps(frame.frame))
-            # with open(frame_rect_path,'w') as file_obj:
-            #     file_obj.write(json.dumps(frame.frame_rect))
+            # image = image.convert_alpha()                                 # 想要修改透明度，必须改变图片通道
+            # transparent(image)                                            # 背景透明化
+            # pygame.image.save(image, png_image_path)                      #
+            # self.image_to_frame[image] = Frame(image, self.settings)      # 描绘人物外框,并对人物图片进行修改
+            # pygame.image.save(image, png_image_path)                      # 保存图片
+            # frame = Frame(image, self.settings)                           # 
+            frame_path = "frames/frame/"+str(self.frame_num) + ".txt"
+            frame_rect_path = "frames/frame_rect/" + str(self.frame_num) + ".txt"
+            self.frame_num += 1
+            # with open(frame_path,'w') as file_obj:                        # 将人物外框事先保存在json文件中
+            #     file_obj.write(json.dumps(frame.frame))                   # 这样就不用每次开启的时候都要描绘外框
+            # with open(frame_rect_path,'w') as file_obj:                   # 减少开启的时间
+            #     file_obj.write(json.dumps(frame.frame_rect))              #
             with open(frame_path,'r') as file_obj:
                 frame_frame = json.loads(file_obj.read())
             with open(frame_rect_path,'r') as file_obj:
@@ -698,18 +693,18 @@ class Hero():
             for weapon in range(0, self.weapon_size):
                 png_image_path = 'images/' + str(weapon) + '_' + direction + '_stay.png'
                 image = pygame.image.load(png_image_path)
-                # image = image.convert_alpha()  
-                # transparent(image)                    #背景透明化
-                # pygame.image.save(image, png_image_path)
-                # self.image_to_frame[image] = Frame(image, self.settings)
-                # pygame.image.save(image, png_image_path)
-                # frame = Frame(image, self.settings)
-                frame_path = "frames/frame/"+str(self.frame_size) + ".txt"
-                frame_rect_path = "frames/frame_rect/" + str(self.frame_size) + ".txt"
-                self.frame_size += 1
-                # with open(frame_path,'w') as file_obj:
-                #     file_obj.write(json.dumps(frame.frame))
-                # with open(frame_rect_path,'w') as file_obj:
+                # image = image.convert_alpha()                                 #
+                # transparent(image)                                            # 背景透明化
+                # pygame.image.save(image, png_image_path)                      #
+                # self.image_to_frame[image] = Frame(image, self.settings)      # 描绘人物外框
+                # pygame.image.save(image, png_image_path)                      # 保存图片
+                # frame = Frame(image, self.settings)                           # 
+                frame_path = "frames/frame/"+str(self.frame_num) + ".txt"
+                frame_rect_path = "frames/frame_rect/" + str(self.frame_num) + ".txt"
+                self.frame_num += 1
+                # with open(frame_path,'w') as file_obj:                        # 将人物外框事先保存在json文件中
+                #     file_obj.write(json.dumps(frame.frame))                   # 这样就不用每次开启的时候都要描绘外框
+                # with open(frame_rect_path,'w') as file_obj:                   # 减少开启的时间
                 #     file_obj.write(json.dumps(frame.frame_rect))
                 with open(frame_path,'r') as file_obj:
                     frame_frame = json.loads(file_obj.read())
