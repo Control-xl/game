@@ -64,18 +64,50 @@ class Menu():
         #self.button1 = pygame.image.load(r"E:\vscode\python\game\images\button1.jpg")
         self.buttons = []
         self.buttons.append(Button(self.screen, pygame.Rect(100, 60, 550, 100), "Begin game", ))
-        self.buttons.append(Button(self.screen, pygame.Rect(100, 60, 550, 200), "Return game", ))
+        self.buttons.append(Button(self.screen, pygame.Rect(100, 60, 550, 100), "Return game", ))
         self.buttons.append(Button(self.screen, pygame.Rect(100, 60, 550, 300), "Exit game", ))
-        self.buttons.append(Button(self.screen, pygame.Rect(100, 60, 550, 400), "Shop", ))
+        self.buttons.append(Button(self.screen, pygame.Rect(100, 60, 550, 200), "Shop", ))
         self.buttons.append(Button(self.screen, pygame.Rect(100, 60, 550, 100), "Sword : $100", ))
         self.buttons.append(Button(self.screen, pygame.Rect(100, 60, 550, 200), "Gun   : $500", ))
         self.buttons.append(Button(self.screen, pygame.Rect(100, 60, 550, 300), "Food  : $10", ))
         self.buttons.append(Button(self.screen, pygame.Rect(100, 60, 550, 400), "Return Menu", ))
 
     def update(self):
-        if self.begin_game.is_clicked == True:
-            self.begin_game.en_clicked = 0
+        if self.in_shop == False :
+            for i in range(4):
+                if self.buttons[i].is_clicked == True:
+                    self.buttons[i].is_clicked = False
+                    self.buttons[i].en_clicked = 0
+                    if i == 2:
+                        sys.exit()
+                    elif i == 3:
+                        self.in_shop = True
+                    else :
+                        self.occupy = False
+        else :
+            for i in range(5, 8):
+                if self.buttons[i].is_clicked == True:
+                    self.buttons[i].is_clicked = False
+                    self.buttons[i].en_clicked = 0
+                if i == 5 and self.hero.money >= 100:
+                    self.hero.money -= 100
+                    self.hero.weapon["sword"] = True
+                if i == 5 and self.hero.money >= 100:
+                    self.hero.money -= 100
+                    self.hero.weapon["sword"] = True
+                if i == 5 and self.hero.money >= 100:
+                    self.hero.money -= 100
+                    self.hero.weapon["sword"] = True
+                if i == 5 and self.hero.money >= 100:
+                    self.hero.money -= 100
+                    self.hero.weapon["sword"] = True
+
 
 
     def blitme(self):
-        pass
+        if self.in_shop:
+            for i in range(5, 8):
+                self.buttons[i].blitme()
+        else :
+            for i in range(4):
+                self.buttons[i].blitme()

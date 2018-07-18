@@ -25,7 +25,7 @@ class Settings():
         self.right_border = 1200
         self.map_lock = False
         # 整个地图的最大长度
-        self.map_max = 12000
+        self.map_max = 99999999
         self.map_color = (0, 0, 0)
         self.BOTTOM_NUM = 1100
 
