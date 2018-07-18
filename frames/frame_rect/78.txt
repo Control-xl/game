@@ -1,0 +1,1 @@
+{"top": 38, "bottom": 235, "left": 42, "right": 120}

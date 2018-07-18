@@ -7,6 +7,7 @@ from map import Map
 from monster import MonsterBall, MonsterPlane
 from game_functions import transparent
 from frame import Frame
+import json
 
 
 class Hero():
@@ -44,12 +45,18 @@ class Hero():
         self.jump_attack_images = {}
         self.fire_magic_images = {}
         self.hurt_images = {}
+        self.frame_size = 0
+        # self.stay_images = self.settings.hero_stay_images
+        # self.move_images = self.settings.hero_move_images
+        # self.attack_images = self.settings.hero_attack_images
+        # self.jump_images = self.settings.hero_jump_images
+        # self.jump_attack_images = self.settings.hero_jump_attack_images
+        # self.fire_magic_images = self.settings.hero_fire_magic_images
+        # self.hurt_images = self.settings.hero_hurt_images
         # self.squat_images = {}
         # self.squat_attack_images = {}
         # self.squat_move_images = {}
         self.image_to_frame = {}
-        self.image_to_num = {}
-        self.num_to_frame = {}
         self.load_images()
         # for i in range(len(self.image_to_frame[self.jump_attack_images[1][0][9]].frame)):
         #     print(i, self.image_to_frame[self.jump_attack_images[1][0][9]].frame[i])
@@ -211,7 +218,9 @@ class Hero():
             self.velocityx = self.speedx
         else :
             self.velocityx = 0
-        if self.image_order >= 6 and self.image_order <= 7:
+        if self.image_order < 6 :
+            self.velocityx = 0
+        elif self.image_order >= 6 and self.image_order <= 7:
             self.velocityy = -self.speedy
         elif self.image_order >= 8 and self.image_order <= 10:
             self.velocityy = -self.speedy
@@ -235,7 +244,9 @@ class Hero():
         else :
             self.velocityx = 0
         # 调节帧数目
-        if self.image_order >= 6 and self.image_order <= 7:
+        if self.image_order < 6 :
+            self.velocityx = 0
+        elif self.image_order >= 6 and self.image_order <= 7:
             self.velocityy = -self.speedy
         elif self.image_order >= 8 and self.image_order <= 10:
             self.velocityy = -self.speedy
@@ -332,7 +343,7 @@ class Hero():
         #否则受到攻击
         frame = self.image_to_frame[self.image]
         del_tool_list = []                                          #接触到的道具, 要在最后删除
-        for y in range(frame.top, frame.bottom):
+        for y in range(frame.frame_rect["top"], frame.frame_rect["bottom"]):
             for direction, xs in frame.frame[y].items() :
                 for x in xs :
                     pos = (self.rect.left + x, self.rect.top + y)
@@ -656,7 +667,21 @@ class Hero():
             # image = image.convert_alpha()
             # transparent(image)
             # pygame.image.save(image, png_image_path)
-            self.image_to_frame[image] = Frame(image, self.settings)
+            # self.image_to_frame[image] = Frame(image, self.settings)
+            # pygame.image.save(image, png_image_path)
+            # frame = Frame(image, self.settings)
+            frame_path = "frames/frame/"+str(self.frame_size) + ".txt"
+            frame_rect_path = "frames/frame_rect/" + str(self.frame_size) + ".txt"
+            self.frame_size += 1
+            # with open(frame_path,'w') as file_obj:
+            #     file_obj.write(json.dumps(frame.frame))
+            # with open(frame_rect_path,'w') as file_obj:
+            #     file_obj.write(json.dumps(frame.frame_rect))
+            with open(frame_path,'r') as file_obj:
+                frame_frame = json.loads(file_obj.read())
+            with open(frame_rect_path,'r') as file_obj:
+                frame_frame_rect = json.loads(file_obj.read())
+            self.image_to_frame[image] = Frame(image, self.settings, True, frame_frame, frame_frame_rect)
             images[self.settings.hero_direction[direction]][weapon].append(image)
 
 
@@ -676,7 +701,21 @@ class Hero():
                 # image = image.convert_alpha()  
                 # transparent(image)                    #背景透明化
                 # pygame.image.save(image, png_image_path)
-                self.image_to_frame[image] = Frame(image, self.settings)
+                # self.image_to_frame[image] = Frame(image, self.settings)
+                # pygame.image.save(image, png_image_path)
+                # frame = Frame(image, self.settings)
+                frame_path = "frames/frame/"+str(self.frame_size) + ".txt"
+                frame_rect_path = "frames/frame_rect/" + str(self.frame_size) + ".txt"
+                self.frame_size += 1
+                # with open(frame_path,'w') as file_obj:
+                #     file_obj.write(json.dumps(frame.frame))
+                # with open(frame_rect_path,'w') as file_obj:
+                #     file_obj.write(json.dumps(frame.frame_rect))
+                with open(frame_path,'r') as file_obj:
+                    frame_frame = json.loads(file_obj.read())
+                with open(frame_rect_path,'r') as file_obj:
+                    frame_frame_rect = json.loads(file_obj.read())
+                self.image_to_frame[image] = Frame(image, self.settings, True, frame_frame, frame_frame_rect)
                 self.stay_images[self.settings.hero_direction[direction]].append(image)
                 self.load_image_file(direction, weapon, self.move_images, 'move_images', self.move_size[weapon])
                 self.load_image_file(direction, weapon, self.attack_images, 'attack_images', self.attack_size[weapon])

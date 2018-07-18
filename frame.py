@@ -8,30 +8,29 @@ class Frame():
     # 代表一个火柴人的外部框架，用以碰撞检测
     # 在火柴人的外表加一层白色的颜色层，当这一层东西颜色变了，发生了碰撞
     # get_at(pos), set_at(pos, color)表示读取与设置surface中一个像素点的颜色
-    def __init__(self, image, settings, from_file = False, frame = [], top = 0, bottom = 0, left = 0, right = 0):
+    def __init__(self, image, settings, from_file = False, frame = [], frame_rect = {}):
         self.frame = []                  #表示第几行的人物外框
         if from_file == False :
-            self.top = 300
-            self.bottom = 0
-            self.left = 300
-            self.right = 0
+            self.frame_rect = {
+                "top" : 300,
+                "bottom" : 0,
+                "left" : 300,
+                "right" : 0,
+            }
             self.build_frame(image, settings.hero_boot_color)
         else :
+            self.frame_rect = frame_rect
             self.frame = frame
-            self.top = top
-            self.bottom = bottom
-            self.left = left
-            self.right = right
 
 
     def build_frame(self, image, hero_boot_color):
         rect = image.get_rect()
         rect.top = 0
         rect.left = 0
-        self.top = rect.bottom
-        self.bottom = rect.top
-        self.left = rect.right
-        self.right = rect.left
+        self.frame_rect["top"] = rect.bottom
+        self.frame_rect["bottom"] = rect.top
+        self.frame_rect["left"] = rect.right
+        self.frame_rect["right"] = rect.left
         for y in range(rect.top, rect.bottom):
             left = 0
             right = 0
@@ -58,10 +57,10 @@ class Frame():
                 right += 1
             self.frame.append({"left" : [], "right" : []})             #
             if left != right:
-                self.top = min (y, self.top)
-                self.bottom = max(y, self.bottom)
-                self.left = min(self.left+1, left)
-                self.right = max(self.right-1, right)
+                self.frame_rect["top"] = min (y, self.frame_rect["top"])
+                self.frame_rect["bottom"] = max(y, self.frame_rect["bottom"])
+                self.frame_rect["left"] = min(self.frame_rect["left"]+1, left)
+                self.frame_rect["right"] = max(self.frame_rect["right"]-1, right)
                 image.set_at((left, y), hero_boot_color)
                 image.set_at((right, y), hero_boot_color)
                 self.frame[-1]["left"].append(left)
