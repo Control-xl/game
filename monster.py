@@ -4,7 +4,7 @@ import pygame
 class MonsterBall():
     def __init__(self, settings, screen, protection_blood = 1, center_blood = 1, protection_num = 0, x = 1000, y = 500,
                  protection_speed = 0.1, center_speed = 0, center_speed_y = 0, center_radius = 100,
-                 protection_radius = 100, map_lock = True):
+                 protection_radius = 100, map_lock = True, solid_left=0, solid_right = 1200):
         self.settings = settings
         self.screen = screen
         # 怪物中心位置
@@ -49,6 +49,8 @@ class MonsterBall():
 
         # 是否锁屏
         self.map_lock = map_lock
+        self.solid_left_border = solid_left
+        self.solid_right_border = solid_right
         # 是否存活
         self.alive = True
 
@@ -59,9 +61,14 @@ class MonsterBall():
             self.check_collisions(hero.weapon_attacks)
             self.protection_position = (self.protection_position + self.protection_speed) % 360
             # 遇到地图边界就换方向
-            if self.map_x - self.center_radius < self.settings.left_border:
+            left_border = self.settings.left_border
+            right_border = self.settings.left_border + 1200
+            if not self.map_lock:
+                left_border = self.solid_left_border
+                right_border = self.solid_right_border
+            if self.map_x - self.center_radius < left_border:
                 self.direction_x = 1
-            if self.map_x + self.center_radius > self.settings.left_border + 1200:
+            if self.map_x + self.center_radius > right_border:
                 self.direction_x = -1
             if self.center_y - self.center_radius < 0:
                 self.direction_y = 1
@@ -79,7 +86,7 @@ class MonsterBall():
             return
 
         if self.blood > 0:
-            pygame.draw.circle(self.screen, (0, 0, 0), (int(self.center_x), self.center_y), self.center_radius)
+            pygame.draw.circle(self.screen, (0, 0, 0), (int(self.center_x), int(self.center_y)), self.center_radius)
 
         for i in range(self.protection_number):
             if self.protection_blood[i] > 0:
@@ -241,7 +248,7 @@ def get_distance2(x1, y1, x2, y2):
 
 
 class MonsterPlane():
-    def __init__(self, settings, screen, blood=1, save_time=5000, fire_time=250, max_bullet=3, x= 0, y=0):
+    def __init__(self, settings, screen, blood=1, save_time=5000, fire_time=250, max_bullet=3, x=0, y=0, map_lock=True):
         self.settings = settings
         self.screen = screen
         # 加载飞船
@@ -295,7 +302,7 @@ class MonsterPlane():
         self.full_energy = False
 
         # 是否锁屏
-        self.map_lock = True
+        self.map_lock = map_lock
 
     def update(self, hero):
         if self.blood > 0:
@@ -303,41 +310,43 @@ class MonsterPlane():
             self.update_bullet()
             # 更新位置
             self.rect.x = self.map_x - self.settings.left_border
+            # 仅在飞船在屏幕中的时候进行发射子弹和碰撞检测
+            if self.rect.right >= 0 or self.rect.left <= 0:
+                # 检测碰撞
+                self.check_collisions(hero.weapon_attacks)
 
-            # 检测碰撞
-            self.check_collisions(hero.weapon_attacks)
-            # 计算子弹数
-            cnt = 0
-            for i in range(len(self.bullet_list)):
-                if self.bullet_alive_list[i]:
-                    cnt += 1
-            # 计时
-            self.time_passed += self.clock.tick()
-            if self.full_energy and cnt > 0:
-                self.time_passed = 0
-                return
-            else:
-                self.full_energy = False
-            # 如果不是在蓄能状态，那么就等待，直到非蓄能状态时间达到save_time毫秒，默认5秒一次
-            if not self.save_state:
-                if self.time_passed > self.save_time:
+                # 计算子弹数
+                cnt = 0
+                for i in range(len(self.bullet_list)):
+                    if self.bullet_alive_list[i]:
+                        cnt += 1
+                # 计时
+                self.time_passed += self.clock.tick()
+                if self.full_energy and cnt > 0:
                     self.time_passed = 0
-                    self.save_state = True
-            else:
-                # 如果在蓄能状态，那就fire_time毫秒（默认0.25秒）更新一次状态图，5次更新后发射
-                if self.time_passed >= self.fire_time:
-                    self.save_energy_image_cnt = (self.save_energy_image_cnt + 1) % 6
-                    if cnt < self.max_bullet_num:
-                        if self.save_energy_image_cnt == 5:
-                            self.add_bullet(hero)
-                    else:
-                        self.save_state = False
-                        self.full_energy = True
+                    return
+                else:
+                    self.full_energy = False
+                # 如果不是在蓄能状态，那么就等待，直到非蓄能状态时间达到save_time毫秒，默认5秒一次
+                if not self.save_state:
+                    if self.time_passed > self.save_time:
+                        self.time_passed = 0
+                        self.save_state = True
+                else:
+                    # 如果在蓄能状态，那就fire_time毫秒（默认0.25秒）更新一次状态图，5次更新后发射
+                    if self.time_passed >= self.fire_time:
+                        self.save_energy_image_cnt = (self.save_energy_image_cnt + 1) % 6
+                        if cnt < self.max_bullet_num:
+                            if self.save_energy_image_cnt == 5:
+                                self.add_bullet(hero)
+                        else:
+                            self.save_state = False
+                            self.full_energy = True
 
-                    self.time_passed = 0
-                if self.save_energy_image_cnt < 5:
-                    self.save_rect[self.save_energy_image_cnt].centerx = self.rect.centerx
-                    self.save_rect[self.save_energy_image_cnt].centery = self.rect.bottom + self.save_energy_image_down
+                        self.time_passed = 0
+                    if self.save_energy_image_cnt < 5:
+                        self.save_rect[self.save_energy_image_cnt].centerx = self.rect.centerx
+                        self.save_rect[self.save_energy_image_cnt].centery = self.rect.bottom + self.save_energy_image_down
 
 
 
