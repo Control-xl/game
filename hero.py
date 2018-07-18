@@ -25,7 +25,7 @@ class Hero():
         self.frame_order = 0                                                    #正播放的帧序号
         self.frame_size = 5                                                     #代表一个图片要放的帧数目
         self.basic_frame_size = 5                                               #基本帧数目
-        self.jump_frame_size = [2,2,2,2,5,5,2,5, 5,10,10,20,2,2,2,2,2,]         #用于调节跳跃动作的帧数目
+        self.jump_frame_size = [2,2,2,2,5,5,2,5, 5,10,15,25,2,2,2,2,2,]         #用于调节跳跃动作的帧数目
         #                      [0,1,2,3,4,5,6,7, 8, 9, 0, 1, 2,3,4,5,6,]
         self.image_order = 0     #正播放的图片序号
         self.move_size = [6, 12, 6]       #移动图片的总数目 6,12,6
@@ -78,6 +78,7 @@ class Hero():
         }
         self.blood = self.settings.hero_init_blood
         self.magic = self.settings.hero_init_magic
+        self.money = 0
         self.jump_en = 1                                # 1代表可以跳跃
         self.shoot_cd = 0                               # 射击冷却时间，0时才能进行射击
         self.magic_cd = 0                               # 技能冷却时间
@@ -182,7 +183,7 @@ class Hero():
             self.frame_order = 0
             self.blood_cd = 200
             self.blood -= 1
-        if self.blood < 0 :
+        if self.blood <= 0 :
             pass
 
     def restart(self):
@@ -385,6 +386,11 @@ class Hero():
     def touch_object(self, pos, color, monster_list, tool_list, del_tool_list):
         # 判断接触到了什么 ？ 道具, 地图, 技能, 子弹, 敌人
         (x, y) = pos
+        #检测碰撞到血槽和蓝
+        if y < 50 and x < self.blood * 50 :
+            return "blood"
+        elif y < 100 and x < 50:
+            return "blue"
         #检测道具
         for i in range(len(tool_list)) :
             if x >= tool_list[i].rect.left and x < tool_list[i].rect.right \
