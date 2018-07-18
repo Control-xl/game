@@ -3,21 +3,31 @@ import pygame
 
 class MonsterBall():
     def __init__(self, settings, screen, protection_blood = 1, center_blood = 1, protection_num = 0, x = 1000, y = 500,
-                 protection_speed = 0.1, center_speed = 0.03):
+                 protection_speed = 0.1, center_speed = 0, center_speed_y = 0, center_radius = 100,
+                 protection_radius = 100, map_lock = True):
         self.settings = settings
         self.screen = screen
         # 怪物中心位置
-        self.center_x = x
+        self.center_x = 0
         self.center_y = y
+        # 怪物在地图上的位置
+        self.map_x = x
+
         # 怪物中心受攻击范围
-        self.center_radius = 100
+        self.center_radius = center_radius
         # 怪物中心移动速度
         self.center_speed = center_speed
+        # 怪物上下移动速度
+        self.center_speed_y = center_speed_y
+        # 移动方向
+        self.direction_x = -1
+        self.direction_y = -1
         # 怪物血量
         self.blood = center_blood
 
+
         # 怪物保护圈半径
-        self.protection_radius = settings.protection_radius
+        self.protection_radius = protection_radius
 
         # 怪物保护圈数目
         self.protection_number = protection_num
@@ -37,16 +47,32 @@ class MonsterBall():
         self.protection_color = settings.monster_ball_protection_color
         self.protection_blood = [protection_blood for i in range(5)]
 
+        # 是否锁屏
+        self.map_lock = map_lock
         # 是否存活
         self.alive = True
 
     def update(self, hero):
         if self.blood < 0:
-            self.alive = 0
+            self.alive = False
         else:
             self.check_collisions(hero.weapon_attacks)
             self.protection_position = (self.protection_position + self.protection_speed) % 360
-            self.center_x -= self.center_speed
+            # 遇到地图边界就换方向
+            if self.map_x - self.center_radius < self.settings.left_border:
+                self.direction_x = 1
+            if self.map_x + self.center_radius > self.settings.left_border + 1200:
+                self.direction_x = -1
+            if self.center_y - self.center_radius < 0:
+                self.direction_y = 1
+            if self.center_y + self.center_radius > 800:
+                self.direction_y = -1
+            self.map_x += self.center_speed * self.direction_x
+
+            self.center_x = self.map_x - self.settings.left_border
+            self.center_y += self.center_speed_y * self.direction_y
+
+
 
     def blitme(self):
         if not self.alive:
@@ -69,13 +95,9 @@ class MonsterBall():
             if self.check_sword_coll(weapon.sword):
                 weapon.sword_attacking = False
         if weapon.fist_attacking:
-            print("fist", weapon.fist)
-            print("center blood", self.blood)
-
             if self.check_fist_coll(weapon.fist):
                 weapon.fist_attacking = False
         if weapon.fist_magic_firing:
-            print("fist magic", weapon.fist_magic)
             if self.check_fist_magic_coll(weapon):
                 weapon.fist_magic_firing = False
         if weapon.sword_magic_firing:
@@ -89,11 +111,7 @@ class MonsterBall():
                 bullets_to_delete.append(bullet)
             elif self.center_rect_collisions(bullet.rect, self.settings.bullet_damage):
                 bullets_to_delete.append(bullet)
-
-        if bullets_to_delete:
-            print("delete bullets", bullets_to_delete)
         for bullet in bullets_to_delete:
-            print("rect:", bullet.rect)
             bullets.remove(bullet)
 
 
@@ -223,13 +241,15 @@ def get_distance2(x1, y1, x2, y2):
 
 
 class MonsterPlane():
-    def __init__(self, settings, screen, blood=1, save_time=5000, fire_time=250, max_bullet=3, x=1000, y=500):
+    def __init__(self, settings, screen, blood=1, save_time=5000, fire_time=250, max_bullet=3, x= 0, y=0):
         self.settings = settings
         self.screen = screen
         # 加载飞船
         self.image = pygame.image.load("images/plane.png")
         # 飞船位置
         self.rect = self.image.get_rect()
+        self.map_x = x
+        self.map_y = y
         self.rect.x = x
         self.rect.y = y
         # 加载飞船蓄力图像
@@ -274,10 +294,16 @@ class MonsterPlane():
         # 子弹一共存在3发后的停火标志（停止计时）
         self.full_energy = False
 
+        # 是否锁屏
+        self.map_lock = True
+
     def update(self, hero):
         if self.blood > 0:
             # 更新子弹位置
             self.update_bullet()
+            # 更新位置
+            self.rect.x = self.map_x - self.settings.left_border
+
             # 检测碰撞
             self.check_collisions(hero.weapon_attacks)
             # 计算子弹数
@@ -312,6 +338,8 @@ class MonsterPlane():
                 if self.save_energy_image_cnt < 5:
                     self.save_rect[self.save_energy_image_cnt].centerx = self.rect.centerx
                     self.save_rect[self.save_energy_image_cnt].centery = self.rect.bottom + self.save_energy_image_down
+
+
 
     def update_bullet(self):
         max_ = min(len(self.bullet_list), self.max_bullet_num)
