@@ -102,7 +102,7 @@ class Map():
         # 怪物出现点：过渡点后1/3屏幕
         self.monster_point_app()
         # 怪物
-        self.monster_list.append([monster.MonsterPlane(settings, screen, 1, 10000, 500, 1, 1000, 500)])
+        self.monster_list.append([monster.MonsterPlane(settings, screen, 1, 10000, 500, 1, len(self.shape)+1000, 500)])
         # 战斗地图
         self.map_app(700, 1300)
 

@@ -60,6 +60,7 @@ if __name__ == '__main__':
         map_.update(hero, monster_list)
         hero.update2_v2()
         monster_to_del = []
+
         for monster in monster_list:
             monster.update(hero)
             if monster.blood <= 0:
