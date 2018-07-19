@@ -104,7 +104,7 @@ class Hero():
         self.velocityx = 0
         self.velocityy = -self.speedy
 
-    def restart(x):
+    def restart(self, x):
         self.x = x
         # self.bottom = self.
 

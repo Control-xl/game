@@ -167,16 +167,16 @@ class Map():
         # 球，以此为保护圈血量，中心血量，保护圈数目，初始位置x，y， 保护转速，中心平移速度，y轴移动速度, 中心半径，保护半径
         # 是否锁地图，左边界，右边界
 
-        # # 7 球加障碍物
-        # self.map_mid_app()
-        # self.monster_point_app()
-        # self.map_app(600, 400)
-        # self.monster_list.append([monster.MonsterBall(settings, screen, 0, 999999, 1, len(self.shape) + 900, 450, 0, 5, 0,
-        #                                               20, 1, False, len(self.shape)+100, len(self.shape)+1300),
-        #                           monster.MonsterPlane(settings, screen, 7, 5000, 3000, 2, len(self.shape) + 900, 400, False)])
-        # for i in range(7):
-        #     self.map_app(600, 100)
-        #     self.map_app(700, 100)
+        # 7 球加障碍物
+        self.map_mid_app()
+        self.monster_point_app()
+        self.map_app(600, 400)
+        self.monster_list.append([monster.MonsterBall(settings, screen, 0, 999999, 1, len(self.shape) + 900, 450, 0, 5, 0,
+                                                      20, 1, False, len(self.shape)+100, len(self.shape)+1300),
+                                  monster.MonsterPlane(settings, screen, 7, 5000, 3000, 2, len(self.shape) + 900, 400, False)])
+        for i in range(7):
+            self.map_app(600, 100)
+            self.map_app(700, 100)
 
 
         # map 8

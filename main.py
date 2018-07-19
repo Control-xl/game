@@ -45,6 +45,9 @@ if __name__ == '__main__':
             hero.update1_v2(monster_list, tool_list)
             map_.update(hero, monster_list)
             hero.update2_v2(map_.monster_point[map_.cnt-1])
+            print(map_.cnt)
+            print(map_.monster_point)
+            print(map_.monster_point[map_.cnt-1])
             monster_to_del = []
             for monster in monster_list:
                 monster.update(hero)
@@ -52,6 +55,7 @@ if __name__ == '__main__':
                     monster_to_del.append(monster)
             for monster in monster_to_del:
                 monster_list.remove(monster)
+
             # monsterball.update(hero)
             # monsterplane.update(hero)
             screen.fill(settings.bg_color)
