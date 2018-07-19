@@ -17,8 +17,13 @@ def check_keydown_events(event, settings, screen, hero, menu):
         hero.moving_right = True
     if event.key == pygame.K_s:
         hero.squating = False
-    if event.key == pygame.K_l:
-        hero.change_weapon()
+    if event.key == pygame.K_1:
+        hero.change_weapon(0)
+    if event.key == pygame.K_2:
+        hero.change_weapon(1)
+    if event.key == pygame.K_3:
+        hero.change_weapon(2)
+        
     # if event.key == pygame.K_ESCAPE:
     #     if settings.pause:
     #         settings.pause = False

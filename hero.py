@@ -590,11 +590,13 @@ class Hero():
         self.update_weapon_attack()
 
 
-    def change_weapon(self):
+    def change_weapon(self, weapon_order):
         #更换武器，保证更换武器后不会有动作冲突
-        self.weapon = (self.weapon + 1) % self.weapon_size
-        while self.weapon_en[self.weapon] == False :
-            self.weapon = (self.weapon + 1) % self.weapon_size
+        if self.weapon_en[weapon_order] == True:
+            self.weapon = weapon_order
+        # self.weapon = (self.weapon + 1) % self.weapon_size
+        # while self.weapon_en[self.weapon] == False :
+        #     self.weapon = (self.weapon + 1) % self.weapon_size
         if self.status == self.settings.hero_status["move"] and self.image_order >= 6: 
             self.image_order -= 6
         if self.status == self.settings.hero_status["fire_magic"] :
