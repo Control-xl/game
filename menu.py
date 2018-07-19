@@ -92,13 +92,16 @@ class Menu():
         self.buttons.append(Button(self.screen, pygame.Rect((520, 310), button_size), "Shop", ))
         self.buttons.append(Button(self.screen, pygame.Rect((520, 150), button_size), "Sword : 100", ))
         self.buttons.append(Button(self.screen, pygame.Rect((520, 230), button_size), "Gun : 500", ))
-        self.buttons.append(Button(self.screen, pygame.Rect((520, 310), button_size), "Food : 10", ))
+        self.buttons.append(Button(self.screen, pygame.Rect((520, 310), button_size), "Blood : 10", ))
         self.buttons.append(Button(self.screen, pygame.Rect((520, 390), button_size), "Level 1: 50", ))
         self.buttons.append(Button(self.screen, pygame.Rect((520, 470), button_size), "Return Menu", ))
 
+
     def update(self, hero, map_, monster_list):
         if self.money != hero.money:
+            self.money = hero.money
             self.shop_text_message = str(self.money)
+            self.shop_text = self.font_pen.render(self.shop_text_message, True, (0,0,0))
             self.shop_text_rect = self.shop_text.get_rect()
             self.shop_text_rect.centerx = 600
             self.shop_text_rect.top = 100
