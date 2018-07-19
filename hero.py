@@ -55,8 +55,8 @@ class Hero():
         #     print(i, self.image_to_frame[self.jump_attack_images[1][0][9]].frame[i])
         # 初始化人物
         self.weapon = self.settings.hero_weapon["fist"]
-        self.status = settings.hero_status["stay"]
-        self.direction = settings.hero_direction["right"]
+        self.status = self.settings.hero_status["stay"]
+        self.direction = self.settings.hero_direction["right"]
         self.image = self.stay_images[self.direction][self.weapon]
         self.rect = self.image.get_rect()
         self.rect.centerx = self.settings.hero_init_centerx
@@ -91,6 +91,19 @@ class Hero():
 
 
     def start(self):
+        self.weapon = self.settings.hero_weapon["fist"]
+        self.status = self.settings.hero_status["stay"]
+        self.direction = self.settings.hero_direction["right"]
+        self.image = self.stay_images[self.direction][self.weapon]
+        self.rect = self.image.get_rect()
+        self.rect.centerx = self.settings.hero_init_centerx
+        self.x = self.settings.left_border + self.rect.centerx          #在整个地图中的位置
+        self.rect.bottom = self.map.gety(self.rect.centerx)
+        self.weapon_en = {
+            self.settings.hero_weapon["fist"] : True,
+            self.settings.hero_weapon["sword"] : True,
+            self.settings.hero_weapon["gun"] : True,
+        }
         self.blood = self.settings.hero_init_blood
         self.magic = self.settings.hero_init_magic
         self.magic_level = 0

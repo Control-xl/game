@@ -19,13 +19,14 @@ if __name__ == '__main__':
     pygame.init()
     settings = Settings()
     screen = pygame.display.set_mode((settings.screen_width, settings.screen_height), 0, 0)
+    menu = Menu(screen, settings)
     map_ = Map(screen, settings)
-    tool_list = []
     hero = Hero(screen, map_, settings)
+    tool_list = []
     tool = Tool(screen, settings, "food", (600, 700))
     tool_list.append(tool)
     monster_list = []
-    menu = Menu(screen)
+    
     # monster_list.append(MonsterPlane(settings, screen))
     # monsterball = MonsterBall(settings, screen)
     clock = pygame.time.Clock()
@@ -36,7 +37,7 @@ if __name__ == '__main__':
         if hero.blood <= 0:
             menu.occupy = True
         if menu.occupy == True :
-            menu.update(hero)
+            menu.update(hero, map_, monster_list)
             menu.blitme(hero)
             if hero.blood_cd < 5:
                 hero.blood_cd += 5
@@ -45,10 +46,6 @@ if __name__ == '__main__':
             hero.update1_v2(monster_list, tool_list)
             map_.update(hero, monster_list)
             hero.update2_v2(int(map_.monster_point[map_.cnt-1]))
-            print(map_.cnt)
-            print(map_.monster_point)
-            print(map_.monster_point[map_.cnt-1])
-            print(hero.x)
             monster_to_del = []
             for monster in monster_list:
                 monster.update(hero)
