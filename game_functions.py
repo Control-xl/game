@@ -42,6 +42,8 @@ def check_keydown_events(event, settings, screen, hero, menu):
 def check_keyup_events(event, hero):
     if event.key == pygame.K_k:
         hero.fire_magicing = False
+    if event.key == pygame.K_j:
+        hero.attacking = False
     if event.key == pygame.K_a:
         hero.moving_left = False
     if event.key == pygame.K_d:

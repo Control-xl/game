@@ -53,7 +53,6 @@ if __name__ == '__main__':
                     monster_to_del.append(monster)
             for monster in monster_to_del:
                 monster_list.remove(monster)
-
             # monsterball.update(hero)
             # monsterplane.update(hero)
             screen.fill(settings.bg_color)

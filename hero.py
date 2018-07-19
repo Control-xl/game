@@ -79,6 +79,7 @@ class Hero():
         self.blood = 0
         self.magic = self.settings.hero_init_magic
         self.magic_level = 0
+        self.magic_cd_time = 1000
         self.money = 0
         self.jump_en = 1                                # 1代表可以跳跃
         self.shoot_cd = 0                               # 射击冷却时间，0时才能进行射击
@@ -99,15 +100,8 @@ class Hero():
         self.rect.centerx = self.settings.hero_init_centerx
         self.x = self.settings.left_border + self.rect.centerx          #在整个地图中的位置
         self.rect.bottom = self.map.gety(self.rect.centerx)
-        self.weapon_en = {
-            self.settings.hero_weapon["fist"] : True,
-            self.settings.hero_weapon["sword"] : True,
-            self.settings.hero_weapon["gun"] : True,
-        }
         self.blood = self.settings.hero_init_blood
         self.magic = self.settings.hero_init_magic
-        self.magic_level = 0
-        self.money = 0
         self.jump_en = 1                                # 1代表可以跳跃
         self.shoot_cd = 0                               # 射击冷却时间，0时才能进行射击
         self.magic_cd = 0                               # 技能冷却时间
@@ -192,7 +186,7 @@ class Hero():
         #重置
         if self.status != self.settings.hero_status["hurt"]:
             if self.weapon == self.settings.hero_weapon["gun"] and self.attacking: #gun无攻击状态
-                #self.attacking = False
+                # self.attacking = False
                 self.shoot_bullet()
         if self.shoot_cd > 0:
             self.shoot_cd -= 1
@@ -485,14 +479,14 @@ class Hero():
         return "enemy"
 
     def update_weapon_attack(self):
-        self.weapon_attacks.update()
+        self.weapon_attacks.update(self.magic_level)
         # 初始化各种攻击范围. 技能,普通攻击,跳跃攻击. (均可分为拳头和剑两种武器)
         if self.status == self.settings.hero_status["fire_magic"]:
             if self.weapon == self.settings.hero_weapon["fist"] \
             and self.image_order == self.fire_magic_size[self.weapon] - 2 \
             and self.frame_order == 0 and self.magic_cd == 0 :
                 self.magic -= 1                                                 # 扣一点蓝
-                self.magic_cd = 300                                             # 冷却时间为300帧
+                self.magic_cd = self.magic_cd_time                              # 冷却时间为300帧
                 self.weapon_attacks.image_order = 0                             # 技能开始播放的帧序号
                 self.weapon_attacks.fist_magic_playing = True                   # 设置技能动画播放为True
                 self.weapon_attacks.fist_magic_firing = True                    # 设置技能伤害为True，命中或过时后为失效
@@ -512,7 +506,7 @@ class Hero():
             and self.image_order == self.fire_magic_size[self.weapon] - 2 \
             and self.frame_order == 0 and self.magic_cd == 0:
                 self.magic -= 1
-                self.magic_cd = 300
+                self.magic_cd = self.magic_cd_time
                 self.weapon_attacks.image_order = 0
                 self.weapon_attacks.sword_magic_playing = True
                 self.weapon_attacks.sword_magic_firing = True

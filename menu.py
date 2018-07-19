@@ -85,16 +85,16 @@ class Menu():
         self.money = 0
         #self.button1 = pygame.image.load(r"E:\vscode\python\game\images\button1.jpg")
         self.buttons = []
-        button_size = (100, 60)
-        self.buttons.append(Button(self.screen, pygame.Rect((550, 150), button_size), "Begin game", ))
-        self.buttons.append(Button(self.screen, pygame.Rect((550, 150), button_size), "Return game", ))
-        self.buttons.append(Button(self.screen, pygame.Rect((550, 230), button_size), "Exit game", ))
-        self.buttons.append(Button(self.screen, pygame.Rect((550, 310), button_size), "Shop", ))
-        self.buttons.append(Button(self.screen, pygame.Rect((550, 150), button_size), "Sword : 100", ))
-        self.buttons.append(Button(self.screen, pygame.Rect((550, 230), button_size), "Gun : 500", ))
-        self.buttons.append(Button(self.screen, pygame.Rect((550, 310), button_size), "Food : 10", ))
-        self.buttons.append(Button(self.screen, pygame.Rect((550, 390), button_size), "Magic level 1: 50", ))
-        self.buttons.append(Button(self.screen, pygame.Rect((550, 470), button_size), "Return Menu", ))
+        button_size = (160, 60)
+        self.buttons.append(Button(self.screen, pygame.Rect((520, 150), button_size), "Begin game", ))
+        self.buttons.append(Button(self.screen, pygame.Rect((520, 150), button_size), "Return game", ))
+        self.buttons.append(Button(self.screen, pygame.Rect((520, 230), button_size), "Exit game", ))
+        self.buttons.append(Button(self.screen, pygame.Rect((520, 310), button_size), "Shop", ))
+        self.buttons.append(Button(self.screen, pygame.Rect((520, 150), button_size), "Sword : 100", ))
+        self.buttons.append(Button(self.screen, pygame.Rect((520, 230), button_size), "Gun : 500", ))
+        self.buttons.append(Button(self.screen, pygame.Rect((520, 310), button_size), "Food : 10", ))
+        self.buttons.append(Button(self.screen, pygame.Rect((520, 390), button_size), "Level 1: 50", ))
+        self.buttons.append(Button(self.screen, pygame.Rect((520, 470), button_size), "Return Menu", ))
 
     def update(self, hero, map_, monster_list):
         if self.money != hero.money:
@@ -112,7 +112,7 @@ class Menu():
                         self.settings.__init__()
                         hero.start()
                         map_.__init__(self.screen, self.settings)
-                        monster_list = []
+                        monster_list.clear()
                     elif i == 1:
                         self.occupy = False
                     elif i == 2:
@@ -137,7 +137,7 @@ class Menu():
                         hero.money -= 50
                         hero.magic_level += 1
                         if hero.magic_level < 5:
-                            self.buttons[i].update_text("magic level " + str(hero.magic_level + 1) + ": 50")
+                            self.buttons[i].update_text("Level " + str(hero.magic_level + 1) + ": 50")
                     if i == 8 :
                         self.in_shop = False
 

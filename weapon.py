@@ -14,6 +14,7 @@ class Weapon():
         self.fist = pygame.Rect(0, 0, 1, 1)
         self.sword_attacking = False
         self.fist_attacking = False
+        self.basic_magic_damage = 2
         self.fist_magic_damage = 5
         self.sword_magic_damage = 5
         self.fist_magic = pygame.Rect(0, 0, 1, 1)
@@ -46,8 +47,10 @@ class Weapon():
         self.fist_magic_time = 0
         self.sword_magic_time = 0
 
-    def update(self):
+    def update(self, magic_level):
         # 更新子弹, 技能位置, 播放技能动画
+        self.fist_magic_damage = magic_level * 2 + self.basic_magic_damage
+        self.sword_magic_damage = magic_level * 2 + self.basic_magic_damage
         if self.fist_magic_playing == True :
             self.frame_order += 1
             if self.frame_order >= self.frame_size :
