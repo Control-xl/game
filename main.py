@@ -44,7 +44,7 @@ if __name__ == '__main__':
             # hero.update(monster_list, tool_list)
             hero.update1_v2(monster_list, tool_list)
             map_.update(hero, monster_list)
-            hero.update2_v2(map_.monster_point[map_.cnt-1])
+            hero.update2_v2(int(map_.monster_point[map_.cnt-1]))
             print(map_.cnt)
             print(map_.monster_point)
             print(map_.monster_point[map_.cnt-1])
