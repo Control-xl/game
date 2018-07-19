@@ -78,6 +78,7 @@ class Hero():
         }
         self.blood = 0
         self.magic = self.settings.hero_init_magic
+        self.magic_level = 0
         self.money = 0
         self.jump_en = 1                                # 1代表可以跳跃
         self.shoot_cd = 0                               # 射击冷却时间，0时才能进行射击
@@ -92,6 +93,7 @@ class Hero():
     def start(self):
         self.blood = self.settings.hero_init_blood
         self.magic = self.settings.hero_init_magic
+        self.magic_level = 0
         self.money = 0
         self.jump_en = 1                                # 1代表可以跳跃
         self.shoot_cd = 0                               # 射击冷却时间，0时才能进行射击
@@ -102,6 +104,9 @@ class Hero():
         self.velocityx = 0
         self.velocityy = -self.speedy
 
+    def restart(x):
+        self.x = x
+        # self.bottom = self.
 
     def update_status(self):
         #根据旧状态即status的值继续状态;或者根据按键(即or后面)更改状态.更新image
@@ -308,26 +313,37 @@ class Hero():
     #     self.display_frame(self.squat_attack_size)
 
 
-    def update_pos(self):
-        self.update_herox()
-        self.update_heroy()
+    # def update_pos(self):
+    #     self.update_herox()
+    #     self.update_heroy()
 
-    def update_herox(self):
-        if self.map.gety(self.x + self.velocityx * 2) < self.rect.bottom :
-            self.velocityx = 0
-        if (self.x > self.settings.left_border and self.x < self.settings.left_border + self.settings.screen_width) \
-        or (self.x <= self.settings.left_border and self.velocityx > 0)\
-        or (self.velocityx < 0 and self.x >= self.settings.left_border + self.settings.screen_width):
-            self.x += self.velocityx
-            if self.settings.map_lock or \
-            (self.velocityx > 0 and self.rect.right < self.settings.screen_width/2) or \
-            (self.velocityx < 0 and self.rect.left > self.settings.screen_width/10):
-                self.rect.centerx += self.velocityx
+    # def update_herox(self):
+    #     if self.map.gety(self.x + self.velocityx * 2) < self.rect.bottom :
+    #         self.velocityx = 0
+    #     if (self.x > self.settings.left_border and self.x < self.settings.left_border + self.settings.screen_width) \
+    #     or (self.x <= self.settings.left_border and self.velocityx > 0)\
+    #     or (self.velocityx < 0 and self.x >= self.settings.left_border + self.settings.screen_width):
+    #         self.x += self.velocityx
+    #         if self.settings.map_lock or \
+    #         (self.velocityx > 0 and self.rect.right < self.settings.screen_width/2) or \
+    #         (self.velocityx < 0 and self.rect.left > self.settings.screen_width/10):
+    #             self.rect.centerx += self.velocityx
         # self.map.update(self.velocityx, self.rect)
         
-        
 
-    def update_heroy(self):
+
+    def update_herox_v2(self):
+        if self.map.gety(self.x + self.velocityx * 2) < self.rect.bottom :
+            self.velocityx = 0
+        if (self.rect.centerx > 0 + self.speedx and self.rect.centerx < self.settings.screen_width - self.speedx) \
+        or (self.rect.centerx <= self.speedx and self.velocityx > 0) \
+        or (self.rect.centerx >= self.settings.screen_width - self.speedx and self.velocityx < 0):
+            self.x += self.velocityx
+
+    def update_centerx(self):
+        self.rect.centerx = self.x - self.settings.left_border
+
+    def update_heroy(self, x):
         #跳起与坠落
         self.rect.bottom += self.velocityy
         if self.rect.bottom > self.map.gety(self.x):
@@ -336,7 +352,7 @@ class Hero():
             self.blood -= 1
             # 重新定位
             if self.blood > 0:
-                self.restart()
+                self.restart(x)
             else :
                 pass
                 #游戏结束
@@ -546,33 +562,23 @@ class Hero():
             self.weapon_attacks.sword_attacking = False
 
 
-    def update(self, monster_list, tool_list):
-        self.check_collision(monster_list, tool_list)
-        self.update_status()
-        self.update_pos()
-        self.update_weapon_attack()
+    # def update(self, monster_list, tool_list):
+    #     self.check_collision(monster_list, tool_list)
+    #     self.update_status()
+    #     self.update_pos()
+    #     self.update_weapon_attack()
 
 
-    def update_herox_v2(self):
-        if self.map.gety(self.x + self.velocityx * 2) < self.rect.bottom :
-            self.velocityx = 0
-        if (self.rect.centerx > 0 + self.speedx and self.rect.centerx < self.settings.screen_width - self.speedx) \
-        or (self.rect.centerx <= self.speedx and self.velocityx > 0) \
-        or (self.rect.centerx >= self.settings.screen_width - self.speedx and self.velocityx < 0):
-            self.x += self.velocityx
-
-    def update_centerx(self):
-        self.rect.centerx = self.x - self.settings.left_border
 
     def update1_v2(self, monster_list, tool_list):
         self.check_collision(monster_list, tool_list)
         self.update_status()
         self.update_herox_v2()
 
-    def update2_v2(self):
+    def update2_v2(self, x):
         # 用于保证人物坐标和地图坐标同步
         self.update_centerx()
-        self.update_heroy()
+        self.update_heroy(x)
         self.update_weapon_attack()
 
 
