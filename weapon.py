@@ -14,7 +14,7 @@ class Weapon():
         self.fist = pygame.Rect(0, 0, 1, 1)
         self.sword_attacking = False
         self.fist_attacking = False
-        self.basic_magic_damage = 2
+        self.basic_magic_damage = 10
         self.fist_magic_damage = 5
         self.sword_magic_damage = 5
         self.fist_magic = pygame.Rect(0, 0, 1, 1)
