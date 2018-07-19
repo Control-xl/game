@@ -484,6 +484,8 @@ class MonsterPlane():
         return False
 
     def check_rect_coll(self, rect, damage):
+        """检测矩阵碰撞"""
+        # 四个点是否相互在其中
         if self.point_coll(rect.right, rect.top) or self.point_coll(rect.right, rect.bottom) or \
                 self.point_coll(rect.left, rect.bottom) or self.point_coll(rect.left, rect.top):
             self.blood -= damage
@@ -494,6 +496,12 @@ class MonsterPlane():
                 self.point_coll(self.rect.left, self.rect.top, rect):
             self.blood -= damage
             return True
+        # 判断边
+        i = rect.top
+        while i < rect.bottom:
+            if self.point_coll(rect.left, i):
+                return True
+            i += self.rect.height
         return False
 
     def point_coll(self, x, y, rect = None):
