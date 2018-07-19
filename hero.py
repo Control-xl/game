@@ -79,7 +79,7 @@ class Hero():
         self.blood = 0
         self.magic = self.settings.hero_init_magic
         self.magic_level = 0
-        self.magic_cd_time = 1000
+        self.magic_cd_time = 300
         self.money = 0
         self.jump_en = 1                                # 1代表可以跳跃
         self.shoot_cd = 0                               # 射击冷却时间，0时才能进行射击
