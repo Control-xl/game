@@ -73,14 +73,14 @@ class Hero():
         self.weapon_attacks = Weapon(self.screen, self.settings)
         self.weapon_en = {
             self.settings.hero_weapon["fist"] : True,
-            self.settings.hero_weapon["sword"] : True,
-            self.settings.hero_weapon["gun"] : True,
+            self.settings.hero_weapon["sword"] : False,
+            self.settings.hero_weapon["gun"] : False,
         }
         self.blood = 0
         self.magic = self.settings.hero_init_magic
         self.magic_level = 0
         self.magic_cd_time = 300
-        self.money = 0
+        self.money = 80
         self.jump_en = 1                                # 1代表可以跳跃
         self.shoot_cd = 0                               # 射击冷却时间，0时才能进行射击
         self.magic_cd = 0                               # 技能冷却时间
@@ -754,6 +754,7 @@ class Hero():
                 # self.squat_images[self.direction].append(pygame.image.load('game/images/' + str(weapon) + '_squat_left.jpeg')) 
                 # self.load_image_file(weapon, self.squat_attack_images, 'squat_attack_images', self.squat_attack_size)
                 # self.load_image_file(weapon, self.squat_move_images, 'squat_move_images', self.squat_move_size)
+
 
 if __name__ == '__main__':
     pygame.init()
