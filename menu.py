@@ -129,10 +129,10 @@ class Menu():
                     self.buttons[i].en_clicked = 0
                     if i == 4 and hero.money >= 100:
                         hero.money -= 100
-                        hero.weapon_en["sword"] = True
+                        hero.weapon_en[self.settings.hero_weapon["sword"]] = True
                     if i == 5 and hero.money >= 200:
                         hero.money -= 200
-                        hero.weapon_en["gun"] = True
+                        hero.weapon_en[self.settings.hero_weapon["gun"]] = True
                     if i == 6 and hero.money >= 10:
                         hero.money -= 10
                         hero.blood += 1
@@ -143,6 +143,9 @@ class Menu():
                             self.buttons[i].update_text("Level " + str(hero.magic_level + 1) + ": 50")
                     if i == 8 :
                         self.in_shop = False
+                    print("fist magic damage : ", hero.magic_level * 2 + hero.weapon_attacks.basic_magic_damage)
+                    print("sword magic damage : ", hero.magic_level * 2 + hero.weapon_attacks.basic_magic_damage)
+                    print("blood: ", hero.blood)
 
 
 

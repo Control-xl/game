@@ -5,7 +5,7 @@ from settings import Settings
 from weapon import Weapon, Bullet
 from map import Map
 from monster import MonsterBall, MonsterPlane
-from game_functions import transparent
+from game_functions import transparent, play_short_music
 from frame import Frame
 import json
 
@@ -485,6 +485,7 @@ class Hero():
             if self.weapon == self.settings.hero_weapon["fist"] \
             and self.image_order == self.fire_magic_size[self.weapon] - 2 \
             and self.frame_order == 0 and self.magic_cd == 0 :
+                play_short_music("music/m3.wav")                                            # 播放音效
                 self.magic -= 1                                                 # 扣一点蓝
                 self.magic_cd = self.magic_cd_time                              # 冷却时间为300帧
                 self.weapon_attacks.image_order = 0                             # 技能开始播放的帧序号
@@ -505,6 +506,7 @@ class Hero():
             elif self.weapon == self.settings.hero_weapon["sword"] \
             and self.image_order == self.fire_magic_size[self.weapon] - 2 \
             and self.frame_order == 0 and self.magic_cd == 0:
+                play_short_music("music/m4.wav")
                 self.magic -= 1
                 self.magic_cd = self.magic_cd_time
                 self.weapon_attacks.image_order = 0
