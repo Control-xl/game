@@ -1,5 +1,7 @@
 import pygame
 import sys
+
+
 class Button():
     """ 按键类, 在屏幕上显示一个按键，当鼠标位于其上时，按键颜色变暗 """
     def __init__(self, screen, rect, text = "button", text_size = 16):
@@ -35,14 +37,14 @@ class Button():
         if self.en_clicked > 0:
             self.en_clicked -= 1
         if self.is_in_button() :
-            color = (180, 180, 180)
+            color = (120, 120, 120)
             if pygame.mouse.get_pressed()[0]:
                 color = (50, 50, 50)
                 self.en_clicked = 5
             elif self.en_clicked > 0:
                 self.is_clicked = True
         else :
-            color = (255, 255, 255)
+            color = (200, 200, 200)
         radius = self.rect.height // 2
         pos = (self.rect.left+radius, self.rect.top+radius)
         pygame.draw.circle(self.screen, color, pos, radius)
@@ -53,61 +55,155 @@ class Button():
         self.screen.blit(self.text, self.text_rect)
 
 
-
-
 class Menu():
-    def __init__(self, screen, hero):
+    def __init__(self, screen):
         self.screen = screen
-        self.hero = hero
         self.occupy = False
         self.in_shop = False
+        self.money = 0
+        self.money_use = 0
         #self.button1 = pygame.image.load(r"E:\vscode\python\game\images\button1.jpg")
         self.buttons = []
-        self.buttons.append(Button(self.screen, pygame.Rect(100, 60, 550, 100), "Begin game", ))
-        self.buttons.append(Button(self.screen, pygame.Rect(100, 60, 550, 100), "Return game", ))
-        self.buttons.append(Button(self.screen, pygame.Rect(100, 60, 550, 300), "Exit game", ))
-        self.buttons.append(Button(self.screen, pygame.Rect(100, 60, 550, 200), "Shop", ))
-        self.buttons.append(Button(self.screen, pygame.Rect(100, 60, 550, 100), "Sword : $100", ))
-        self.buttons.append(Button(self.screen, pygame.Rect(100, 60, 550, 200), "Gun   : $500", ))
-        self.buttons.append(Button(self.screen, pygame.Rect(100, 60, 550, 300), "Food  : $10", ))
-        self.buttons.append(Button(self.screen, pygame.Rect(100, 60, 550, 400), "Return Menu", ))
+        button_size = (100, 60)
+        self.buttons.append(Button(self.screen, pygame.Rect((550, 100), button_size), "Begin game", ))
+        self.buttons.append(Button(self.screen, pygame.Rect((550, 100), button_size), "Return game", ))
+        self.buttons.append(Button(self.screen, pygame.Rect((550, 180), button_size), "Exit game", ))
+        self.buttons.append(Button(self.screen, pygame.Rect((550, 260), button_size), "Shop", ))
+        self.buttons.append(Button(self.screen, pygame.Rect((550, 100), button_size), "Sword : $100", ))
+        self.buttons.append(Button(self.screen, pygame.Rect((550, 180), button_size), "Gun : $500", ))
+        self.buttons.append(Button(self.screen, pygame.Rect((550, 260), button_size), "Food : $10", ))
+        self.buttons.append(Button(self.screen, pygame.Rect((550, 340), button_size), "Return Menu", ))
 
-    def update(self):
+    def update(self, hero):
         if self.in_shop == False :
             for i in range(4):
                 if self.buttons[i].is_clicked == True:
                     self.buttons[i].is_clicked = False
                     self.buttons[i].en_clicked = 0
-                    if i == 2:
+                    if i == 0:
+                        self.occupy = False
+                        hero.start()
+                    elif i == 1:
+                        self.occupy = False
+                    elif i == 2:
                         sys.exit()
                     elif i == 3:
                         self.in_shop = True
-                    else :
-                        self.occupy = False
+                        
         else :
-            for i in range(5, 8):
+            if self.money_use == 0:
+                self.money = hero.money
+            elif self.money_use > 0:
+                self.money -= 1
+                self.money_use -= 1
+            for i in range(4, 8):
                 if self.buttons[i].is_clicked == True:
                     self.buttons[i].is_clicked = False
                     self.buttons[i].en_clicked = 0
-                if i == 5 and self.hero.money >= 100:
-                    self.hero.money -= 100
-                    self.hero.weapon["sword"] = True
-                if i == 5 and self.hero.money >= 100:
-                    self.hero.money -= 100
-                    self.hero.weapon["sword"] = True
-                if i == 5 and self.hero.money >= 100:
-                    self.hero.money -= 100
-                    self.hero.weapon["sword"] = True
-                if i == 5 and self.hero.money >= 100:
-                    self.hero.money -= 100
-                    self.hero.weapon["sword"] = True
+                    if i == 4 and hero.money >= 100:
+                        hero.money -= 100
+                        self.money_use += 100
+                        hero.weapon["sword"] = True
+                    if i == 5 and hero.money >= 100:
+                        hero.money -= 100
+                        self.money_use += 100
+                        hero.weapon["gun"] = True
+                    if i == 6 and hero.money >= 100:
+                        hero.money -= 100
+                        self.money_use += 100
+                        hero.blood += 1
+                    if i == 7 :
+                        self.in_shop = False
+                        self.money -= self.money_use
+                        self.money_use = 0
 
 
 
-    def blitme(self):
+    def blitme(self, hero):
+        color = (230, 230, 230, 15)
+        rect = (450, 50, 300, 400)
+        pygame.draw.rect(self.screen, color, rect)
         if self.in_shop:
-            for i in range(5, 8):
+            for i in range(4, 8):
                 self.buttons[i].blitme()
         else :
-            for i in range(4):
+            if hero.blood > 0:
+                self.buttons[1].blitme()
+            else:
+                self.buttons[0].blitme()
+            for i in range(2,4):
                 self.buttons[i].blitme()
+
+
+if __name__ == '__main__':
+    pygame.init()
+    settings = Settings()
+    screen = pygame.display.set_mode((settings.screen_width, settings.screen_height), 0, 0)
+    map_ = Map(screen, settings)
+    tool_list = []
+    hero = Hero(screen, map_, settings)
+    tool = Tool(screen, settings, "food", (600, 700))
+    tool_list.append(tool)
+    monster_list = []
+    menu = Menu(screen)
+    # monster_list.append(MonsterPlane(settings, screen))
+    # monsterball = MonsterBall(settings, screen)
+    clock = pygame.time.Clock()
+    while True:
+        clock.tick(200)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    menu.occupy = True
+                if event.key == pygame.K_k:
+                    hero.fire_magicing = True
+                if event.key == pygame.K_j:
+                    hero.attacking = True
+                if event.key == pygame.K_w:
+                    hero.jumping = True
+                if event.key == pygame.K_a:
+                    hero.moving_left = True
+                if event.key == pygame.K_d:
+                    hero.moving_right = True
+                if event.key == pygame.K_s:
+                    hero.squating = False
+                if event.key == pygame.K_l:
+                    hero.change_weapon()
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_k:
+                    hero.fire_magicing = False
+                if event.key == pygame.K_a:
+                    hero.moving_left = False
+                if event.key == pygame.K_d:
+                    hero.moving_right = False
+                if event.key == pygame.K_s:
+                    hero.squating = False
+        if menu.occupy == True :
+            menu.update(hero)
+            menu.blitme(hero)
+            if hero.blood_cd < 5:
+                hero.blood_cd += 5
+        else:
+            # hero.update(monster_list, tool_list)
+            hero.update1_v2(monster_list, tool_list)
+            map_.update(hero, monster_list)
+            hero.update2_v2()
+            monster_to_del = []
+            for monster in monster_list:
+                monster.update(hero)
+                if monster.blood <= 0:
+                    monster_to_del.append(monster)
+            for monster in monster_to_del:
+                monster_list.remove(monster)
+            # monsterball.update(hero)
+            # monsterplane.update(hero)
+            screen.fill(settings.bg_color)
+            hero.blitme()
+            for monster in monster_list:
+                monster.blitme()
+            for tool in tool_list:
+                tool.blitme()
+            map_.blitme()
+        pygame.display.update()

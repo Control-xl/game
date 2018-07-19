@@ -76,6 +76,20 @@ class Hero():
             self.settings.hero_weapon["sword"] : True,
             self.settings.hero_weapon["gun"] : True,
         }
+        self.blood = 0
+        self.magic = self.settings.hero_init_magic
+        self.money = 0
+        self.jump_en = 1                                # 1代表可以跳跃
+        self.shoot_cd = 0                               # 射击冷却时间，0时才能进行射击
+        self.magic_cd = 0                               # 技能冷却时间
+        self.blood_cd = 200                             # 暴血状态，非0时代表无敌
+        self.speedy = 8
+        self.speedx = 4
+        self.velocityx = 0
+        self.velocityy = -self.speedy
+
+
+    def start(self):
         self.blood = self.settings.hero_init_blood
         self.magic = self.settings.hero_init_magic
         self.money = 0
@@ -87,6 +101,7 @@ class Hero():
         self.speedx = 4
         self.velocityx = 0
         self.velocityy = -self.speedy
+
 
     def update_status(self):
         #根据旧状态即status的值继续状态;或者根据按键(即or后面)更改状态.更新image
@@ -185,10 +200,6 @@ class Hero():
             self.blood -= 1
         if self.blood <= 0 :
             pass
-
-    def restart(self):
-        self.blood_cd = 500
-        self.magic_cd = 0
 
 #播放动画
     def hurt_image(self):
@@ -642,7 +653,7 @@ class Hero():
 
     def blitme(self):
         # 绘制图片到屏幕
-        if self.blood_cd % 6 < 3 :
+        if self.blood_cd % 10 < 5 :
             self.screen.blit(self.image, self.rect)
         self.weapon_attacks.blitme()
         # 绘制血条，技能冷却时间
