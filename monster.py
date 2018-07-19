@@ -279,6 +279,8 @@ class MonsterPlane():
         self.bullet_dir_list = []
         self.bullet_ud_list = []
         self.bullet_alive_list = []
+        self.bullet_map_x = []
+        self.bullet_map_y = []
         # 蓄力状态
         self.save_state = False
         # 蓄力时间/ms
@@ -354,12 +356,17 @@ class MonsterPlane():
         max_ = min(len(self.bullet_list), self.max_bullet_num)
         for i in range(max_):
             if self.bullet_alive_list[i]:
-                self.bullet_center_list[i] = (self.bullet_center_list[i][0] +
-                                              math.sin(self.bullet_dir_list[i]) *
-                                              self.bullet_speed * self.bullet_ud_list[i],
-                                              self.bullet_center_list[i][1] +
-                                              math.cos(self.bullet_dir_list[i]) *
-                                              self.bullet_speed * self.bullet_ud_list[i])
+                self.bullet_map_x[i] = self.bullet_map_x[i] + \
+                                       math.sin(self.bullet_dir_list[i]) * self.bullet_speed * self.bullet_ud_list[i]
+                self.bullet_map_y[i] = self.bullet_map_y[i] + \
+                                       math.cos(self.bullet_dir_list[i]) * self.bullet_speed * self.bullet_ud_list[i]
+                # self.bullet_center_list[i] = (self.bullet_center_list[i][0] +
+                #                               math.sin(self.bullet_dir_list[i]) *
+                #                               self.bullet_speed * self.bullet_ud_list[i],
+                #                               self.bullet_center_list[i][1] +
+                #                               math.cos(self.bullet_dir_list[i]) *
+                #                               self.bullet_speed * self.bullet_ud_list[i])
+                self.bullet_center_list[i] = (self.bullet_map_x[i] - self.settings.left_border, self.bullet_map_y[i])
                 self.bullet_rect_list[i].centerx = self.bullet_center_list[i][0]
                 self.bullet_rect_list[i].centery = self.bullet_center_list[i][1]
                 # 如果飞出屏幕外，状态改为False
@@ -371,12 +378,13 @@ class MonsterPlane():
     def add_bullet(self, hero):
         if len(self.bullet_list) < self.max_bullet_num:
             bullet = pygame.image.load('images/laser/bullet.png')
-            i = len(self.bullet_list)
             self.bullet_list.append(bullet)
             rect = bullet.get_rect()
             rect.centerx = self.rect.centerx
             rect.centery = self.rect.bottom + self.save_energy_image_down
             self.bullet_rect_list.append(rect)
+            self.bullet_map_x.append(self.settings.left_border + rect.x)
+            self.bullet_map_y.append(rect.y)
             self.bullet_center_list.append((self.bullet_rect_list[-1].centerx, self.bullet_rect_list[-1].centery))
             if rect.centery != hero.rect.centery:
                 k = (hero.rect.centerx - rect.centerx) / (hero.rect.centery - rect.centery)
@@ -395,13 +403,16 @@ class MonsterPlane():
             if not self.bullet_alive_list[i]:
                 fst_disable_bullet = i
                 break
-            i += 1
+            #  += 1
         if fst_disable_bullet < self.max_bullet_num:
             bullet = self.bullet_list[fst_disable_bullet]
             rect = bullet.get_rect()
+
             rect.centerx = self.rect.centerx
             rect.centery = self.rect.bottom + self.save_energy_image_down
             self.bullet_rect_list[fst_disable_bullet] = rect
+            self.bullet_map_x[fst_disable_bullet] = self.bullet_rect_list[fst_disable_bullet].x + self.settings.left_border
+            self.bullet_map_y[fst_disable_bullet] = self.bullet_rect_list[fst_disable_bullet].y
             self.bullet_center_list[fst_disable_bullet] = (self.bullet_rect_list[fst_disable_bullet].centerx,
                                                            self.bullet_rect_list[fst_disable_bullet].centery)
             if rect.centery != hero.rect.centery:
