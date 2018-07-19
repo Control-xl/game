@@ -179,7 +179,7 @@ class Map():
             self.map_app(700, 100)
 
 
-        # map 8
+        # map 8,障碍跑
         self.map_mid_app()
         self.monster_point_app()
         self.map_mid_app()
@@ -200,14 +200,9 @@ class Map():
 
         # self.monster_list.append([monster.MonsterBall(settings, screen, 1, 10, 5, 1100, 500, 0.1, 0.1)])
 
-
         # for test
         # 怪物组数
         self.max_index = len(self.monster_list)
-
-        # to del
-        self.monster_point.append(600)
-        self.monster_point.append(2300)
 
         for i in range(1200):
             self.shape.append(400)

@@ -48,6 +48,7 @@ if __name__ == '__main__':
             print(map_.cnt)
             print(map_.monster_point)
             print(map_.monster_point[map_.cnt-1])
+            print(hero.x)
             monster_to_del = []
             for monster in monster_list:
                 monster.update(hero)

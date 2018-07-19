@@ -357,7 +357,7 @@ class Hero():
             else :
                 pass
                 #游戏结束
-            self.x = 50
+            # self.x = 50
         #print(self.x, self.rect.bottom, self.map.gety(self.x))
 
 
