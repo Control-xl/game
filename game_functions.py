@@ -2,40 +2,60 @@ import pygame
 import sys
 import threading
 
-def check_keydown_events(event, settings, screen, hero):
-    if event.key == pygame.K_ESCAPE:
-        if settings.pause:
-            settings.pause = False
-        else:
-            settings.pause = True
-
-        print(settings.pause)
-        return
-    if event.key == pygame.K_RIGHT:
-         # 右移
-        hero.moving_right = True
-    if event.key == pygame.K_LEFT:
-        # left移
+def check_keydown_events(event, settings, screen, hero, menu):
+    if event.key == pygame.K_ESCAPE :
+        menu.occupy = True
+    if event.key == pygame.K_k:
+        hero.fire_magicing = True
+    if event.key == pygame.K_j:
+        hero.attacking = True
+    if event.key == pygame.K_w:
+        hero.jumping = True
+    if event.key == pygame.K_a:
         hero.moving_left = True
-    if event.key == pygame.K_DOWN:
-        hero.blood -= 1
-    if event.key == pygame.K_UP:
-        hero.blood += 1
+    if event.key == pygame.K_d:
+        hero.moving_right = True
+    if event.key == pygame.K_s:
+        hero.squating = False
+    if event.key == pygame.K_l:
+        hero.change_weapon()
+    # if event.key == pygame.K_ESCAPE:
+    #     if settings.pause:
+    #         settings.pause = False
+    #     else:
+    #         settings.pause = True
+
+    #     print(settings.pause)
+    #     return
+    # if event.key == pygame.K_RIGHT:
+    #      # 右移
+    #     hero.moving_right = True
+    # if event.key == pygame.K_LEFT:
+    #     # left移
+    #     hero.moving_left = True
+    # if event.key == pygame.K_DOWN:
+    #     hero.blood -= 1
+    # if event.key == pygame.K_UP:
+    #     hero.blood += 1
 
 
 def check_keyup_events(event, hero):
-    if event.key == pygame.K_RIGHT:
-        hero.moving_right = False
-    if event.key == pygame.K_LEFT:
+    if event.key == pygame.K_k:
+        hero.fire_magicing = False
+    if event.key == pygame.K_a:
         hero.moving_left = False
+    if event.key == pygame.K_d:
+        hero.moving_right = False
+    if event.key == pygame.K_s:
+        hero.squating = False
 
 
-def check_events(settings, screen, hero):
+def check_events(settings, screen, hero, menu):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
         elif event.type == pygame.KEYDOWN:
-            check_keydown_events(event, settings, screen, hero)
+            check_keydown_events(event, settings, screen, hero, menu)
         elif event.type == pygame.KEYUP:
             check_keyup_events(event, hero)
 

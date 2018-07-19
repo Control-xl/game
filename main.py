@@ -32,35 +32,7 @@ if __name__ == '__main__':
     screen.fill(settings.bg_color)
     while True:
         clock.tick(200)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                sys.exit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE :
-                    menu.occupy = True
-                if event.key == pygame.K_k:
-                    hero.fire_magicing = True
-                if event.key == pygame.K_j:
-                    hero.attacking = True
-                if event.key == pygame.K_w:
-                    hero.jumping = True
-                if event.key == pygame.K_a:
-                    hero.moving_left = True
-                if event.key == pygame.K_d:
-                    hero.moving_right = True
-                if event.key == pygame.K_s:
-                    hero.squating = False
-                if event.key == pygame.K_l:
-                    hero.change_weapon()
-            if event.type == pygame.KEYUP:
-                if event.key == pygame.K_k:
-                    hero.fire_magicing = False
-                if event.key == pygame.K_a:
-                    hero.moving_left = False
-                if event.key == pygame.K_d:
-                    hero.moving_right = False
-                if event.key == pygame.K_s:
-                    hero.squating = False
+        gf.check_events(settings, screen, hero, menu)
         if hero.blood <= 0:
             menu.occupy = True
         if menu.occupy == True :
