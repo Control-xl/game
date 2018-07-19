@@ -9,8 +9,7 @@ from pause_menu import PauseMenu
 from monster import MonsterBall
 from monster import MonsterPlane
 from state_display import StateDisplay
-from weapon import Weapon
-from weapon import Bullet
+from weapon import Weapon, Bullet
 from tool import Tool
 from menu import Menu
 
