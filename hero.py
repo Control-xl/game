@@ -106,7 +106,7 @@ class Hero():
 
     def restart(self, x):
         self.x = x
-        self.settings.left_border = max(self.x - 50, 0)
+        self.settings.left_border = max(int(self.x - 50), 0)
         # self.bottom = self.
 
     def update_status(self):
