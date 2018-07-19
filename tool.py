@@ -4,7 +4,7 @@ from settings import Settings
 
 
 class Tool():
-    def __init__(self, screen, settings, name, pos, life_time = 5000):
+    def __init__(self, screen, settings, name, pos, life_time = 99999):
         self.screen = screen
         self.settings = settings
         self.name = name
