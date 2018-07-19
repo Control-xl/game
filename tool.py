@@ -1,7 +1,7 @@
 import pygame
 import sys
 from settings import Settings
-from map import Map
+
 
 class Tool():
     def __init__(self, screen, settings, name, pos, life_time = 5000):
@@ -22,29 +22,4 @@ class Tool():
         if self.life_time > 500 or (self.life_time > 0 and self.life_time % 10 >= 5) :
             self.screen.blit(self.image, self.rect)
 
-
-if __name__ == '__main__':
-    pygame.init()
-    settings = Settings()
-    screen = pygame.display.set_mode((settings.screen_width, settings.screen_height), 0, 0)
-    screen.fill(settings.bg_color)
-    map_ = Map(screen, settings)
-    tools = []
-    tool = Tool(screen, settings, "food", (600, 700), )
-    tools.append(tool)
-    clock = pygame.time.Clock()
-    while True:
-        clock.tick(100)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                sys.exit()
-        screen.fill(settings.bg_color)
-        map_.blitme()
-        i = len(tools)
-        while i > 0 :
-            i -= 1
-            if tools[i].life_time < 0 : 
-                tools.pop(i)
-        for tool in tools:
-            tool.blitme()
 

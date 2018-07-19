@@ -22,15 +22,15 @@ if __name__ == '__main__':
     menu = Menu(screen, settings)
     map_ = Map(screen, settings)
     hero = Hero(screen, map_, settings)
-    tool_list = []
-    tool = Tool(screen, settings, "food", (600, 700))
-    tool_list.append(tool)
+    # tool = Tool(screen, settings, "food", (600, 700))
+    # tool_list.append(tool)
     monster_list = []
     
     # monster_list.append(MonsterPlane(settings, screen))
     # monsterball = MonsterBall(settings, screen)
     clock = pygame.time.Clock()
     screen.fill(settings.bg_color)
+    gf.play_bg_music("music/forest01_new.ogg", -1)
     while True:
         clock.tick(200)
         gf.check_events(settings, screen, hero, menu)
@@ -43,7 +43,7 @@ if __name__ == '__main__':
                 hero.blood_cd += 5
         else:
             # hero.update(monster_list, tool_list)
-            hero.update1_v2(monster_list, tool_list)
+            hero.update1_v2(monster_list, map_.tool_list)
             map_.update(hero, monster_list)
             hero.update2_v2(int(map_.monster_point[map_.cnt-1]))
             monster_to_del = []
@@ -59,7 +59,5 @@ if __name__ == '__main__':
             hero.blitme()
             for monster in monster_list:
                 monster.blitme()
-            for tool in tool_list:
-                tool.blitme()
             map_.blitme()
         pygame.display.update()

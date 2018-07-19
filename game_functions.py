@@ -98,9 +98,10 @@ def play_short_music(music_name,  volume = 0.1, loops = 0):
     music.play(loops)
 
 
-def play_bg_music(music_name, loops = -1):
+def play_bg_music(music_name, loops=-1, volume = 0.1):
     """播放背景音乐，MP3格式"""
     pygame.mixer.music.load(music_name)
+    pygame.mixer.music.set_volume(volume)
     pygame.mixer.music.play(loops)
 
 

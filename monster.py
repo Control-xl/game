@@ -383,8 +383,8 @@ class MonsterPlane():
             rect.centerx = self.rect.centerx
             rect.centery = self.rect.bottom + self.save_energy_image_down
             self.bullet_rect_list.append(rect)
-            self.bullet_map_x.append(self.settings.left_border + rect.x)
-            self.bullet_map_y.append(rect.y)
+            self.bullet_map_x.append(self.settings.left_border + rect.centerx)
+            self.bullet_map_y.append(rect.centery)
             self.bullet_center_list.append((self.bullet_rect_list[-1].centerx, self.bullet_rect_list[-1].centery))
             if rect.centery != hero.rect.centery:
                 k = (hero.rect.centerx - rect.centerx) / (hero.rect.centery - rect.centery)
