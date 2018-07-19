@@ -1,6 +1,6 @@
 import math
 import pygame
-
+import game_functions as gf
 class MonsterBall():
     def __init__(self, settings, screen, protection_blood = 1, center_blood = 1, protection_num = 0, x = 1000, y = 500,
                  protection_speed = 0.1, center_speed = 0, center_speed_y = 0, center_radius = 100,
@@ -100,15 +100,19 @@ class MonsterBall():
         self.check_bullet_coll(weapon.bullets)
         if weapon.sword_attacking:
             if self.check_sword_coll(weapon.sword):
+                gf.play_short_music("music/hit1.wav")
                 weapon.sword_attacking = False
         if weapon.fist_attacking:
             if self.check_fist_coll(weapon.fist):
+                gf.play_short_music("music/hit1.wav")
                 weapon.fist_attacking = False
         if weapon.fist_magic_firing:
             if self.check_fist_magic_coll(weapon):
+                gf.play_short_music("music/hit1.wav")
                 weapon.fist_magic_firing = False
         if weapon.sword_magic_firing:
             if self.check_sword_magic_coll(weapon):
+                gf.play_short_music("music/hit1.wav")
                 weapon.sword_magic_firing = False
 
     def check_bullet_coll(self, bullets):
@@ -433,17 +437,19 @@ class MonsterPlane():
         self.check_bullet_coll(weapon.bullets)
         if weapon.sword_attacking:
             if self.check_sword_coll(weapon.sword):
+                gf.play_short_music("music/hit1.wav")
                 weapon.sword_attacking = False
         if weapon.fist_attacking:
             if self.check_rect_coll(weapon.fist, self.settings.fist_damage):
+                gf.play_short_music("music/hit1.wav")
                 weapon.fist_attacking = False
         if weapon.fist_magic_firing:
-            print("magic:", weapon.fist_magic, "self at", self.rect)
             if self.check_rect_coll(weapon.fist_magic, weapon.fist_magic_damage):
-                print("fist magic success!")
+                gf.play_short_music("music/hit1.wav")
                 weapon.fist_magic_firing = False
         if weapon.sword_magic_firing:
             if self.check_rect_coll(weapon.sword_magic, weapon.sword_magic_damage):
+                gf.play_short_music("music/hit1.wav")
                 weapon.sword_magic_firing = False
 
     def check_bullet_coll(self, bullets):
