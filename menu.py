@@ -91,7 +91,7 @@ class Menu():
         self.buttons.append(Button(self.screen, pygame.Rect((520, 230), button_size), "Exit game", ))
         self.buttons.append(Button(self.screen, pygame.Rect((520, 310), button_size), "Shop", ))
         self.buttons.append(Button(self.screen, pygame.Rect((520, 150), button_size), "Sword : 100", ))
-        self.buttons.append(Button(self.screen, pygame.Rect((520, 230), button_size), "Gun : 500", ))
+        self.buttons.append(Button(self.screen, pygame.Rect((520, 230), button_size), "Gun : 200", ))
         self.buttons.append(Button(self.screen, pygame.Rect((520, 310), button_size), "Blood : 10", ))
         self.buttons.append(Button(self.screen, pygame.Rect((520, 390), button_size), "Level 1: 50", ))
         self.buttons.append(Button(self.screen, pygame.Rect((520, 470), button_size), "Return Menu", ))
@@ -129,10 +129,10 @@ class Menu():
                     self.buttons[i].en_clicked = 0
                     if i == 4 and hero.money >= 100:
                         hero.money -= 100
-                        hero.weapon["sword"] = True
-                    if i == 5 and hero.money >= 500:
-                        hero.money -= 100
-                        hero.weapon["gun"] = True
+                        hero.weapon_en["sword"] = True
+                    if i == 5 and hero.money >= 200:
+                        hero.money -= 200
+                        hero.weapon_en["gun"] = True
                     if i == 6 and hero.money >= 10:
                         hero.money -= 10
                         hero.blood += 1

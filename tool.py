@@ -13,7 +13,6 @@ class Tool():
         self.rect = self.image.get_rect()
         self.centerx = pos[0]
         self.rect.bottom = pos[1]
-        self.rect.centerx = pos[0]
         self.life_time = life_time
 
     def blitme(self):
