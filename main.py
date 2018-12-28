@@ -24,7 +24,6 @@ if __name__ == '__main__':
     # tool = Tool(screen, settings, "food", (600, 700))
     # tool_list.append(tool)
     monster_list = []
-    
     # monster_list.append(MonsterPlane(settings, screen))
     # monsterball = MonsterBall(settings, screen)
     clock = pygame.time.Clock()

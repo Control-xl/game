@@ -80,7 +80,7 @@ class Hero():
         self.magic = self.settings.hero_init_magic
         self.magic_level = 0
         self.magic_cd_time = 300
-        self.money = 80
+        self.money = 999
         self.jump_en = 1                                # 1代表可以跳跃
         self.shoot_cd = 0                               # 射击冷却时间，0时才能进行射击
         self.magic_cd = 0                               # 技能冷却时间
@@ -357,7 +357,8 @@ class Hero():
         if self.rect.bottom > self.map.gety(self.x):
             self.rect.bottom = self.map.gety(self.x)
         if self.rect.bottom == self.settings.BOTTOM_NUM:
-            self.blood -= 1
+            if self.blood_cd == 0:
+                self.blood -= 1
             # 重新定位
             if self.blood > 0:
                 self.restart(x)
